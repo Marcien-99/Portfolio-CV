@@ -51,3 +51,4 @@ Ce document récapitule l'avancement du projet, les fonctionnalités implément�
 - **Galerie de Preuves Visuelles** : Évolution du modèle de données (`lib/data/seed.ts`) permettant d'attacher un tableau d'images (`gallery`) à chaque projet. Rendu dynamique sous la section "Résultat" pour renforcer la crédibilité technique.
 - **Intégration Photo de Profil** : Intégration de la vraie photo de l'utilisateur (`Profil.jpg`) avec un masque circulaire, un overlay "plan d'architecte" et des effets d'ombre dynamiques.
 - **Gestion de version (GitHub)** : Initialisation du dépôt Git local et push de la totalité du code, incluant la refonte graphique complète, vers le dépôt distant `https://github.com/Marcien-99/Portfolio-CV.git`.
+- **Mise � jour des informations de contact** : Int�gration des vraies coordonn�es (email, t�l�phone, lien LinkedIn) dans la page de contact et le footer en pr�paration du d�ploiement.

@@ -87,17 +87,17 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">Mes coordonnées</h3>
                 <div className="space-y-4">
-                  <a href="mailto:marcien.nzoussi@example.com" className="flex items-center gap-4 text-[#F5F5F7]/70 hover:text-primary transition-colors group">
+                  <a href="mailto:marcienbalouboula@gmail.com" className="flex items-center gap-4 text-[#F5F5F7]/70 hover:text-primary transition-colors group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center group-hover:scale-110 transition-transform border border-white/5 group-hover:border-primary/50">
                       <Mail className="w-5 h-5" />
                     </div>
-                    <span>marcien.nzoussi@example.com</span>
+                    <span>marcienbalouboula@gmail.com</span>
                   </a>
                   <div className="flex items-center gap-4 text-[#F5F5F7]/70 group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center border border-white/5">
                       <Phone className="w-5 h-5" />
                     </div>
-                    <span>+33 6 XX XX XX XX</span>
+                    <span>+33 6 52 14 26 45</span>
                   </div>
                   <div className="flex items-center gap-4 text-[#F5F5F7]/70 group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center border border-white/5">
@@ -111,7 +111,7 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">Réseaux</h3>
                 <div className="flex gap-4">
-                  <Link href="https://linkedin.com" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-[#F5F5F7]/70 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
+                  <Link href="https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-[#F5F5F7]/70 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
                     <LinkedinIcon className="w-5 h-5" />
                   </Link>
                   <Link href="https://github.com/Marcien-99" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-[#F5F5F7]/70 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
