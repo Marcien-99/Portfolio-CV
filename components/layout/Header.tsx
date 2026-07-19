@@ -68,13 +68,13 @@ export function Header() {
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Menu</span>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] bg-background/95 backdrop-blur-xl border-border/10">
-                  <SheetHeader className="text-left mb-6 mt-4">
-                    <SheetTitle className="font-heading text-xl font-bold tracking-tight text-foreground">
+                <SheetContent side="right" className="w-[300px] p-6 bg-background/95 backdrop-blur-xl border-border/10">
+                  <SheetHeader className="text-left mb-8 mt-4">
+                    <SheetTitle className="font-heading text-2xl font-bold tracking-tight text-foreground">
                       Navigation
                     </SheetTitle>
                   </SheetHeader>
-                  <nav className="flex flex-col gap-6 text-lg font-medium text-foreground/80 mt-8">
+                  <nav className="flex flex-col gap-6 text-lg font-medium text-foreground/80 px-2">
                     <SheetClose nativeButton={false} render={<Link href="/" className="hover:text-primary transition-colors" />}>Accueil</SheetClose>
                     <SheetClose nativeButton={false} render={<Link href="/a-propos" className="hover:text-primary transition-colors" />}>À propos</SheetClose>
                     <SheetClose nativeButton={false} render={<Link href="/competences" className="hover:text-primary transition-colors" />}>Compétences</SheetClose>
