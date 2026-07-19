@@ -48,6 +48,7 @@ export function Header() {
             <Link href="/competences" className="hover:text-primary hover:-translate-y-px transition-all">Compétences</Link>
             <Link href="/experiences" className="hover:text-primary hover:-translate-y-px transition-all">Expériences</Link>
             <Link href="/projets" className="hover:text-primary hover:-translate-y-px transition-all">Projets</Link>
+            <Link href="/contact" className="hover:text-primary hover:-translate-y-px transition-all">Contact</Link>
           </nav>
 
           {/* === DROITE : Outils et Mobile Menu === */}
@@ -79,6 +80,7 @@ export function Header() {
                     <SheetClose nativeButton={false} render={<Link href="/competences" className="hover:text-primary transition-colors" />}>Compétences</SheetClose>
                     <SheetClose nativeButton={false} render={<Link href="/experiences" className="hover:text-primary transition-colors" />}>Expériences</SheetClose>
                     <SheetClose nativeButton={false} render={<Link href="/projets" className="hover:text-primary transition-colors" />}>Projets</SheetClose>
+                    <SheetClose nativeButton={false} render={<Link href="/contact" className="hover:text-primary transition-colors" />}>Contact</SheetClose>
                   </nav>
                 </SheetContent>
               </Sheet>

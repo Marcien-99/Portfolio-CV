@@ -25,10 +25,13 @@ Basée sur les règles du portfolio cinématographique et l'inspiration de l'age
 
 ## 4. Composants Clés
 - **Boutons** : Minimalistes, forts contrastes. Effet magnétique au survol (`scale: 1.03`).
-- **Cartes (Expériences, Compétences)** : Fond teinté, sans bordure, `rounded-[2rem]`, très léger effet d'élévation au survol.
-- **Hero Section** : Asymétrique, titre massif à gauche, image/visuel détouré via un masque géométrique (arche) à droite.
-- **Texture Visuelle** : Un subtil overlay de bruit (SVG turbulence à ~5% d'opacité) sur l'ensemble de la page pour un rendu "matière" premium.
+- **Cartes (Expériences, Projets)** : Fond teinté sombre (`#1A1A1A`), sans bordure, `rounded-[2rem]`, très léger effet d'élévation au survol.
+- **Tags de Compétences** : Uniformisés avec un style sombre, sobre et élégant (`bg-[#1A1A1A]`, bordure `white/10`) pour privilégier la lisibilité professionnelle.
+- **Hero Section / Photo de Profil** : Masque circulaire parfait (`rounded-full`) avec des dimensions symétriques, orné d'un liseré "plan d'architecte" et d'une ombre dynamique lumineuse au survol (`hover:shadow-primary/30`).
+- **Structure de Page "Dual-Tone" Stricte** : Chaque page interne est découpée en deux univers :
+  1. *L'En-tête (Clair)* : Titre dramatique en italique et ligne verticale d'accentuation sur fond blanc (`bg-background`).
+  2. *Le Contenu (Sombre)* : Grilles, timelines et détails techniques sur fond noir (`bg-[#121212]`).
 
 ## 5. Animations (GSAP)
 - **Apparition** : Fade-up séquentiel (stagger) au scroll avec des easing fluides (`power3.out`).
-- **Micro-interactions** : Les liens ont un très subtil `translateY(-1px)` au survol. Les éléments interactifs semblent réagir au passage de la souris.
+- **Micro-interactions** : Les liens ont un très subtil `translateY(-1px)` au survol. Effet de zoom fluide sur les photos des projets (`scale-105`) et pulsation sur les éléments interactifs.
