@@ -103,7 +103,8 @@ export async function getProjects(domain?: ItemDomain, status?: string): Promise
     .select(`
       *,
       project_domains (domain),
-      project_images (url, position)
+      project_images (url, position, caption_fr, caption_en),
+      project_links (url, label_fr, label_en, position)
     `)
     .eq('visibility', 'published')
     .order('position')
@@ -126,7 +127,8 @@ export async function getProjects(domain?: ItemDomain, status?: string): Promise
   return (data as any[]).map(item => ({
     ...item,
     domains: item.project_domains?.map((d: any) => d.domain) || [],
-    gallery: item.project_images?.sort((a: any, b: any) => a.position - b.position).map((img: any) => ({ url: img.url, position: img.position })) || []
+    gallery: item.project_images?.sort((a: any, b: any) => a.position - b.position).map((img: any) => ({ url: img.url, position: img.position, caption_fr: img.caption_fr, caption_en: img.caption_en })) || [],
+    links: item.project_links?.sort((a: any, b: any) => a.position - b.position) || []
   }))
 }
 
@@ -137,7 +139,8 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     .select(`
       *,
       project_domains (domain),
-      project_images (url, position)
+      project_images (url, position, caption_fr, caption_en),
+      project_links (url, label_fr, label_en, position)
     `)
     .eq('slug', slug)
     .eq('visibility', 'published')
@@ -153,7 +156,8 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   return {
     ...data,
     domains: data.project_domains?.map((d: any) => d.domain) || [],
-    gallery: data.project_images?.sort((a: any, b: any) => a.position - b.position).map((img: any) => ({ url: img.url, position: img.position })) || []
+    gallery: data.project_images?.sort((a: any, b: any) => a.position - b.position).map((img: any) => ({ url: img.url, position: img.position, caption_fr: img.caption_fr, caption_en: img.caption_en })) || [],
+    links: data.project_links?.sort((a: any, b: any) => a.position - b.position) || []
   }
 }
 
