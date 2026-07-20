@@ -56,6 +56,15 @@ export type Education = {
 export type ProjectGalleryImage = {
   url: string;
   position: number;
+  caption_fr?: string;
+  caption_en?: string;
+};
+
+export type ProjectLink = {
+  url: string;
+  position: number;
+  label_fr?: string;
+  label_en?: string;
 };
 
 export type Project = {
@@ -75,4 +84,5 @@ export type Project = {
   position: number;
   domains: ItemDomain[];
   gallery?: ProjectGalleryImage[];
+  links?: ProjectLink[];
 };
