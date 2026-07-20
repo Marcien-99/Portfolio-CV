@@ -126,7 +126,7 @@ export async function getProjects(domain?: ItemDomain, status?: string): Promise
   return (data as any[]).map(item => ({
     ...item,
     domains: item.project_domains?.map((d: any) => d.domain) || [],
-    gallery: item.project_images?.sort((a: any, b: any) => a.position - b.position).map((img: any) => ({ src: img.url, description: '' })) || []
+    gallery: item.project_images?.sort((a: any, b: any) => a.position - b.position).map((img: any) => ({ url: img.url, position: img.position })) || []
   }))
 }
 
@@ -153,7 +153,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   return {
     ...data,
     domains: data.project_domains?.map((d: any) => d.domain) || [],
-    gallery: data.project_images?.sort((a: any, b: any) => a.position - b.position).map((img: any) => ({ src: img.url, description: '' })) || []
+    gallery: data.project_images?.sort((a: any, b: any) => a.position - b.position).map((img: any) => ({ url: img.url, position: img.position })) || []
   }
 }
 

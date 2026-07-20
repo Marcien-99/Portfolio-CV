@@ -119,15 +119,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     <div key={index} className="space-y-3 group">
                       <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black/40 border border-white/10 group-hover:border-primary/50 transition-colors shadow-lg">
                         <Image 
-                          src={img.src} 
-                          alt={img.description} 
+                          src={img.url} 
+                          alt={`Image ${index + 1}`} 
                           fill 
                           className="object-contain sm:object-cover group-hover:scale-105 transition-transform duration-500" 
                         />
                       </div>
-                      <p className="text-sm text-[#F5F5F7]/50 font-light leading-relaxed px-1">
-                        {img.description}
-                      </p>
                     </div>
                   ))}
                 </div>
