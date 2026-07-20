@@ -84,7 +84,7 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
           </div>
         )}
 
-        <form action={handleSubmit} className="space-y-8">
+        <form action={handleSubmit} className="space-y-8" encType="multipart/form-data">
           
           {/* SECTION: Informations de base */}
           <div>

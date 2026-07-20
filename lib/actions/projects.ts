@@ -114,6 +114,7 @@ export async function createProject(formData: FormData) {
         }])
       } else {
         console.error("Upload error: ", uploadError)
+        return { error: "Erreur lors de l'upload de l'image. Avez-vous configuré les permissions Storage (RLS) ?" }
       }
     }
   }
@@ -232,9 +233,13 @@ export async function updateProject(id: string, formData: FormData) {
           caption_fr,
           caption_en
         }])
-        if (dbError) console.error("DB insert error: ", dbError)
+        if (dbError) {
+          console.error("DB insert error: ", dbError)
+          return { error: "Erreur DB lors de l'enregistrement de l'image." }
+        }
       } else {
         console.error("Upload error: ", uploadError)
+        return { error: "Erreur lors de l'upload de l'image. Avez-vous configuré les permissions Storage (RLS) ?" }
       }
     }
   }
