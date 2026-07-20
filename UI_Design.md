@@ -27,6 +27,8 @@ Basée sur les règles du portfolio cinématographique et l'inspiration de l'age
 - **Boutons** : Minimalistes, forts contrastes. Effet magnétique au survol (`scale: 1.03`).
 - **Cartes (Expériences, Projets)** : Fond teinté sombre (`#1A1A1A`), sans bordure, `rounded-[2rem]`, très léger effet d'élévation au survol.
 - **Tags de Compétences** : Uniformisés avec un style sombre, sobre et élégant (`bg-[#1A1A1A]`, bordure `white/10`) pour privilégier la lisibilité professionnelle.
+- **Badges de Domaines (Monochrome Inversé)** : Contraste maximum (pilule noire texte blanc sur fond clair ; pilule blanche texte noir sur fond sombre).
+- **Textes Solides (Anti-Flou)** : Interdiction stricte des opacités sur les textes (ex: `/70` ou `/80`). Utilisation exclusive de couleurs pleines (ex: `text-gray-300`, `text-gray-700`) pour une netteté absolue.
 - **Hero Section / Photo de Profil** : Masque circulaire parfait (`rounded-full`) avec des dimensions symétriques, orné d'un liseré "plan d'architecte" et d'une ombre dynamique lumineuse au survol (`hover:shadow-primary/30`).
 - **Structure de Page "Dual-Tone" Stricte** : Chaque page interne est découpée en deux univers :
   1. *L'En-tête (Clair)* : Titre dramatique en italique et ligne verticale d'accentuation sur fond blanc (`bg-background`).

@@ -24,7 +24,7 @@ export default async function Home() {
                 Marcien B.<br/>Nzoussi
               </h1>
               {/* Titre pro façon éditorial */}
-              <div className="text-2xl sm:text-3xl lg:text-4xl text-foreground/80 font-light italic mb-6">
+              <div className="text-2xl sm:text-3xl lg:text-4xl text-gray-700 font-light italic mb-6">
                 Ingénieur <span className="font-semibold not-italic text-primary">Sûreté de Fonctionnement</span> & Développement
               </div>
               
@@ -82,15 +82,15 @@ export default async function Home() {
           <GsapReveal stagger={0.15} className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             <Link href="/competences" className="group block bg-[#1A1A1A] rounded-[2rem] p-8 hover:bg-[#222] transition-all hover:-translate-y-2">
               <h3 className="font-heading font-semibold text-2xl mb-3 text-[#F5F5F7]">Expertise</h3>
-              <p className="text-[#F5F5F7]/70 text-sm leading-relaxed">Découvrez mes compétences en {skillCategories.map(c => c.name_fr).join(", ").substring(0, 50)}...</p>
+              <p className="text-gray-300 text-sm leading-relaxed">Découvrez mes compétences en {skillCategories.map(c => c.name_fr).join(", ").substring(0, 50)}...</p>
             </Link>
             <Link href="/experiences" className="group block bg-[#1A1A1A] rounded-[2rem] p-8 hover:bg-[#222] transition-all hover:-translate-y-2">
               <h3 className="font-heading font-semibold text-2xl mb-3 text-[#F5F5F7]">Parcours</h3>
-              <p className="text-[#F5F5F7]/70 text-sm leading-relaxed">Aperçu de mes dernières expériences, notamment chez {currentExperience.company}.</p>
+              <p className="text-gray-300 text-sm leading-relaxed">Aperçu de mes dernières expériences, notamment chez {currentExperience.company}.</p>
             </Link>
             <Link href="/projets" className="group block bg-[#1A1A1A] rounded-[2rem] p-8 hover:bg-[#222] transition-all hover:-translate-y-2">
               <h3 className="font-heading font-semibold text-2xl mb-3 text-[#F5F5F7]">Réalisations</h3>
-              <p className="text-[#F5F5F7]/70 text-sm leading-relaxed">Consultez mes études de cas et projets techniques transversaux.</p>
+              <p className="text-gray-300 text-sm leading-relaxed">Consultez mes études de cas et projets techniques transversaux.</p>
             </Link>
           </GsapReveal>
         </div>

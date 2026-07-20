@@ -87,19 +87,19 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">Mes coordonnées</h3>
                 <div className="space-y-4">
-                  <a href="mailto:marcienbalouboula@gmail.com" className="flex items-center gap-4 text-[#F5F5F7]/70 hover:text-primary transition-colors group">
+                  <a href="mailto:marcienbalouboula@gmail.com" className="flex items-center gap-4 text-gray-300 hover:text-primary transition-colors group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center group-hover:scale-110 transition-transform border border-white/5 group-hover:border-primary/50">
                       <Mail className="w-5 h-5" />
                     </div>
                     <span>marcienbalouboula@gmail.com</span>
                   </a>
-                  <div className="flex items-center gap-4 text-[#F5F5F7]/70 group">
+                  <div className="flex items-center gap-4 text-gray-300 group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center border border-white/5">
                       <Phone className="w-5 h-5" />
                     </div>
                     <span>+33 6 52 14 26 45</span>
                   </div>
-                  <div className="flex items-center gap-4 text-[#F5F5F7]/70 group">
+                  <div className="flex items-center gap-4 text-gray-300 group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center border border-white/5">
                       <MapPin className="w-5 h-5" />
                     </div>
@@ -111,10 +111,10 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">Réseaux</h3>
                 <div className="flex gap-4">
-                  <Link href="https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-[#F5F5F7]/70 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
+                  <Link href="https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-gray-300 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
                     <LinkedinIcon className="w-5 h-5" />
                   </Link>
-                  <Link href="https://github.com/Marcien-99" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-[#F5F5F7]/70 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
+                  <Link href="https://github.com/Marcien-99" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-gray-300 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
                     <GithubIcon className="w-5 h-5" />
                   </Link>
                 </div>
@@ -130,31 +130,31 @@ export default function ContactPage() {
                 <form className="space-y-8 relative z-10">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <Label htmlFor="firstName" className="text-[#F5F5F7]/90 text-sm tracking-wide uppercase font-mono">Prénom</Label>
-                      <Input id="firstName" placeholder="John" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-white/20 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
+                      <Label htmlFor="firstName" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Prénom</Label>
+                      <Input id="firstName" placeholder="John" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
                     </div>
                     <div className="space-y-3">
-                      <Label htmlFor="lastName" className="text-[#F5F5F7]/90 text-sm tracking-wide uppercase font-mono">Nom</Label>
-                      <Input id="lastName" placeholder="Doe" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-white/20 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
+                      <Label htmlFor="lastName" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Nom</Label>
+                      <Input id="lastName" placeholder="Doe" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
                     </div>
                   </div>
                   
                   <div className="space-y-3">
-                    <Label htmlFor="email" className="text-[#F5F5F7]/90 text-sm tracking-wide uppercase font-mono">Adresse e-mail</Label>
-                    <Input id="email" type="email" placeholder="john.doe@exemple.com" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-white/20 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
+                    <Label htmlFor="email" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Adresse e-mail</Label>
+                    <Input id="email" type="email" placeholder="john.doe@exemple.com" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
                   </div>
 
                   <div className="space-y-3">
-                    <Label htmlFor="subject" className="text-[#F5F5F7]/90 text-sm tracking-wide uppercase font-mono">Sujet</Label>
-                    <Input id="subject" placeholder="Proposition de collaboration..." className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-white/20 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
+                    <Label htmlFor="subject" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Sujet</Label>
+                    <Input id="subject" placeholder="Proposition de collaboration..." className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
                   </div>
 
                   <div className="space-y-3">
-                    <Label htmlFor="message" className="text-[#F5F5F7]/90 text-sm tracking-wide uppercase font-mono">Message</Label>
+                    <Label htmlFor="message" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Message</Label>
                     <Textarea 
                       id="message" 
                       placeholder="Dites-m'en plus sur votre besoin..." 
-                      className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-white/20 min-h-[160px] rounded-xl focus-visible:ring-primary focus-visible:ring-1 resize-none"
+                      className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 min-h-[160px] rounded-xl focus-visible:ring-primary focus-visible:ring-1 resize-none"
                     />
                   </div>
 

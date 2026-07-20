@@ -18,7 +18,7 @@ export function ExperienceCard({ title, company, location, period, description }
             <CardTitle className="text-xl font-heading text-foreground">{title}</CardTitle>
             <div className="text-primary font-medium mt-1">{company}</div>
           </div>
-          <div className="flex flex-col gap-1 text-sm text-muted-foreground whitespace-nowrap">
+          <div className="flex flex-col gap-1 text-sm text-muted-foreground [.dark-section_&]:text-gray-300 whitespace-nowrap">
             <div className="flex items-center gap-1.5 justify-start sm:justify-end">
               <Calendar className="w-4 h-4" />
               {period}
@@ -33,7 +33,7 @@ export function ExperienceCard({ title, company, location, period, description }
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-wrap">{description}</p>
+        <p className="text-muted-foreground [.dark-section_&]:text-gray-100 leading-relaxed text-sm whitespace-pre-wrap">{description}</p>
       </CardContent>
     </Card>
   );

@@ -43,7 +43,7 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
             <div className="block lg:hidden w-full h-[2px] bg-primary my-4"></div>
 
             <div className="lg:col-span-7">
-              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-foreground/70 font-light mb-6">
+              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light mb-6">
                 Explorez mes études de cas et réalisations techniques. Ces projets reflètent ma capacité à concevoir des solutions robustes, de l'architecture matérielle à la logique logicielle.
               </p>
             </div>
@@ -73,7 +73,7 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
               </div>
             </GsapReveal>
 
-            <GsapReveal delay={0.2} stagger={0.15} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <GsapReveal key={activeFilter} delay={0.2} stagger={0.15} className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredProjects.map((project) => (
                 <Link key={project.id} href={`/projets/${project.slug}`} className="block h-full">
                   <ProjectCard 

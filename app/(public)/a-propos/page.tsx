@@ -32,13 +32,13 @@ export default async function AboutPage() {
 
             {/* Colonne Droite : Texte de présentation */}
             <div className="lg:col-span-7 prose prose-lg dark:prose-invert max-w-none">
-              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-foreground/80 font-light mb-6">
+              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light mb-6">
                 Je suis un Ingénieur spécialisé en fiabilité des systèmes, développement logiciel et conception électronique. 
                 Ma formation interdisciplinaire me permet d'aborder la résolution de problèmes techniques complexes avec 
                 une vision globale, allant de la conception matérielle (IoT, systèmes embarqués) jusqu'au développement 
                 d'applications logicielles (Python, Next.js).
               </p>
-              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-foreground/80 font-light">
+              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light">
                 J'ai un fort attrait pour la <strong className="text-foreground font-semibold">sûreté de fonctionnement</strong>, visant à garantir 
                 la fiabilité, la disponibilité, la maintenabilité et la sécurité (RAMS) des systèmes industriels. 
                 À travers mes diverses expériences, j'ai développé des méthodes innovantes combinant l'ingénierie 
@@ -69,8 +69,8 @@ export default async function AboutPage() {
                   </div>
                   <div className="sm:w-2/3">
                     <h3 className="text-xl sm:text-2xl font-sans font-bold text-[#F5F5F7] mb-2">{edu.title_fr}</h3>
-                    <p className="font-sans text-[#F5F5F7]/60 text-lg mb-4">{edu.institution}</p>
-                    {edu.description_fr && <p className="font-sans text-[#F5F5F7]/80 leading-relaxed font-light">{edu.description_fr}</p>}
+                    <p className="font-sans text-gray-400 text-lg mb-4">{edu.institution}</p>
+                    {edu.description_fr && <p className="font-sans text-gray-300 leading-relaxed font-light">{edu.description_fr}</p>}
                   </div>
                 </div>
               ))}

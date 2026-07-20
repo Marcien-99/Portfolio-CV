@@ -36,7 +36,7 @@ export default async function ExperiencesPage() {
             <div className="block lg:hidden w-full h-[2px] bg-primary my-4"></div>
 
             <div className="lg:col-span-7">
-              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-foreground/70 font-light mb-6">
+              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light mb-6">
                 Découvrez mon parcours professionnel, mes stages et les missions que j'ai menées en entreprise. 
                 Chaque expérience m'a permis d'affiner mon expertise et d'apporter des solutions concrètes aux défis de la sûreté de fonctionnement et du développement.
               </p>
@@ -76,7 +76,7 @@ export default async function ExperiencesPage() {
                           <div>
                             <h3 className="text-2xl font-sans font-bold text-[#F5F5F7] mb-1">{exp.title_fr}</h3>
                             <p className="font-sans text-primary/80 text-lg mb-4">{exp.company}{exp.location ? ` • ${exp.location}` : ""}</p>
-                            {exp.description_fr && <p className="font-sans text-[#F5F5F7]/80 leading-relaxed font-light whitespace-pre-wrap">{exp.description_fr}</p>}
+                            {exp.description_fr && <p className="font-sans text-gray-300 leading-relaxed font-light whitespace-pre-wrap">{exp.description_fr}</p>}
                           </div>
                         </div>
                       </div>

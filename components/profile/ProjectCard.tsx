@@ -35,7 +35,7 @@ export function ProjectCard({ title, description, status, domains, imageUrl }: P
       </CardHeader>
       
       <CardContent className="flex-grow pb-4">
-        <p className="text-muted-foreground text-sm line-clamp-3">{description}</p>
+        <p className="text-muted-foreground [.dark-section_&]:text-gray-100 text-sm line-clamp-3">{description}</p>
       </CardContent>
       
       <CardFooter className="pt-0 flex justify-between items-center border-t border-border/10 mt-auto px-6 py-4">
@@ -43,7 +43,7 @@ export function ProjectCard({ title, description, status, domains, imageUrl }: P
           {domains.slice(0, 2).map((domain) => (
             <DomainBadge key={domain} domain={domain} />
           ))}
-          {domains.length > 2 && <span className="text-xs text-muted-foreground self-center">+{domains.length - 2}</span>}
+          {domains.length > 2 && <span className="text-xs text-muted-foreground [.dark-section_&]:text-gray-300 self-center">+{domains.length - 2}</span>}
         </div>
         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
           <ArrowRight className="w-4 h-4" />

@@ -41,7 +41,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto space-y-8">
             
-            <Link href="/projets" className={buttonVariants({ variant: "ghost", size: "sm", className: "-ml-4 text-foreground/70 hover:text-foreground hover:bg-black/5" })}>
+            <Link href="/projets" className={buttonVariants({ variant: "ghost", size: "sm", className: "-ml-4 text-gray-600 hover:text-foreground hover:bg-black/5" })}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Retour aux projets
             </Link>
@@ -77,7 +77,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">1</div>
                   Contexte
                 </h2>
-                <p className="text-[#F5F5F7]/70 leading-relaxed">
+                <p className="text-gray-300 leading-relaxed">
                   {project.context_fr}
                 </p>
               </section>
@@ -89,7 +89,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">2</div>
                   Démarche
                 </h2>
-                <p className="text-[#F5F5F7]/70 leading-relaxed whitespace-pre-line">
+                <p className="text-gray-300 leading-relaxed whitespace-pre-line">
                   {project.approach_fr}
                 </p>
               </section>
@@ -101,7 +101,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">3</div>
                   Résultat
                 </h2>
-                <p className="text-[#F5F5F7]/70 leading-relaxed whitespace-pre-line">
+                <p className="text-gray-300 leading-relaxed whitespace-pre-line">
                   {project.result_fr}
                 </p>
               </section>
@@ -122,7 +122,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                           src={img.url} 
                           alt={`Image ${index + 1}`} 
                           fill 
-                          className="object-contain sm:object-cover group-hover:scale-105 transition-transform duration-500" 
+                          className="object-contain group-hover:scale-105 transition-transform duration-500" 
                         />
                       </div>
                     </div>

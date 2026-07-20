@@ -48,7 +48,7 @@ export default async function SkillsPage() {
 
             {/* Colonne Droite : Texte de présentation */}
             <div className="lg:col-span-7">
-              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-foreground/70 font-light mb-6">
+              <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light mb-6">
                 Cartographie de mon expertise technique sous forme de tableau de bord. Les domaines couverts vont de la sûreté de fonctionnement à l'ingénierie logicielle et matérielle.
               </p>
             </div>
