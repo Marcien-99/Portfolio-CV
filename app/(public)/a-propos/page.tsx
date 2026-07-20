@@ -69,7 +69,7 @@ export default async function AboutPage() {
                   </div>
                   <div className="sm:w-2/3">
                     <h3 className="text-xl sm:text-2xl font-sans font-bold text-[#F5F5F7] mb-2">{edu.title_fr}</h3>
-                    <p className="font-sans text-gray-400 text-lg mb-4">{edu.institution}</p>
+                    <p className="font-sans text-gray-400 text-lg mb-4">{edu.institution}{edu.location ? ` • ${edu.location}` : ""}</p>
                     {edu.description_fr && <p className="font-sans text-gray-300 leading-relaxed font-light">{edu.description_fr}</p>}
                   </div>
                 </div>
