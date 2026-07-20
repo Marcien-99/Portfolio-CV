@@ -52,3 +52,20 @@ Ce document rÃ©capitule l'avancement du projet, les fonctionnalitÃ©s implÃ©mentÃ
 - **IntÃ©gration Photo de Profil** : IntÃ©gration de la vraie photo de l'utilisateur (`Profil.jpg`) avec un masque circulaire, un overlay "plan d'architecte" et des effets d'ombre dynamiques.
 - **Gestion de version (GitHub)** : Initialisation du dÃ©pÃ´t Git local et push de la totalitÃ© du code, incluant la refonte graphique complÃ¨te, vers le dÃ©pÃ´t distant `https://github.com/Marcien-99/Portfolio-CV.git`.
 - **Mise à jour des informations de contact** : Intégration des vraies coordonnées (email, téléphone, lien LinkedIn) dans la page de contact et le footer en préparation du déploiement.
+
+### Fiche 5 — Schéma Supabase réel (Terminé)
+- **Création des tables SQL** : Implémentation complète des tables (profils, compétences, expériences, formations, projets, etc.) et de leurs relations.
+- **Sécurité (RLS)** : Activation de Row Level Security (RLS) sur toutes les tables pour limiter l'écriture aux administrateurs, et la lecture au contenu publié.
+- **Scripts de test** : Préparation de scripts pour garantir l'étanchéité de la base avant même de coder la logique applicative.
+
+### Fiche 6 — Authentification admin (Terminé)
+- **Dépendances** : Installation de @supabase/supabase-js et @supabase/ssr.
+- **Middleware** : Création d'un middleware Next.js global qui protège toutes les requêtes vers '/admin/*'.
+- **Authentification** : Implémentation d'une page de connexion sécurisée et création des Server Actions pour interagir avec Supabase Auth.
+- **Clients Supabase** : Centralisation des appels via des clients générés côté navigateur et côté serveur (dont un mode 'Admin' utilisant la clé service_role).
+
+### Fiche 7 — Contenu branché en lecture réelle (Terminé)
+- **Migration vers Supabase** : Création d'un script Node pour populer automatiquement la base de données avec le contenu initial.
+- **API Supabase** : Création des Server Actions (getSkills, getExperiences, getEducations, getProjects, getProjectBySlug) pour lire directement la base via le client serveur.
+- **Pages dynamiques** : Remplacement des imports statiques par les requêtes asynchrones sur toutes les pages publiques (Accueil, À propos, Compétences, Expériences, Projets).
+- **Sécurité** : Les requêtes utilisent le RLS pour ne récupérer que le contenu publié (status = 'published').

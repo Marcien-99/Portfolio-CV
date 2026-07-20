@@ -1,4 +1,5 @@
-import { skillCategories, skills, ItemDomain } from "@/lib/data/seed";
+import { ItemDomain } from "@/lib/types";
+import { getSkillCategories, getSkills } from "@/lib/api/content";
 import { SkillCard } from "@/components/profile/SkillCard";
 import { DomainType } from "@/components/profile/DomainBadge";
 import { GsapReveal } from "@/components/animations/GsapReveal";
@@ -17,7 +18,10 @@ const mapDomain = (d: ItemDomain): DomainType => {
   }
 };
 
-export default function SkillsPage() {
+export default async function SkillsPage() {
+  const skills = await getSkills();
+  const skillCategories = await getSkillCategories();
+  
   // Trier les catégories par position
   const sortedCategories = [...skillCategories].sort((a, b) => a.position - b.position);
 

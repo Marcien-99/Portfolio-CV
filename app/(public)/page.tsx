@@ -2,11 +2,14 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { skillCategories, experiences } from "@/lib/data/seed";
+import { getSkillCategories, getExperiences, getActivePhoto } from "@/lib/api/content";
 import { GsapReveal } from "@/components/animations/GsapReveal";
 
-export default function Home() {
-  const currentExperience = experiences.find(e => e.end_date === undefined) || experiences[0];
+export default async function Home() {
+  const experiences = await getExperiences();
+  const skillCategories = await getSkillCategories();
+  const currentExperience = experiences.find(e => e.end_date === null || e.end_date === undefined) || experiences[0];
+  const profilePhoto = await getActivePhoto() || "/Profil.jpg";
 
   return (
     <div className="flex flex-col">
@@ -53,7 +56,7 @@ export default function Home() {
             <GsapReveal direction="left" className="w-full md:w-2/5 flex justify-center md:justify-end relative group">
               <div className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[450px] lg:h-[450px] rounded-full bg-secondary/60 flex flex-col items-center justify-center text-muted-foreground relative overflow-hidden shadow-2xl group-hover:shadow-[0_0_30px_rgba(var(--primary),0.2)] transition-all duration-500">
                 <Image 
-                  src="/Profil.jpg"
+                  src={profilePhoto}
                   alt="Marcien B. Nzoussi"
                   fill
                   className="object-cover object-top transition-transform duration-700 group-hover:scale-105"

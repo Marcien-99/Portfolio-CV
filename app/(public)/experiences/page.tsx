@@ -1,4 +1,4 @@
-import { experiences } from "@/lib/data/seed";
+import { getExperiences } from "@/lib/api/content";
 import { ExperienceCard } from "@/components/profile/ExperienceCard";
 import { DomainType } from "@/components/profile/DomainBadge";
 import { GsapReveal } from "@/components/animations/GsapReveal";
@@ -8,7 +8,8 @@ export const metadata = {
   description: "Mon parcours professionnel",
 };
 
-export default function ExperiencesPage() {
+export default async function ExperiencesPage() {
+  const experiences = await getExperiences();
   const sortedExperiences = [...experiences].sort((a, b) => 
     new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
   );

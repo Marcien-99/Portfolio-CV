@@ -1,4 +1,4 @@
-import { projects } from "@/lib/data/seed";
+import { getProjectBySlug } from "@/lib/api/content";
 import { notFound } from "next/navigation";
 import { DomainBadge, DomainType } from "@/components/profile/DomainBadge";
 import { Badge } from "@/components/ui/badge";
@@ -7,15 +7,9 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
-export async function generateStaticParams() {
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = await getProjectBySlug(slug);
   if (!project) return { title: "Projet non trouvé" };
   
   return {
@@ -26,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     notFound();

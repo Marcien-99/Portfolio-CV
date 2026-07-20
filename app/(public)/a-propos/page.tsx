@@ -1,4 +1,4 @@
-import { educations } from "@/lib/data/seed";
+import { getEducations } from "@/lib/api/content";
 import { Badge } from "@/components/ui/badge";
 import { GsapReveal } from "@/components/animations/GsapReveal";
 
@@ -7,7 +7,8 @@ export const metadata = {
   description: "Mon parcours et mes diplômes",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const educations = await getEducations();
   return (
     <>
       {/* SECTION A PROPOS - Le Manifeste Personnel */}
