@@ -43,6 +43,7 @@ function LinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 import { getSiteSettings } from "@/lib/actions/settings";
+import { AdminSecretLink } from "./AdminSecretLink";
 
 export async function Footer() {
   const settings = await getSiteSettings();
@@ -55,7 +56,9 @@ export async function Footer() {
     <footer className="w-full border-t border-border/40 bg-background py-8 mt-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="text-center md:text-left">
-          <p className="font-heading text-lg font-bold">marcien-bn.dev</p>
+          <p className="font-heading text-lg font-bold">
+            <AdminSecretLink>marcien-bn.dev</AdminSecretLink>
+          </p>
           <p className="text-sm text-muted-foreground mt-1">© {new Date().getFullYear()} Marcien BALOUBOULA NZOUSSI. Tous droits réservés.</p>
         </div>
         <div className="flex items-center gap-4">
