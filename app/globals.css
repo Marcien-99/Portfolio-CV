@@ -127,3 +127,24 @@ body::before {
 .gsap-reveal-hidden > * {
   opacity: 0;
 }
+
+/* Custom premium date picker styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  background-color: rgba(128, 128, 128, 0.1);
+}
+.dark-section input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="date"].dark-theme-date::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(0.8);
+}
+input[type="date"].dark-theme-date::-webkit-calendar-picker-indicator:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  filter: invert(1) brightness(1);
+}
