@@ -7,9 +7,12 @@ import {
   Briefcase,
   GraduationCap,
   FolderKanban,
+  Tags,
   UserCircle,
   Settings,
   LogOut,
+  FileText,
+  Image,
 } from "lucide-react"
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -29,12 +32,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
         <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible">
           <NavItem href="/admin" icon={<LayoutDashboard size={20} />} label="Tableau de bord" exact />
-          <div className="hidden md:block pt-4 pb-2">
-            <p className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          <div className="mt-8 mb-2 px-4">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Contenu
             </p>
           </div>
           <NavItem href="/admin/competences" icon={<Code2 size={20} />} label="Compétences" />
+          <NavItem href="/admin/categories" icon={<Tags size={20} />} label="Catégories" />
           <NavItem href="/admin/experiences" icon={<Briefcase size={20} />} label="Expériences" />
           <NavItem href="/admin/formations" icon={<GraduationCap size={20} />} label="Formations" />
           <NavItem href="/admin/projets" icon={<FolderKanban size={20} />} label="Projets" />
@@ -44,7 +48,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               Paramètres
             </p>
           </div>
-          <NavItem href="/admin/profil" icon={<UserCircle size={20} />} label="Profil & CV" />
+          <NavItem href="/admin/cv-profils" icon={<FileText size={20} />} label="Profils CV" />
+          <NavItem href="/admin/photo" icon={<Image size={20} />} label="Photo de profil" />
           <NavItem href="/admin/reglages" icon={<Settings size={20} />} label="Réglages" />
         </nav>
 

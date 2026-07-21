@@ -2,14 +2,23 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { getSkillCategories, getExperiences, getActivePhoto } from "@/lib/api/content";
+import { getSkillCategories, getExperiences, getActivePhoto, getProjects } from "@/lib/api/content";
+import { getSiteSettings } from "@/lib/actions/settings";
 import { GsapReveal } from "@/components/animations/GsapReveal";
 
 export default async function Home() {
   const experiences = await getExperiences();
   const skillCategories = await getSkillCategories();
-  const currentExperience = experiences.find(e => e.end_date === null || e.end_date === undefined) || experiences[0];
+  const projects = await getProjects();
+  const currentExperience = experiences.find(e => e.end_date === null || e.end_date === undefined) || experiences[0] || { company: '...' };
   const profilePhoto = await getActivePhoto() || "/Profil.jpg";
+  const settings = await getSiteSettings();
+
+  const heroExperience = settings.hero_experience || "3+";
+  const heroLocation = settings.hero_location || "Paris, FR";
+  const projectsMode = settings.hero_projects_mode || "auto";
+  const projectsManual = settings.hero_projects_manual || "12";
+  const projectsCount = projectsMode === "auto" ? projects.length : projectsManual;
 
   return (
     <div className="flex flex-col">
@@ -30,11 +39,11 @@ export default async function Home() {
               
               {/* Stats en Monospace */}
               <div className="font-mono text-sm text-muted-foreground uppercase tracking-wider mb-8 flex flex-wrap items-center justify-center md:justify-start gap-3">
-                <span>3+ ans d'expérience</span>
+                <span>{heroExperience} ans d'expérience</span>
                 <span className="text-primary">•</span>
-                <span>12 Projets</span>
+                <span>{projectsCount} Projets</span>
                 <span className="text-primary">•</span>
-                <span>Paris, FR</span>
+                <span>{heroLocation}</span>
               </div>
               
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">

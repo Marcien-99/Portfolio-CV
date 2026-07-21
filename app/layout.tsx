@@ -12,10 +12,15 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Marcien BALOUBOULA NZOUSSI - Portfolio",
-  description: "Portfolio professionnel et générateur de CV interactif",
-};
+import { getSiteSettings } from "@/lib/actions/settings";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  return {
+    title: settings.seo_title || "Marcien B. Nzoussi - Portfolio",
+    description: settings.seo_description || "Portfolio professionnel et générateur de CV interactif",
+  };
+}
 
 export default function RootLayout({
   children,

@@ -42,7 +42,15 @@ function LinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function Footer() {
+import { getSiteSettings } from "@/lib/actions/settings";
+
+export async function Footer() {
+  const settings = await getSiteSettings();
+  
+  const email = settings.contact_email || "marcienbalouboula@gmail.com";
+  const linkedin = settings.social_linkedin || "https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215";
+  const github = settings.social_github || "https://github.com/Marcien-99";
+
   return (
     <footer className="w-full border-t border-border/40 bg-background py-8 mt-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -51,13 +59,13 @@ export function Footer() {
           <p className="text-sm text-muted-foreground mt-1">© {new Date().getFullYear()} Marcien BALOUBOULA NZOUSSI. Tous droits réservés.</p>
         </div>
         <div className="flex items-center gap-4">
-          <Link href="https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215" target="_blank" className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors">
+          <Link href={linkedin} target="_blank" className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors">
             <LinkedinIcon className="w-5 h-5" />
           </Link>
-          <Link href="https://github.com/Marcien-99" target="_blank" className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors">
+          <Link href={github} target="_blank" className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors">
             <GithubIcon className="w-5 h-5" />
           </Link>
-          <Link href="mailto:marcienbalouboula@gmail.com" className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors">
+          <Link href={`mailto:${email}`} className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors">
             <Mail className="w-5 h-5" />
           </Link>
         </div>

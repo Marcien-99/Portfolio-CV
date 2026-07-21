@@ -254,6 +254,13 @@ export async function updateProject(id: string, formData: FormData) {
 export async function deleteProject(id: string) {
   const supabase = await createClient()
   
+  // 1. Lister les images du projet pour les supprimer du Storage
+  const { data: images } = await supabase
+    .from('project_images')
+    .select('url')
+    .eq('project_id', id)
+
+  // 2. Supprimer le projet de la base de données (les lignes project_images seront supprimées via CASCADE)
   const { error } = await supabase
     .from('projects')
     .delete()
@@ -262,6 +269,23 @@ export async function deleteProject(id: string) {
   if (error) {
     console.error('Erreur suppression projet:', error)
     return { error: 'Erreur lors de la suppression' }
+  }
+
+  // 3. Supprimer physiquement les fichiers du Storage
+  if (images && images.length > 0) {
+    const pathsToRemove = images.map(img => {
+      try {
+        const urlObj = new URL(img.url)
+        const pathParts = urlObj.pathname.split('/portfolio/')
+        return pathParts.length > 1 ? pathParts[1] : null
+      } catch (e) {
+        return null
+      }
+    }).filter(Boolean) as string[]
+
+    if (pathsToRemove.length > 0) {
+      await supabase.storage.from('portfolio').remove(pathsToRemove)
+    }
   }
 
   revalidatePath('/projets')

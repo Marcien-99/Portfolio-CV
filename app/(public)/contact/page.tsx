@@ -52,7 +52,17 @@ export const metadata = {
   description: "Me contacter",
 };
 
-export default function ContactPage() {
+import { getSiteSettings } from "@/lib/actions/settings";
+
+export default async function ContactPage() {
+  const settings = await getSiteSettings();
+  
+  const email = settings.contact_email || "marcienbalouboula@gmail.com";
+  const phone = settings.contact_phone || "+33 6 52 14 26 45";
+  const address = settings.contact_address || "Paris, France";
+  const linkedin = settings.social_linkedin || "https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215";
+  const github = settings.social_github || "https://github.com/Marcien-99";
+
   return (
     <>
       {/* SECTION HEADER - Clair */}
@@ -87,23 +97,23 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">Mes coordonnées</h3>
                 <div className="space-y-4">
-                  <a href="mailto:marcienbalouboula@gmail.com" className="flex items-center gap-4 text-gray-300 hover:text-primary transition-colors group">
+                  <a href={`mailto:${email}`} className="flex items-center gap-4 text-gray-300 hover:text-primary transition-colors group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center group-hover:scale-110 transition-transform border border-white/5 group-hover:border-primary/50">
                       <Mail className="w-5 h-5" />
                     </div>
-                    <span>marcienbalouboula@gmail.com</span>
+                    <span>{email}</span>
                   </a>
                   <div className="flex items-center gap-4 text-gray-300 group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center border border-white/5">
                       <Phone className="w-5 h-5" />
                     </div>
-                    <span>+33 6 52 14 26 45</span>
+                    <span>{phone}</span>
                   </div>
                   <div className="flex items-center gap-4 text-gray-300 group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center border border-white/5">
                       <MapPin className="w-5 h-5" />
                     </div>
-                    <span>Paris, France</span>
+                    <span>{address}</span>
                   </div>
                 </div>
               </div>
@@ -111,10 +121,10 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">Réseaux</h3>
                 <div className="flex gap-4">
-                  <Link href="https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-gray-300 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
+                  <Link href={linkedin} target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-gray-300 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
                     <LinkedinIcon className="w-5 h-5" />
                   </Link>
-                  <Link href="https://github.com/Marcien-99" target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-gray-300 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
+                  <Link href={github} target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-gray-300 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
                     <GithubIcon className="w-5 h-5" />
                   </Link>
                 </div>
