@@ -17,7 +17,8 @@ import {
   FileText,
   Image as ImageIcon,
   Menu,
-  X
+  X,
+  Globe
 } from "lucide-react"
 
 export function AdminSidebar() {
@@ -83,7 +84,14 @@ export function AdminSidebar() {
         <NavItem href="/admin/reglages" icon={<Settings size={20} strokeWidth={1.5} />} label="Réglages" />
       </nav>
 
-      <div className="p-6 border-t border-black/5">
+      <div className="p-6 border-t border-black/5 space-y-3">
+        <Link 
+          href="/"
+          className="flex items-center justify-center gap-3 px-4 py-4 w-full text-sm font-medium rounded-[1.25rem] bg-[#111111] text-[#F5F5F7] hover:bg-primary hover:text-white transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 group"
+        >
+          <Globe size={18} strokeWidth={1.5} className="group-hover:rotate-12 transition-transform" />
+          Retour au site
+        </Link>
         <form>
           <button 
             formAction={logout}
