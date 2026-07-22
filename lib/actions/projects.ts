@@ -88,7 +88,14 @@ export async function createProject(formData: FormData) {
   for (let i = 0; i < linksCount; i++) {
     const url = formData.get(`link_url_${i}`) as string
     const label_fr = formData.get(`link_label_fr_${i}`) as string
-    const label_en = formData.get(`link_label_en_${i}`) as string
+    let label_en = formData.get(`link_label_en_${i}`) as string
+    
+    if (projectData.en_auto_generated && !label_en && label_fr) {
+      const { translateTexts } = await import('@/lib/translate')
+      const t = await translateTexts([label_fr])
+      if (t[0]) label_en = t[0]
+    }
+
     if (url) {
       await supabase.from('project_links').insert([{
         project_id: newProject.id,
@@ -105,7 +112,13 @@ export async function createProject(formData: FormData) {
   for (let i = 0; i < newImagesCount; i++) {
     const file = formData.get(`new_image_file_${i}`) as File
     const caption_fr = formData.get(`new_image_caption_fr_${i}`) as string
-    const caption_en = formData.get(`new_image_caption_en_${i}`) as string
+    let caption_en = formData.get(`new_image_caption_en_${i}`) as string
+
+    if (projectData.en_auto_generated && !caption_en && caption_fr) {
+      const { translateTexts } = await import('@/lib/translate')
+      const t = await translateTexts([caption_fr])
+      if (t[0]) caption_en = t[0]
+    }
 
     if (file && file.size > 0) {
       const ext = file.name.split('.').pop()
@@ -212,7 +225,14 @@ export async function updateProject(id: string, formData: FormData) {
   for (let i = 0; i < linksCount; i++) {
     const url = formData.get(`link_url_${i}`) as string
     const label_fr = formData.get(`link_label_fr_${i}`) as string
-    const label_en = formData.get(`link_label_en_${i}`) as string
+    let label_en = formData.get(`link_label_en_${i}`) as string
+    
+    if (projectData.en_auto_generated && !label_en && label_fr) {
+      const { translateTexts } = await import('@/lib/translate')
+      const t = await translateTexts([label_fr])
+      if (t[0]) label_en = t[0]
+    }
+
     if (url) {
       await supabase.from('project_links').insert([{
         project_id: id,
@@ -229,8 +249,14 @@ export async function updateProject(id: string, formData: FormData) {
   for (let i = 0; i < existingImagesCount; i++) {
     const imgId = formData.get(`existing_image_id_${i}`) as string
     const caption_fr = formData.get(`existing_image_caption_fr_${i}`) as string
-    const caption_en = formData.get(`existing_image_caption_en_${i}`) as string
+    let caption_en = formData.get(`existing_image_caption_en_${i}`) as string
     
+    if (projectData.en_auto_generated && !caption_en && caption_fr) {
+      const { translateTexts } = await import('@/lib/translate')
+      const t = await translateTexts([caption_fr])
+      if (t[0]) caption_en = t[0]
+    }
+
     await supabase.from('project_images')
       .update({ caption_fr, caption_en })
       .eq('id', imgId)
@@ -241,7 +267,13 @@ export async function updateProject(id: string, formData: FormData) {
   for (let i = 0; i < newImagesCount; i++) {
     const file = formData.get(`new_image_file_${i}`) as File
     const caption_fr = formData.get(`new_image_caption_fr_${i}`) as string
-    const caption_en = formData.get(`new_image_caption_en_${i}`) as string
+    let caption_en = formData.get(`new_image_caption_en_${i}`) as string
+
+    if (projectData.en_auto_generated && !caption_en && caption_fr) {
+      const { translateTexts } = await import('@/lib/translate')
+      const t = await translateTexts([caption_fr])
+      if (t[0]) caption_en = t[0]
+    }
 
     if (file && file.size > 0) {
       const ext = file.name.split('.').pop()

@@ -144,7 +144,7 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
                       <Input name={`link_url_${i}`} defaultValue={link.url} placeholder="https://github.com/..." required className="w-full px-5 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto font-mono" />
                       <div className="grid grid-cols-2 gap-4">
                         <Input name={`link_label_fr_${i}`} defaultValue={link.label_fr} placeholder="Texte FR (ex: Code source)" required className="w-full px-5 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
-                        <Input name={`link_label_en_${i}`} defaultValue={link.label_en} placeholder="Texte EN (ex: Source code)" required className="w-full px-5 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
+                        <Input name={`link_label_en_${i}`} defaultValue={link.label_en} placeholder="Texte EN (ex: Source code)" className="w-full px-5 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
                       </div>
                     </div>
                     <Button type="button" variant="ghost" size="icon" onClick={() => removeLink(i)} className="text-white/30 hover:text-red-400 hover:bg-red-500/10 shrink-0">
@@ -281,7 +281,7 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
                           <Input name={`new_image_file_${i}`} type="file" accept="image/*" required className="w-full bg-[#111111] border border-white/10 rounded-xl text-white file:bg-primary file:text-primary-foreground file:border-0 file:rounded-lg file:px-5 file:py-2 file:mr-4 file:cursor-pointer file:hover:bg-primary/90 h-auto p-2" />
                           <div className="grid grid-cols-2 gap-4">
                             <Input name={`new_image_caption_fr_${i}`} placeholder="Légende FR" required className="w-full px-4 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
-                            <Input name={`new_image_caption_en_${i}`} placeholder="Légende EN" required className="w-full px-4 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                            <Input name={`new_image_caption_en_${i}`} placeholder="Légende EN" className="w-full px-4 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
                           </div>
                         </div>
                         <Button type="button" variant="ghost" size="icon" onClick={() => removeNewImageBlock(blockId)} className="text-white/30 hover:text-red-400 hover:bg-red-500/10 shrink-0 h-12 w-12 rounded-xl">
