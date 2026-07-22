@@ -29,14 +29,20 @@ export default function PhotoAdminPage() {
     setError(null)
     const formData = new FormData(form)
     
-    const result = await uploadPhoto(formData)
-    if (result.error) {
-      setError(result.error)
-    } else {
-      await loadPhotos()
-      form.reset()
+    try {
+      const result = await uploadPhoto(formData)
+      if (result?.error) {
+        setError(result.error)
+      } else {
+        await loadPhotos()
+        form.reset()
+      }
+    } catch (err: any) {
+      console.error("Upload error:", err)
+      setError(err.message || "Une erreur inattendue est survenue.")
+    } finally {
+      setUploading(false)
     }
-    setUploading(false)
   }
 
   async function handleSetActive(id: string) {
