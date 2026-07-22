@@ -24,16 +24,17 @@ export default function PhotoAdminPage() {
 
   async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const form = e.currentTarget
     setUploading(true)
     setError(null)
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(form)
     
     const result = await uploadPhoto(formData)
     if (result.error) {
       setError(result.error)
     } else {
       await loadPhotos()
-      e.currentTarget.reset()
+      form.reset()
     }
     setUploading(false)
   }
