@@ -29,6 +29,12 @@ export async function logout() {
   redirect('/admin/login')
 }
 
+export async function logoutAndReturn() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect('/')
+}
+
 export async function updatePassword(formData: FormData) {
   const supabase = await createClient()
   
