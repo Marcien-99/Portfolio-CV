@@ -2,13 +2,17 @@ import { getExperiences } from "@/lib/api/content";
 import { ExperienceCard } from "@/components/profile/ExperienceCard";
 import { DomainType } from "@/components/profile/DomainBadge";
 import { GsapReveal } from "@/components/animations/GsapReveal";
+import { getDictionary, Locale } from "@/lib/i18n/dictionaries";
 
 export const metadata = {
   title: "Expériences - Marcien B. Nzoussi",
   description: "Mon parcours professionnel",
 };
 
-export default async function ExperiencesPage() {
+export default async function ExperiencesPage(props: { params: Promise<{ lang: string }> }) {
+  const { lang } = await props.params;
+  const dict = await getDictionary(lang as Locale);
+  
   const experiences = await getExperiences();
   const sortedExperiences = [...experiences].sort((a, b) => 
     new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
@@ -24,7 +28,7 @@ export default async function ExperiencesPage() {
             {/* Colonne Gauche : Titre Dramatique */}
             <div className="lg:col-span-4 flex lg:justify-end">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading italic font-light text-foreground tracking-tight lg:text-right">
-                Parcours
+                {dict.nav.experiences}
               </h1>
             </div>
 
@@ -37,8 +41,9 @@ export default async function ExperiencesPage() {
 
             <div className="lg:col-span-7">
               <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light mb-6">
-                Découvrez mon parcours professionnel, mes stages et les missions que j'ai menées en entreprise. 
-                Chaque expérience m'a permis d'affiner mon expertise et d'apporter des solutions concrètes aux défis de la sûreté de fonctionnement et du développement.
+                {lang === 'en' 
+                  ? "Discover my professional background, my internships, and the missions I've carried out in companies. Each experience has allowed me to refine my expertise and provide concrete solutions to RAMS and software development challenges." 
+                  : "Découvrez mon parcours professionnel, mes stages et les missions que j'ai menées en entreprise. Chaque expérience m'a permis d'affiner mon expertise et d'apporter des solutions concrètes aux défis de la sûreté de fonctionnement et du développement."}
               </p>
             </div>
           </GsapReveal>
@@ -71,12 +76,18 @@ export default async function ExperiencesPage() {
                       <div className="bg-[#1A1A1A] p-8 sm:p-10 rounded-[2rem] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300">
                         <div className="flex flex-col gap-4">
                           <span className="font-mono text-primary text-sm tracking-wider uppercase">
-                            {exp.start_date.substring(0, 7)} — {exp.end_date ? exp.end_date.substring(0, 7) : "Présent"}
+                            {exp.start_date.substring(0, 7)} — {exp.end_date ? exp.end_date.substring(0, 7) : (lang === 'en' ? "Present" : "Présent")}
                           </span>
                           <div>
-                            <h3 className="text-2xl font-sans font-bold text-[#F5F5F7] mb-1">{exp.title_fr}</h3>
+                            <h3 className="text-2xl font-sans font-bold text-[#F5F5F7] mb-1">
+                              {lang === 'en' && exp.title_en ? exp.title_en : exp.title_fr}
+                            </h3>
                             <p className="font-sans text-primary/80 text-lg mb-4">{exp.company}{exp.location ? ` • ${exp.location}` : ""}</p>
-                            {exp.description_fr && <p className="font-sans text-gray-300 leading-relaxed font-light whitespace-pre-wrap">{exp.description_fr}</p>}
+                            {(lang === 'en' && exp.description_en ? exp.description_en : exp.description_fr) && (
+                              <p className="font-sans text-gray-300 leading-relaxed font-light whitespace-pre-wrap">
+                                {lang === 'en' && exp.description_en ? exp.description_en : exp.description_fr}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>

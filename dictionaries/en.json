@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "home": "Home",
+    "navigation": "Navigation",
+    "about": "About",
+    "experiences": "Experiences",
+    "projects": "Projects",
+    "skills": "Skills",
+    "contact": "Contact",
+    "download_cv": "Download CV"
+  },
+  "domains": {
+    "surete_fonctionnement": "Dependability",
+    "electronique": "Electronics",
+    "automatisme": "Automation",
+    "informatique_ia": "IT & AI"
+  },
+  "hero": {
+    "years_experience": "years experience",
+    "projects": "Projects",
+    "view_projects": "View my projects",
+    "learn_more": "Learn more",
+    "download_cv": "Download CV"
+  },
+  "project": {
+    "status_completed": "Completed",
+    "status_in_progress": "In Progress",
+    "back_to_projects": "Back to projects",
+    "context": "Context",
+    "approach": "Approach",
+    "results": "Results",
+    "view_live": "View Live Project",
+    "github": "Source Code"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "back": "Back"
+  }
+}

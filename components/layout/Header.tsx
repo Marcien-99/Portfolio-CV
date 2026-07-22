@@ -13,7 +13,12 @@ import {
   SheetClose
 } from "@/components/ui/sheet";
 
-export function Header() {
+interface HeaderProps {
+  lang: string;
+  dict: any;
+}
+
+export function Header({ lang, dict }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -44,11 +49,11 @@ export function Header() {
           
           {/* === CENTRE : Navigation (Desktop uniquement) === */}
           <nav className="hidden md:flex items-center justify-center gap-6 text-sm font-medium text-foreground/80">
-            <Link href="/a-propos" className="hover:text-primary hover:-translate-y-px transition-all">À propos</Link>
-            <Link href="/competences" className="hover:text-primary hover:-translate-y-px transition-all">Compétences</Link>
-            <Link href="/experiences" className="hover:text-primary hover:-translate-y-px transition-all">Expériences</Link>
-            <Link href="/projets" className="hover:text-primary hover:-translate-y-px transition-all">Projets</Link>
-            <Link href="/contact" className="hover:text-primary hover:-translate-y-px transition-all">Contact</Link>
+            <Link href={`/${lang}/a-propos`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.about}</Link>
+            <Link href={`/${lang}/competences`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.skills}</Link>
+            <Link href={`/${lang}/experiences`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.experiences}</Link>
+            <Link href={`/${lang}/projets`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.projects}</Link>
+            <Link href={`/${lang}/contact`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.contact}</Link>
           </nav>
 
           {/* === DROITE : Outils et Mobile Menu === */}
@@ -64,23 +69,25 @@ export function Header() {
             {/* Menu Hamburger (Mobile) */}
             <div className="flex md:hidden">
               <Sheet>
-                <SheetTrigger render={<Button variant="ghost" size="icon" className="rounded-full text-foreground hover:bg-background/50" />}>
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Menu</span>
-                </SheetTrigger>
+                <SheetTrigger render={
+                  <Button variant="ghost" size="icon" className="rounded-full text-foreground hover:bg-background/50">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Menu</span>
+                  </Button>
+                } />
                 <SheetContent side="right" className="w-[300px] p-6 bg-background/95 backdrop-blur-xl border-border/10">
                   <SheetHeader className="text-left mb-8 mt-4">
                     <SheetTitle className="font-heading text-2xl font-bold tracking-tight text-foreground">
-                      Navigation
+                      {dict.nav.navigation}
                     </SheetTitle>
                   </SheetHeader>
                   <nav className="flex flex-col gap-6 text-lg font-medium text-foreground/80 px-2">
-                    <SheetClose nativeButton={false} render={<Link href="/" className="hover:text-primary transition-colors" />}>Accueil</SheetClose>
-                    <SheetClose nativeButton={false} render={<Link href="/a-propos" className="hover:text-primary transition-colors" />}>À propos</SheetClose>
-                    <SheetClose nativeButton={false} render={<Link href="/competences" className="hover:text-primary transition-colors" />}>Compétences</SheetClose>
-                    <SheetClose nativeButton={false} render={<Link href="/experiences" className="hover:text-primary transition-colors" />}>Expériences</SheetClose>
-                    <SheetClose nativeButton={false} render={<Link href="/projets" className="hover:text-primary transition-colors" />}>Projets</SheetClose>
-                    <SheetClose nativeButton={false} render={<Link href="/contact" className="hover:text-primary transition-colors" />}>Contact</SheetClose>
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}`} className="hover:text-primary transition-colors">{dict.nav.home}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/a-propos`} className="hover:text-primary transition-colors">{dict.nav.about}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/experiences`} className="hover:text-primary transition-colors">{dict.nav.experience}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/competences`} className="hover:text-primary transition-colors">{dict.nav.skills}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/projets`} className="hover:text-primary transition-colors">{dict.nav.projects}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/contact`} className="text-primary hover:opacity-80 transition-opacity font-semibold">{dict.nav.contact}</Link>} />
                   </nav>
                 </SheetContent>
               </Sheet>

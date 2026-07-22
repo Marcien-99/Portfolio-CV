@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 const experienceSchema = z.object({
   title_fr: z.string().min(1, "Le titre (FR) est requis"),
-  title_en: z.string().min(1, "Le titre (EN) est requis"),
+  title_en: z.string().optional().or(z.literal('')),
   company: z.string().min(1, "L'entreprise est requise"),
   location: z.string().optional(),
   start_date: z.string().min(1, "Date de début requise"),

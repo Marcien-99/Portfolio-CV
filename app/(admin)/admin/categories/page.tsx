@@ -12,7 +12,7 @@ export default function CategoriesAdminPage() {
   const [error, setError] = useState<string | null>(null)
   
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [formData, setFormData] = useState({ name_fr: '', name_en: '', position: 0 })
+  const [formData, setFormData] = useState({ name_fr: '', name_en: '', position: 0, auto_translate: true })
   const [isNew, setIsNew] = useState(false)
 
   useEffect(() => {
@@ -28,14 +28,14 @@ export default function CategoriesAdminPage() {
 
   function handleEdit(cat: any) {
     setEditingId(cat.id)
-    setFormData({ name_fr: cat.name_fr, name_en: cat.name_en, position: cat.position })
+    setFormData({ name_fr: cat.name_fr, name_en: cat.name_en, position: cat.position, auto_translate: false })
     setIsNew(false)
     setError(null)
   }
 
   function handleAddNew() {
     setEditingId('new')
-    setFormData({ name_fr: '', name_en: '', position: categories.length * 10 })
+    setFormData({ name_fr: '', name_en: '', position: categories.length * 10, auto_translate: true })
     setIsNew(true)
     setError(null)
   }
@@ -134,11 +134,22 @@ export default function CategoriesAdminPage() {
                   <label className="text-sm font-medium text-white/70">Nom (EN)</label>
                   <input 
                     type="text" 
-                    required
                     value={formData.name_en} 
                     onChange={e => setFormData({...formData, name_en: e.target.value})}
                     className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
                   />
+                  <div className="flex items-center gap-3 mt-3">
+                    <input 
+                      type="checkbox" 
+                      id="auto_translate" 
+                      checked={formData.auto_translate}
+                      onChange={e => setFormData({...formData, auto_translate: e.target.checked})}
+                      className="w-4 h-4 rounded border-white/20 text-primary bg-[#111111] focus:ring-primary/50"
+                    />
+                    <label htmlFor="auto_translate" className="text-xs font-normal text-white/50 cursor-pointer">
+                      Traduction automatique
+                    </label>
+                  </div>
                 </div>
                 <div className="space-y-3 sm:col-span-2">
                   <label className="text-sm font-medium text-white/70">Position (ordre d'affichage)</label>

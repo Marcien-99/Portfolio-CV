@@ -97,11 +97,10 @@ export function SkillForm({ categories, initialData }: SkillFormProps) {
               </div>
               
               <div className="space-y-3">
-                <Label htmlFor="name_en" className="text-sm font-medium text-white/70">Nom (Anglais) *</Label>
+                <Label htmlFor="name_en" className="text-sm font-medium text-white/70">Nom (Anglais)</Label>
                 <Input 
                   id="name_en" 
                   name="name_en" 
-                  required 
                   defaultValue={initialData?.name_en || ''}
                   className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto"
                 />

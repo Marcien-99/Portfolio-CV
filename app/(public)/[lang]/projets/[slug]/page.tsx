@@ -6,21 +6,26 @@ import { buttonVariants } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string, lang: string }> }) {
+  const { slug, lang } = await params;
   const project = await getProjectBySlug(slug);
   if (!project) return { title: "Projet non trouvé" };
   
+  const title = lang === 'en' && project.title_en ? project.title_en : project.title_fr;
+  const description = lang === 'en' && project.context_en ? project.context_en : project.context_fr;
+
   return {
-    title: `${project.title_fr} - Marcien B. Nzoussi`,
-    description: project.context_fr,
+    title: `${title} - Marcien B. Nzoussi`,
+    description: description,
   };
 }
 
-export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string, lang: string }> }) {
+  const { slug, lang } = await params;
   const project = await getProjectBySlug(slug);
+  const dict = await getDictionary(lang as any);
 
   if (!project) {
     notFound();
@@ -28,8 +33,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   // Format the status
   const statusConfig = {
-    'completed': { label: "Terminé", variant: "default" as const },
-    'in_progress': { label: "En cours", variant: "secondary" as const },
+    'completed': { label: dict.project.status_completed || "Terminé", variant: "default" as const },
+    'in_progress': { label: dict.project.status_in_progress || "En cours", variant: "secondary" as const },
     'planned': { label: "Planifié", variant: "outline" as const },
   };
   const status = statusConfig[project.status as keyof typeof statusConfig] || statusConfig['completed'];
@@ -41,21 +46,21 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto space-y-8">
             
-            <Link href="/projets" className={buttonVariants({ variant: "ghost", size: "sm", className: "-ml-4 text-gray-600 hover:text-foreground hover:bg-black/5" })}>
+            <Link href={`/${lang}/projets`} className={buttonVariants({ variant: "ghost", size: "sm", className: "-ml-4 text-gray-600 hover:text-foreground hover:bg-black/5" })}>
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour aux projets
+              {dict.project.back_to_projects}
             </Link>
 
             <div className="space-y-6">
               <div className="flex flex-wrap items-center gap-3 mb-2">
                 <Badge variant={status.variant}>{status.label}</Badge>
                 {project.domains.map((domain) => (
-                  <DomainBadge key={domain} domain={domain as DomainType} />
+                  <DomainBadge key={domain} domain={domain as DomainType} dict={dict} />
                 ))}
               </div>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-tight tracking-tight">
-                {project.title_fr}
+                {lang === 'en' && project.title_en ? project.title_en : project.title_fr}
               </h1>
             </div>
 
@@ -71,38 +76,38 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             {/* Contenu détaillé */}
             <div className="bg-[#1A1A1A] border-transparent p-8 sm:p-12 rounded-[2rem] shadow-xl space-y-12">
             
-            {project.context_fr && (
+            {(lang === 'en' && project.context_en ? project.context_en : project.context_fr) && (
               <section className="space-y-4">
                 <h2 className="text-xl font-heading font-semibold text-[#F5F5F7] flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">1</div>
-                  Contexte
+                  {dict.project.context}
                 </h2>
                 <p className="text-gray-300 leading-relaxed">
-                  {project.context_fr}
+                  {lang === 'en' && project.context_en ? project.context_en : project.context_fr}
                 </p>
               </section>
             )}
 
-            {project.approach_fr && (
+            {(lang === 'en' && project.approach_en ? project.approach_en : project.approach_fr) && (
               <section className="space-y-4">
                 <h2 className="text-xl font-heading font-semibold text-[#F5F5F7] flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">2</div>
-                  Démarche
+                  {dict.project.approach}
                 </h2>
                 <p className="text-gray-300 leading-relaxed whitespace-pre-line">
-                  {project.approach_fr}
+                  {lang === 'en' && project.approach_en ? project.approach_en : project.approach_fr}
                 </p>
               </section>
             )}
 
-            {project.result_fr && (
+            {(lang === 'en' && project.result_en ? project.result_en : project.result_fr) && (
               <section className="space-y-4">
                 <h2 className="text-xl font-heading font-semibold text-[#F5F5F7] flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">3</div>
-                  Résultat
+                  {dict.project.results}
                 </h2>
                 <p className="text-gray-300 leading-relaxed whitespace-pre-line">
-                  {project.result_fr}
+                  {lang === 'en' && project.result_en ? project.result_en : project.result_fr}
                 </p>
               </section>
             )}
@@ -111,7 +116,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <section className="space-y-6 pt-8 border-t border-white/5">
                 <h2 className="text-xl font-heading font-semibold text-[#F5F5F7] flex items-center gap-3 mb-6">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">4</div>
-                  Galerie & Preuves visuelles
+                  {lang === 'en' ? "Gallery & Visuals" : "Galerie & Preuves visuelles"}
                 </h2>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -121,13 +126,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                         {/* On utilise une balise img native ici pour éviter les erreurs Next/Image si l'image vient d'une source non configurée (ex: anciens fichiers locaux) */}
                         <img 
                           src={img.url} 
-                          alt={img.caption_fr || `Image ${index + 1}`} 
+                          alt={(lang === 'en' && img.caption_en ? img.caption_en : img.caption_fr) || `Image ${index + 1}`} 
                           className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
                         />
                       </div>
-                      {img.caption_fr && (
+                      {(lang === 'en' && img.caption_en ? img.caption_en : img.caption_fr) && (
                         <p className="text-sm text-gray-400 text-center italic">
-                          {img.caption_fr}
+                          {lang === 'en' && img.caption_en ? img.caption_en : img.caption_fr}
                         </p>
                       )}
                     </div>
@@ -143,7 +148,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">
                     {project.gallery && project.gallery.length > 0 ? '5' : '4'}
                   </div>
-                  Liens associés
+                  {lang === 'en' ? "Associated Links" : "Liens associés"}
                 </h2>
                 
                 <div className="flex flex-wrap gap-4">
@@ -164,7 +169,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                         ) : (
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                         )}
-                        {link.label_fr || "Voir le lien"}
+                        {(lang === 'en' && link.label_en ? link.label_en : link.label_fr) || (isGithub ? dict.project.github : dict.project.view_live)}
                       </a>
                     );
                   })}

@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import { GsapReveal } from "@/components/animations/GsapReveal";
 import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
+import { getDictionary, Locale } from "@/lib/i18n/dictionaries";
+import { getSiteSettings } from "@/lib/actions/settings";
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -52,9 +54,9 @@ export const metadata = {
   description: "Me contacter",
 };
 
-import { getSiteSettings } from "@/lib/actions/settings";
-
-export default async function ContactPage() {
+export default async function ContactPage(props: { params: Promise<{ lang: string }> }) {
+  const { lang } = await props.params;
+  const dict = await getDictionary(lang as Locale);
   const settings = await getSiteSettings();
   
   const email = settings.contact_email || "marcienbalouboula@gmail.com";
@@ -72,15 +74,16 @@ export default async function ContactPage() {
             {/* Colonne Gauche : Titre Dramatique */}
             <div className="w-full md:w-1/2 md:pr-8 md:border-r-2 md:border-primary/20">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light italic text-foreground leading-tight tracking-tight mb-6">
-                Travaillons <br/><span className="font-semibold text-primary not-italic">Ensemble</span>
+                {lang === 'en' ? "Let's work " : "Travaillons "}<br/><span className="font-semibold text-primary not-italic">{lang === 'en' ? "Together" : "Ensemble"}</span>
               </h1>
             </div>
             
             {/* Colonne Droite : Intro */}
             <div className="w-full md:w-1/2 text-lg text-muted-foreground leading-relaxed">
               <p>
-                Vous avez un projet en tête, un besoin en Sûreté de Fonctionnement ou en développement logiciel ? 
-                Laissez-moi un message, et discutons de la façon dont nous pouvons collaborer.
+                {lang === 'en' 
+                  ? "Do you have a project in mind, a need in Reliability Engineering or software development? Leave me a message, and let's discuss how we can collaborate."
+                  : "Vous avez un projet en tête, un besoin en Sûreté de Fonctionnement ou en développement logiciel ? Laissez-moi un message, et discutons de la façon dont nous pouvons collaborer."}
               </p>
             </div>
           </GsapReveal>
@@ -95,7 +98,7 @@ export default async function ContactPage() {
             {/* Infos de contact */}
             <div className="lg:col-span-2 space-y-12">
               <div className="space-y-6">
-                <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">Mes coordonnées</h3>
+                <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">{lang === 'en' ? 'My Details' : 'Mes coordonnées'}</h3>
                 <div className="space-y-4">
                   <a href={`mailto:${email}`} className="flex items-center gap-4 text-gray-300 hover:text-primary transition-colors group">
                     <div className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] flex items-center justify-center group-hover:scale-110 transition-transform border border-white/5 group-hover:border-primary/50">
@@ -119,7 +122,7 @@ export default async function ContactPage() {
               </div>
 
               <div className="space-y-6">
-                <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">Réseaux</h3>
+                <h3 className="font-heading text-2xl text-[#F5F5F7] font-semibold">{lang === 'en' ? 'Socials' : 'Réseaux'}</h3>
                 <div className="flex gap-4">
                   <Link href={linkedin} target="_blank" className="w-12 h-12 rounded-[1rem] bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-gray-300 hover:text-primary hover:border-primary/50 hover:scale-110 transition-all">
                     <LinkedinIcon className="w-5 h-5" />
@@ -140,36 +143,36 @@ export default async function ContactPage() {
                 <form className="space-y-8 relative z-10">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <Label htmlFor="firstName" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Prénom</Label>
+                      <Label htmlFor="firstName" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'First Name' : 'Prénom'}</Label>
                       <Input id="firstName" placeholder="John" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
                     </div>
                     <div className="space-y-3">
-                      <Label htmlFor="lastName" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Nom</Label>
+                      <Label htmlFor="lastName" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'Last Name' : 'Nom'}</Label>
                       <Input id="lastName" placeholder="Doe" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
                     </div>
                   </div>
                   
                   <div className="space-y-3">
-                    <Label htmlFor="email" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Adresse e-mail</Label>
+                    <Label htmlFor="email" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'Email Address' : 'Adresse e-mail'}</Label>
                     <Input id="email" type="email" placeholder="john.doe@exemple.com" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
                   </div>
 
                   <div className="space-y-3">
-                    <Label htmlFor="subject" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Sujet</Label>
-                    <Input id="subject" placeholder="Proposition de collaboration..." className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
+                    <Label htmlFor="subject" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'Subject' : 'Sujet'}</Label>
+                    <Input id="subject" placeholder={lang === 'en' ? "Collaboration proposal..." : "Proposition de collaboration..."} className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
                   </div>
 
                   <div className="space-y-3">
-                    <Label htmlFor="message" className="text-gray-200 text-sm tracking-wide uppercase font-mono">Message</Label>
+                    <Label htmlFor="message" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'Message' : 'Message'}</Label>
                     <Textarea 
                       id="message" 
-                      placeholder="Dites-m'en plus sur votre besoin..." 
+                      placeholder={lang === 'en' ? "Tell me more about your needs..." : "Dites-m'en plus sur votre besoin..."} 
                       className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 min-h-[160px] rounded-xl focus-visible:ring-primary focus-visible:ring-1 resize-none"
                     />
                   </div>
 
                   <Button type="button" size="lg" className="w-full sm:w-auto px-10 h-14 rounded-full text-base font-medium shadow-lg hover:-translate-y-1 transition-transform group">
-                    Envoyer le message
+                    {lang === 'en' ? 'Send Message' : 'Envoyer le message'}
                     <div className="ml-2 w-2 h-2 rounded-full bg-white group-hover:animate-ping" />
                   </Button>
                 </form>

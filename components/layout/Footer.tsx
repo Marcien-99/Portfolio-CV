@@ -44,9 +44,11 @@ function LinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
 
 import { getSiteSettings } from "@/lib/actions/settings";
 import { AdminSecretLink } from "./AdminSecretLink";
+import { getDictionary, Locale } from "@/lib/i18n/dictionaries";
 
-export async function Footer() {
+export async function Footer({ lang = 'fr' }: { lang?: string }) {
   const settings = await getSiteSettings();
+  const dict = await getDictionary(lang as Locale);
   
   const email = settings.contact_email || "marcienbalouboula@gmail.com";
   const linkedin = settings.social_linkedin || "https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215";
@@ -59,7 +61,7 @@ export async function Footer() {
           <p className="font-heading text-lg font-bold">
             <AdminSecretLink>marcien-bn.dev</AdminSecretLink>
           </p>
-          <p className="text-sm text-muted-foreground mt-1">© {new Date().getFullYear()} Marcien BALOUBOULA NZOUSSI. Tous droits réservés.</p>
+          <p className="text-sm text-muted-foreground mt-1">© {new Date().getFullYear()} Marcien BALOUBOULA NZOUSSI. {dict.footer.rights}</p>
         </div>
         <div className="flex items-center gap-4">
           <Link href={linkedin} target="_blank" className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors">

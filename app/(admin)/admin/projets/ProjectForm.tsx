@@ -113,8 +113,8 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label htmlFor="title_en" className="text-sm font-medium text-white/70">Titre du projet (Anglais) *</Label>
-                  <Input id="title_en" name="title_en" required defaultValue={initialData?.title_en || ''} className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
+                  <Label htmlFor="title_en" className="text-sm font-medium text-white/70">Titre du projet (Anglais)</Label>
+                  <Input id="title_en" name="title_en" defaultValue={initialData?.title_en || ''} className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
                   <div className="flex items-center gap-3 mt-3">
                     <input type="checkbox" id="en_auto_generated" name="en_auto_generated" defaultChecked={initialData ? initialData.en_auto_generated : true} className="w-4 h-4 rounded border-white/20 text-primary bg-[#111111] focus:ring-primary/50" />
                     <Label htmlFor="en_auto_generated" className="text-xs font-normal text-white/50 cursor-pointer">Générer descriptions EN auto (DeepL) plus tard</Label>

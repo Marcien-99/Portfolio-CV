@@ -5,6 +5,8 @@ export type DomainType = "surete_fonctionnement" | "electronique" | "automatisme
 
 type DomainBadgeProps = {
   domain: DomainType;
+  label?: string;
+  dict?: any;
 };
 
 const domainConfig = {
@@ -14,14 +16,15 @@ const domainConfig = {
   informatique_ia: { label: "Informatique & IA", icon: Code, color: "bg-black text-white border-transparent [.dark-section_&]:bg-white [.dark-section_&]:text-black" },
 };
 
-export function DomainBadge({ domain }: DomainBadgeProps) {
+export function DomainBadge({ domain, label, dict }: DomainBadgeProps) {
   const config = domainConfig[domain];
   const Icon = config.icon;
+  const displayLabel = label || (dict?.domains?.[domain] || config.label);
 
   return (
     <Badge variant="outline" className={`${config.color} gap-1.5 py-0.5 px-2 rounded-full font-medium transition-colors`}>
       <Icon className="w-3 h-3" />
-      {config.label}
+      {displayLabel}
     </Badge>
   );
 }

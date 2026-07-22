@@ -17,17 +17,42 @@ export async function getCategories() {
   return data
 }
 
-export async function createCategory(data: { name_fr: string; name_en: string; position: number }) {
+export async function createCategory(data: { name_fr: string; name_en: string; position: number; auto_translate?: boolean }) {
   const supabase = await createClient()
-  const { error } = await supabase.from('skill_categories').insert([data])
+  
+  let name_en = data.name_en;
+  if (data.auto_translate) {
+    const { translateText } = await import('@/lib/translate')
+    const translation = await translateText(data.name_fr)
+    if (translation) name_en = translation
+  }
+
+  const { error } = await supabase.from('skill_categories').insert([{
+    name_fr: data.name_fr,
+    name_en: name_en,
+    position: data.position
+  }])
   if (error) return { error: error.message }
   revalidatePath('/', 'layout')
   return { success: true }
 }
 
-export async function updateCategory(id: string, data: { name_fr: string; name_en: string; position: number }) {
+export async function updateCategory(id: string, data: { name_fr: string; name_en: string; position: number; auto_translate?: boolean }) {
   const supabase = await createClient()
-  const { error } = await supabase.from('skill_categories').update(data).eq('id', id)
+  
+  let name_en = data.name_en;
+  if (data.auto_translate) {
+    const { translateText } = await import('@/lib/translate')
+    const translation = await translateText(data.name_fr)
+    if (translation) name_en = translation
+  }
+
+  const { error } = await supabase.from('skill_categories').update({
+    name_fr: data.name_fr,
+    name_en: name_en,
+    position: data.position
+  }).eq('id', id)
+  
   if (error) return { error: error.message }
   revalidatePath('/', 'layout')
   return { success: true }

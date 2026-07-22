@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "navigation": "Navigation",
+    "about": "À Propos",
+    "experiences": "Expériences",
+    "projects": "Projets",
+    "skills": "Compétences",
+    "contact": "Contact",
+    "download_cv": "Télécharger CV"
+  },
+  "domains": {
+    "surete_fonctionnement": "Sûreté de fonctionnement",
+    "electronique": "Électronique",
+    "automatisme": "Automatisme",
+    "informatique_ia": "Informatique & IA"
+  },
+  "hero": {
+    "years_experience": "ans d'expérience",
+    "projects": "Projets",
+    "view_projects": "Voir mes projets",
+    "learn_more": "En savoir plus",
+    "download_cv": "Télécharger CV"
+  },
+  "project": {
+    "status_completed": "Terminé",
+    "status_in_progress": "En cours",
+    "back_to_projects": "Retour aux projets",
+    "context": "Contexte",
+    "approach": "Démarche",
+    "results": "Résultats",
+    "view_live": "Voir le projet",
+    "github": "Code Source"
+  },
+  "footer": {
+    "rights": "Tous droits réservés."
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "back": "Retour"
+  }
+}

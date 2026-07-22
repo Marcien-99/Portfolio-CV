@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 const projectSchema = z.object({
   title_fr: z.string().min(1, "Le titre (FR) est requis"),
-  title_en: z.string().min(1, "Le titre (EN) est requis"),
+  title_en: z.string().optional().or(z.literal('')),
   slug: z.string().min(1, "Le slug est requis"),
   context_fr: z.string().optional(),
   context_en: z.string().optional(),

@@ -1,13 +1,16 @@
 import { getEducations } from "@/lib/api/content";
 import { Badge } from "@/components/ui/badge";
 import { GsapReveal } from "@/components/animations/GsapReveal";
+import { getDictionary, Locale } from "@/lib/i18n/dictionaries";
 
 export const metadata = {
   title: "À propos - Marcien B. Nzoussi",
   description: "Mon parcours et mes diplômes",
 };
 
-export default async function AboutPage() {
+export default async function AboutPage(props: { params: Promise<{ lang: string }> }) {
+  const { lang } = await props.params;
+  const dict = await getDictionary(lang as Locale);
   const educations = await getEducations();
   return (
     <>
@@ -19,7 +22,7 @@ export default async function AboutPage() {
             {/* Colonne Gauche : Titre Dramatique */}
             <div className="lg:col-span-4 flex lg:justify-end">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading italic font-light text-foreground tracking-tight lg:text-right">
-                À propos
+                {dict.nav.about}
               </h1>
             </div>
 
@@ -33,16 +36,20 @@ export default async function AboutPage() {
             {/* Colonne Droite : Texte de présentation */}
             <div className="lg:col-span-7 prose prose-lg dark:prose-invert max-w-none">
               <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light mb-6">
-                Je suis un Ingénieur spécialisé en fiabilité des systèmes, développement logiciel et conception électronique. 
-                Ma formation interdisciplinaire me permet d'aborder la résolution de problèmes techniques complexes avec 
-                une vision globale, allant de la conception matérielle (IoT, systèmes embarqués) jusqu'au développement 
-                d'applications logicielles (Python, Next.js).
+                {lang === 'en' 
+                  ? "I am an Engineer specializing in system reliability, software development, and electronic design. My interdisciplinary background allows me to approach complex technical problem-solving with a comprehensive perspective, ranging from hardware design (IoT, embedded systems) to software application development (Python, Next.js)."
+                  : "Je suis un Ingénieur spécialisé en fiabilité des systèmes, développement logiciel et conception électronique. Ma formation interdisciplinaire me permet d'aborder la résolution de problèmes techniques complexes avec une vision globale, allant de la conception matérielle (IoT, systèmes embarqués) jusqu'au développement d'applications logicielles (Python, Next.js)."}
               </p>
               <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light">
-                J'ai un fort attrait pour la <strong className="text-foreground font-semibold">sûreté de fonctionnement</strong>, visant à garantir 
-                la fiabilité, la disponibilité, la maintenabilité et la sécurité (RAMS) des systèmes industriels. 
-                À travers mes diverses expériences, j'ai développé des méthodes innovantes combinant l'ingénierie 
-                classique et les technologies numériques modernes.
+                {lang === 'en' ? (
+                  <>
+                    I have a strong inclination towards <strong className="text-foreground font-semibold">Reliability, Availability, Maintainability, and Safety (RAMS)</strong>, aiming to ensure the dependability of industrial systems. Through my various experiences, I have developed innovative methods combining classical engineering with modern digital technologies.
+                  </>
+                ) : (
+                  <>
+                    J'ai un fort attrait pour la <strong className="text-foreground font-semibold">sûreté de fonctionnement</strong>, visant à garantir la fiabilité, la disponibilité, la maintenabilité et la sécurité (RAMS) des systèmes industriels. À travers mes diverses expériences, j'ai développé des méthodes innovantes combinant l'ingénierie classique et les technologies numériques modernes.
+                  </>
+                )}
               </p>
             </div>
             
@@ -56,7 +63,7 @@ export default async function AboutPage() {
           <div className="max-w-4xl mx-auto">
             
             <GsapReveal className="mb-16">
-              <h2 className="text-4xl font-heading font-bold text-[#F5F5F7] tracking-tight">Mes Formations</h2>
+              <h2 className="text-4xl font-heading font-bold text-[#F5F5F7] tracking-tight">{lang === 'en' ? 'My Education' : 'Mes Formations'}</h2>
             </GsapReveal>
             
             <GsapReveal delay={0.2} stagger={0.15} className="space-y-6">
@@ -68,9 +75,15 @@ export default async function AboutPage() {
                     </span>
                   </div>
                   <div className="sm:w-2/3">
-                    <h3 className="text-xl sm:text-2xl font-sans font-bold text-[#F5F5F7] mb-2">{edu.title_fr}</h3>
+                    <h3 className="text-xl sm:text-2xl font-sans font-bold text-[#F5F5F7] mb-2">
+                      {lang === 'en' && edu.title_en ? edu.title_en : edu.title_fr}
+                    </h3>
                     <p className="font-sans text-gray-400 text-lg mb-4">{edu.institution}{edu.location ? ` • ${edu.location}` : ""}</p>
-                    {edu.description_fr && <p className="font-sans text-gray-300 leading-relaxed font-light">{edu.description_fr}</p>}
+                    {(lang === 'en' && edu.description_en ? edu.description_en : edu.description_fr) && (
+                      <p className="font-sans text-gray-300 leading-relaxed font-light">
+                        {lang === 'en' && edu.description_en ? edu.description_en : edu.description_fr}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}

@@ -9,9 +9,14 @@ type ProjectCardProps = {
   status: "en_cours" | "termine";
   domains: DomainType[];
   imageUrl?: string;
+  dict?: any;
 };
 
-export function ProjectCard({ title, description, status, domains, imageUrl }: ProjectCardProps) {
+export function ProjectCard({ title, description, status, domains, imageUrl, dict }: ProjectCardProps) {
+  const statusLabel = status === "termine" 
+    ? (dict?.project?.status_completed || "Terminé") 
+    : (dict?.project?.status_in_progress || "En cours");
+
   return (
     <Card className="overflow-hidden bg-secondary/30 border-transparent rounded-[2rem] hover:bg-secondary/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:scale-[1.01] group cursor-pointer flex flex-col h-full">
       <div className="h-48 w-full bg-secondary/50 relative overflow-hidden">
@@ -25,7 +30,7 @@ export function ProjectCard({ title, description, status, domains, imageUrl }: P
         )}
         <div className="absolute top-3 right-3">
           <Badge variant={status === "termine" ? "default" : "secondary"} className="shadow-sm">
-            {status === "termine" ? "Terminé" : "En cours"}
+            {statusLabel}
           </Badge>
         </div>
       </div>
@@ -41,7 +46,7 @@ export function ProjectCard({ title, description, status, domains, imageUrl }: P
       <CardFooter className="pt-0 flex justify-between items-center border-t border-border/10 mt-auto px-6 py-4">
         <div className="flex flex-wrap gap-2">
           {domains.slice(0, 2).map((domain) => (
-            <DomainBadge key={domain} domain={domain} />
+            <DomainBadge key={domain} domain={domain} dict={dict} />
           ))}
           {domains.length > 2 && <span className="text-xs text-muted-foreground [.dark-section_&]:text-gray-300 self-center">+{domains.length - 2}</span>}
         </div>

@@ -8,15 +8,15 @@ import Link from "next/link";
 import { GsapReveal } from "@/components/animations/GsapReveal";
 import { Project } from "@/lib/types";
 
-export default function ProjectsClient({ projects }: { projects: Project[] }) {
+export default function ProjectsClient({ projects, lang, dict }: { projects: Project[], lang: string, dict: any }) {
   const [activeFilter, setActiveFilter] = useState<DomainType | "all">("all");
 
   const domains: { value: DomainType | "all", label: string }[] = [
-    { value: "all", label: "Tous les projets" },
-    { value: "surete_fonctionnement", label: "Sûreté de fonctionnement" },
-    { value: "electronique", label: "Électronique" },
-    { value: "automatisme", label: "Automatisme" },
-    { value: "informatique_ia", label: "Informatique / IA" },
+    { value: "all", label: lang === 'en' ? "All projects" : "Tous les projets" },
+    { value: "surete_fonctionnement", label: dict.domains.surete_fonctionnement },
+    { value: "electronique", label: dict.domains.electronique },
+    { value: "automatisme", label: dict.domains.automatisme },
+    { value: "informatique_ia", label: dict.domains.informatique_ia },
   ];
 
   const filteredProjects = projects.filter(project => {
@@ -33,7 +33,7 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
             
             <div className="lg:col-span-4 flex lg:justify-end">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading italic font-light text-foreground tracking-tight lg:text-right">
-                Projets
+                {dict.nav.projects}
               </h1>
             </div>
 
@@ -44,7 +44,9 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
 
             <div className="lg:col-span-7">
               <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light mb-6">
-                Explorez mes études de cas et réalisations techniques. Ces projets reflètent ma capacité à concevoir des solutions robustes, de l'architecture matérielle à la logique logicielle.
+                {lang === 'en' 
+                  ? "Explore my case studies and technical accomplishments. These projects reflect my ability to design robust solutions, from hardware architecture to software logic." 
+                  : "Explorez mes études de cas et réalisations techniques. Ces projets reflètent ma capacité à concevoir des solutions robustes, de l'architecture matérielle à la logique logicielle."}
               </p>
             </div>
           </GsapReveal>
@@ -75,19 +77,20 @@ export default function ProjectsClient({ projects }: { projects: Project[] }) {
 
             <GsapReveal key={activeFilter} delay={0.2} stagger={0.15} className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredProjects.map((project) => (
-                <Link key={project.id} href={`/projets/${project.slug}`} className="block h-full">
+                <Link key={project.id} href={`/${lang}/projets/${project.slug}`} className="block h-full">
                   <ProjectCard 
-                    title={project.title_fr}
-                    description={project.context_fr || ""}
+                    title={lang === 'en' && project.title_en ? project.title_en : project.title_fr}
+                    description={lang === 'en' && project.context_en ? project.context_en : (project.context_fr || "")}
                     status={project.status as any}
                     domains={project.domains as DomainType[]}
+                    dict={dict}
                   />
                 </Link>
               ))}
               
               {filteredProjects.length === 0 && (
                 <div className="col-span-full py-12 text-center text-muted-foreground">
-                  Aucun projet trouvé pour ce domaine.
+                  {lang === 'en' ? "No projects found for this domain." : "Aucun projet trouvé pour ce domaine."}
                 </div>
               )}
             </GsapReveal>

@@ -7,9 +7,9 @@ import { z } from 'zod'
 // Schéma de validation Zod
 const skillSchema = z.object({
   name_fr: z.string().min(1, "Le nom (FR) est requis"),
-  name_en: z.string().min(1, "Le nom (EN) est requis"),
+  name_en: z.string().optional().or(z.literal('')),
   en_auto_generated: z.boolean().default(true),
-  category_id: z.string().uuid("Catégorie invalide"),
+  category_id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "Catégorie invalide"),
   level: z.coerce.number().min(0).max(100).optional().or(z.literal('')),
   status: z.enum(['draft', 'published']).default('draft'),
   domains: z.array(z.enum(['surete_fonctionnement', 'electronique', 'automatisme', 'informatique_ia'])).default([]),
@@ -33,7 +33,11 @@ export async function createSkill(formData: FormData) {
   const result = skillSchema.safeParse(rawData)
   
   if (!result.success) {
-    return { error: 'Données invalides', details: result.error.flatten().fieldErrors }
+    const fieldErrors = result.error.flatten().fieldErrors;
+    if (fieldErrors.category_id) {
+      fieldErrors.category_id = [`Catégorie invalide. Valeur reçue: "${rawData.category_id}"`];
+    }
+    return { error: 'Données invalides', details: fieldErrors }
   }
 
   const { domains, level, ...skillData } = result.data
@@ -99,7 +103,11 @@ export async function updateSkill(id: string, formData: FormData) {
   const result = skillSchema.safeParse(rawData)
   
   if (!result.success) {
-    return { error: 'Données invalides', details: result.error.flatten().fieldErrors }
+    const fieldErrors = result.error.flatten().fieldErrors;
+    if (fieldErrors.category_id) {
+      fieldErrors.category_id = [`Catégorie invalide. Valeur reçue: "${rawData.category_id}"`];
+    }
+    return { error: 'Données invalides', details: fieldErrors }
   }
 
   const { domains, level, ...skillData } = result.data

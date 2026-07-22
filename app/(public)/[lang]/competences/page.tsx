@@ -3,6 +3,7 @@ import { getSkillCategories, getSkills } from "@/lib/api/content";
 import { SkillCard } from "@/components/profile/SkillCard";
 import { DomainType } from "@/components/profile/DomainBadge";
 import { GsapReveal } from "@/components/animations/GsapReveal";
+import { getDictionary, Locale } from "@/lib/i18n/dictionaries";
 
 export const metadata = {
   title: "Compétences - Marcien B. Nzoussi",
@@ -18,7 +19,10 @@ const mapDomain = (d: ItemDomain): DomainType => {
   }
 };
 
-export default async function SkillsPage() {
+export default async function SkillsPage(props: { params: Promise<{ lang: string }> }) {
+  const { lang } = await props.params;
+  const dict = await getDictionary(lang as Locale);
+
   const skills = await getSkills();
   const skillCategories = await getSkillCategories();
   
@@ -35,7 +39,7 @@ export default async function SkillsPage() {
             {/* Colonne Gauche : Titre Dramatique */}
             <div className="lg:col-span-4 flex lg:justify-end">
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading italic font-light text-foreground tracking-tight lg:text-right">
-                Compétences
+                {dict.nav.skills}
               </h1>
             </div>
 
@@ -49,7 +53,9 @@ export default async function SkillsPage() {
             {/* Colonne Droite : Texte de présentation */}
             <div className="lg:col-span-7">
               <p className="font-sans text-[18px] sm:text-[20px] leading-[1.8] text-gray-700 font-light mb-6">
-                Cartographie de mon expertise technique sous forme de tableau de bord. Les domaines couverts vont de la sûreté de fonctionnement à l'ingénierie logicielle et matérielle.
+                {lang === 'en' 
+                  ? "A map of my technical expertise in the form of a dashboard. Domains covered range from RAMS to hardware and software engineering." 
+                  : "Cartographie de mon expertise technique sous forme de tableau de bord. Les domaines couverts vont de la sûreté de fonctionnement à l'ingénierie logicielle et matérielle."}
               </p>
             </div>
             
@@ -78,7 +84,7 @@ export default async function SkillsPage() {
                   {/* Côté Gauche : Titre Catégorie */}
                   <div className="lg:col-span-4 lg:text-right pt-2">
                     <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-[#F5F5F7]">
-                      {category.name_fr}
+                      {lang === 'en' && category.name_en ? category.name_en : category.name_fr}
                     </h2>
                   </div>
 
@@ -90,7 +96,7 @@ export default async function SkillsPage() {
                           key={skill.id} 
                           className="inline-flex items-center gap-2 rounded-full transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 hover:shadow-lg cursor-default bg-[#1A1A1A] text-[#F5F5F7] px-5 py-2.5 font-medium text-sm border border-white/10 hover:bg-[#252525]"
                         >
-                          {skill.name_fr}
+                          {lang === 'en' && skill.name_en ? skill.name_en : skill.name_fr}
                           {skill.domains.length > 0 && (
                             <span className="w-2 h-2 rounded-full bg-primary/50"></span>
                           )}

@@ -92,11 +92,10 @@ export function EducationForm({ initialData }: { initialData?: any }) {
               </div>
               
               <div className="space-y-3">
-                <Label htmlFor="title_en" className="text-sm font-medium text-white/70">Diplôme / Titre (Anglais) *</Label>
+                <Label htmlFor="title_en" className="text-sm font-medium text-white/70">Diplôme / Titre (Anglais)</Label>
                 <Input 
                   id="title_en" 
                   name="title_en" 
-                  required 
                   defaultValue={initialData?.title_en || ''}
                   className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto"
                 />

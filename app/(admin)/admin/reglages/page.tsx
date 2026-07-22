@@ -10,6 +10,8 @@ export default function ReglagesAdminPage() {
     hero_projects_mode: 'auto',
     hero_projects_manual: '12',
     hero_location: 'PARIS, FR',
+    hero_title_fr: 'Ingénieur **Sûreté de Fonctionnement** & Développement',
+    hero_title_en: '**RAMS** & Software Engineer',
     contact_email: 'contact@marcien-bn.dev',
     contact_phone: '+33 6 00 00 00 00',
     contact_address: 'Paris, France',
@@ -121,6 +123,30 @@ export default function ReglagesAdminPage() {
                     placeholder="Ex: PARIS, FR"
                     className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
                   />
+                </div>
+
+                <div className="space-y-3 md:col-span-2">
+                  <label className="text-sm font-medium text-white/70">Titre Professionnel (FR)</label>
+                  <input 
+                    type="text" 
+                    name="hero_title_fr" 
+                    value={settings.hero_title_fr} 
+                    onChange={handleChange}
+                    className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  />
+                  <p className="text-xs text-white/40">Entourez la partie à mettre en valeur (bleu et gras) par deux astérisques `**`. Ex: `Ingénieur **Sûreté de Fonctionnement** & Développement`</p>
+                </div>
+
+                <div className="space-y-3 md:col-span-2">
+                  <label className="text-sm font-medium text-white/70">Titre Professionnel (EN)</label>
+                  <input 
+                    type="text" 
+                    name="hero_title_en" 
+                    value={settings.hero_title_en} 
+                    onChange={handleChange}
+                    className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  />
+                  <p className="text-xs text-white/40">Entourez la partie à mettre en valeur (bleu et gras) par deux astérisques `**`.</p>
                 </div>
               </div>
 
