@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { ProjectGallery } from "@/components/projects/ProjectGallery";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string, lang: string }> }) {
   const { slug, lang } = await params;
@@ -118,26 +119,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">4</div>
                   {lang === 'en' ? "Gallery & Visuals" : "Galerie & Preuves visuelles"}
                 </h2>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  {project.gallery.map((img: any, index: number) => (
-                    <div key={index} className="space-y-3 group">
-                      <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black/40 border border-white/10 group-hover:border-primary/50 transition-colors shadow-lg">
-                        {/* On utilise une balise img native ici pour éviter les erreurs Next/Image si l'image vient d'une source non configurée (ex: anciens fichiers locaux) */}
-                        <img 
-                          src={img.url} 
-                          alt={(lang === 'en' && img.caption_en ? img.caption_en : img.caption_fr) || `Image ${index + 1}`} 
-                          className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" 
-                        />
-                      </div>
-                      {(lang === 'en' && img.caption_en ? img.caption_en : img.caption_fr) && (
-                        <p className="text-sm text-gray-400 text-center italic">
-                          {lang === 'en' && img.caption_en ? img.caption_en : img.caption_fr}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                <ProjectGallery gallery={project.gallery} lang={lang} />
               </section>
             )}
 
