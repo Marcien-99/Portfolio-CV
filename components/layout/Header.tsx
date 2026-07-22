@@ -13,6 +13,8 @@ import {
   SheetClose
 } from "@/components/ui/sheet";
 
+import { usePathname } from "next/navigation";
+
 interface HeaderProps {
   lang: string;
   dict: any;
@@ -20,6 +22,7 @@ interface HeaderProps {
 
 export function Header({ lang, dict }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,11 +52,11 @@ export function Header({ lang, dict }: HeaderProps) {
           
           {/* === CENTRE : Navigation (Desktop uniquement) === */}
           <nav className="hidden md:flex items-center justify-center gap-6 text-sm font-medium text-foreground/80">
-            <Link href={`/${lang}/a-propos`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.about}</Link>
-            <Link href={`/${lang}/competences`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.skills}</Link>
-            <Link href={`/${lang}/experiences`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.experiences}</Link>
-            <Link href={`/${lang}/projets`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.projects}</Link>
-            <Link href={`/${lang}/contact`} className="hover:text-primary hover:-translate-y-px transition-all">{dict.nav.contact}</Link>
+            <Link href={`/${lang}/a-propos`} className={`transition-all hover:-translate-y-px ${pathname.startsWith(`/${lang}/a-propos`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.about}</Link>
+            <Link href={`/${lang}/competences`} className={`transition-all hover:-translate-y-px ${pathname.startsWith(`/${lang}/competences`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.skills}</Link>
+            <Link href={`/${lang}/experiences`} className={`transition-all hover:-translate-y-px ${pathname.startsWith(`/${lang}/experiences`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.experiences}</Link>
+            <Link href={`/${lang}/projets`} className={`transition-all hover:-translate-y-px ${pathname.startsWith(`/${lang}/projets`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.projects}</Link>
+            <Link href={`/${lang}/contact`} className={`transition-all hover:-translate-y-px ${pathname.startsWith(`/${lang}/contact`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.contact}</Link>
           </nav>
 
           {/* === DROITE : Outils et Mobile Menu === */}
@@ -82,12 +85,12 @@ export function Header({ lang, dict }: HeaderProps) {
                     </SheetTitle>
                   </SheetHeader>
                   <nav className="flex flex-col gap-6 text-lg font-medium text-foreground/80 px-2">
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}`} className="block py-2 hover:text-primary transition-colors">{dict.nav.home}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/a-propos`} className="block py-2 hover:text-primary transition-colors">{dict.nav.about}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/experiences`} className="block py-2 hover:text-primary transition-colors">{dict.nav.experiences}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/competences`} className="block py-2 hover:text-primary transition-colors">{dict.nav.skills}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/projets`} className="block py-2 hover:text-primary transition-colors">{dict.nav.projects}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/contact`} className="block py-2 text-primary hover:opacity-80 transition-opacity font-semibold">{dict.nav.contact}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}`} className={`block py-2 transition-colors ${pathname === `/${lang}` || pathname === `/${lang}/` ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.home}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/a-propos`} className={`block py-2 transition-colors ${pathname.startsWith(`/${lang}/a-propos`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.about}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/experiences`} className={`block py-2 transition-colors ${pathname.startsWith(`/${lang}/experiences`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.experiences}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/competences`} className={`block py-2 transition-colors ${pathname.startsWith(`/${lang}/competences`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.skills}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/projets`} className={`block py-2 transition-colors ${pathname.startsWith(`/${lang}/projets`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.projects}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/contact`} className={`block py-2 transition-colors ${pathname.startsWith(`/${lang}/contact`) ? 'text-primary font-semibold' : 'hover:text-primary'}`}>{dict.nav.contact}</Link>} />
                   </nav>
                 </SheetContent>
               </Sheet>
