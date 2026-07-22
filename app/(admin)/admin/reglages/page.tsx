@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { getSiteSettings, updateSiteSettings } from '@/lib/actions/settings'
-import { Loader2, Save } from 'lucide-react'
+import { updatePassword } from '../login/actions'
+import { Loader2, Save, KeyRound, Eye, EyeOff } from 'lucide-react'
 
 export default function ReglagesAdminPage() {
   const [settings, setSettings] = useState<Record<string, string>>({
@@ -23,6 +24,18 @@ export default function ReglagesAdminPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
+  
+  // States pour la sécurité
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  
+  const [showCurrent, setShowCurrent] = useState(false)
+  const [showNew, setShowNew] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
+
+  const [secMessage, setSecMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
+  const [secSaving, setSecSaving] = useState(false)
 
   useEffect(() => {
     loadSettings()
@@ -51,6 +64,33 @@ export default function ReglagesAdminPage() {
       setMessage({ type: 'success', text: 'Réglages sauvegardés avec succès !' })
     }
     setSaving(false)
+  }
+
+  async function handlePasswordSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (newPassword !== confirmPassword) {
+      setSecMessage({ type: 'error', text: 'Les nouveaux mots de passe ne correspondent pas.' })
+      return
+    }
+    
+    setSecSaving(true)
+    setSecMessage(null)
+
+    const formData = new FormData()
+    formData.append('currentPassword', currentPassword)
+    formData.append('newPassword', newPassword)
+    formData.append('confirmPassword', confirmPassword)
+
+    const result = await updatePassword(formData)
+    if (result.error) {
+      setSecMessage({ type: 'error', text: result.error })
+    } else {
+      setSecMessage({ type: 'success', text: 'Mot de passe mis à jour avec succès !' })
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+    }
+    setSecSaving(false)
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -290,6 +330,101 @@ export default function ReglagesAdminPage() {
             </div>
 
           </form>
+
+          {/* Section Sécurité (Mot de passe) */}
+          <div className="bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl mt-12">
+            <h2 className="text-2xl font-heading font-semibold text-white pb-6 border-b border-white/5 mb-8">Sécurité</h2>
+            
+            {secMessage && (
+              <div className={`p-4 rounded-xl border mb-6 ${secMessage.type === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-green-500/10 border-green-500/20 text-green-400'}`}>
+                {secMessage.text}
+              </div>
+            )}
+
+            <form onSubmit={handlePasswordSubmit} className="space-y-6 max-w-md">
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-white/70">Ancien mot de passe</label>
+                <div className="relative">
+                  <input 
+                    type={showCurrent ? "text" : "password"}
+                    name="currentPassword" 
+                    value={currentPassword} 
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full px-5 py-3 pr-12 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrent(!showCurrent)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors flex items-center justify-center"
+                    title={showCurrent ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                  >
+                    {showCurrent ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-white/70">Nouveau mot de passe</label>
+                <div className="relative">
+                  <input 
+                    type={showNew ? "text" : "password"}
+                    name="newPassword" 
+                    value={newPassword} 
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full px-5 py-3 pr-12 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNew(!showNew)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors flex items-center justify-center"
+                    title={showNew ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                  >
+                    {showNew ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                <p className="text-xs text-white/40">Minimum 6 caractères.</p>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-white/70">Confirmer le nouveau mot de passe</label>
+                <div className="relative">
+                  <input 
+                    type={showConfirm ? "text" : "password"}
+                    name="confirmPassword" 
+                    value={confirmPassword} 
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full px-5 py-3 pr-12 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm(!showConfirm)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors flex items-center justify-center"
+                    title={showConfirm ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                  >
+                    {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={secSaving || !currentPassword || !newPassword || !confirmPassword}
+                className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3 bg-[#111111] border border-white/10 hover:border-primary/50 text-white rounded-xl font-medium transition-all duration-300 disabled:opacity-50"
+              >
+                {secSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4 text-primary" />}
+                Mettre à jour le mot de passe
+              </button>
+            </form>
+          </div>
+
         </div>
       </div>
     </div>

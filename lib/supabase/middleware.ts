@@ -37,9 +37,15 @@ export async function updateSession(request: NextRequest) {
                        !request.nextUrl.pathname.startsWith('/_next') &&
                        !request.nextUrl.pathname.includes('.')
 
-  if (isPublicPage && user) {
+  // Protéger contre le prefetch de Next.js pour éviter une déconnexion en arrière-plan
+  const isPrefetch = request.headers.get('next-router-prefetch') === '1' || request.headers.get('purpose') === 'prefetch'
+
+  if (isPublicPage && !isPrefetch && user) {
     await supabase.auth.signOut()
+    // On efface explicitement les cookies pour être sûr
+    supabaseResponse.cookies.delete('sb-' + process.env.NEXT_PUBLIC_SUPABASE_URL!.split('//')[1].split('.')[0] + '-auth-token')
   }
+
 
   // Protection de toutes les routes sous /admin, sauf /admin/login
   if (request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/admin/login')) {

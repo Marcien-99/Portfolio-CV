@@ -163,18 +163,18 @@ export default function CategoriesAdminPage() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-4 pt-6 border-t border-white/5">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-4 pt-6 border-t border-white/5">
                 <button
                   type="button"
                   onClick={cancelEdit}
-                  className="px-8 py-3 bg-[#111111] text-white/70 rounded-full font-medium hover:text-white hover:bg-[#222222] transition-colors"
+                  className="w-full sm:w-auto px-8 py-3 bg-[#111111] text-white/70 rounded-full font-medium hover:text-white hover:bg-[#222222] transition-colors text-center"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all shadow-lg shadow-primary/20"
+                  className="w-full sm:w-auto flex justify-center items-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all shadow-lg shadow-primary/20"
                 >
                   {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                   Enregistrer

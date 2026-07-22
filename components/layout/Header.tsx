@@ -82,12 +82,12 @@ export function Header({ lang, dict }: HeaderProps) {
                     </SheetTitle>
                   </SheetHeader>
                   <nav className="flex flex-col gap-6 text-lg font-medium text-foreground/80 px-2">
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}`} className="hover:text-primary transition-colors">{dict.nav.home}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/a-propos`} className="hover:text-primary transition-colors">{dict.nav.about}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/experiences`} className="hover:text-primary transition-colors">{dict.nav.experience}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/competences`} className="hover:text-primary transition-colors">{dict.nav.skills}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/projets`} className="hover:text-primary transition-colors">{dict.nav.projects}</Link>} />
-                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/contact`} className="text-primary hover:opacity-80 transition-opacity font-semibold">{dict.nav.contact}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}`} className="block py-2 hover:text-primary transition-colors">{dict.nav.home}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/a-propos`} className="block py-2 hover:text-primary transition-colors">{dict.nav.about}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/experiences`} className="block py-2 hover:text-primary transition-colors">{dict.nav.experiences}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/competences`} className="block py-2 hover:text-primary transition-colors">{dict.nav.skills}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/projets`} className="block py-2 hover:text-primary transition-colors">{dict.nav.projects}</Link>} />
+                    <SheetClose nativeButton={false} render={<Link href={`/${lang}/contact`} className="block py-2 text-primary hover:opacity-80 transition-opacity font-semibold">{dict.nav.contact}</Link>} />
                   </nav>
                 </SheetContent>
               </Sheet>

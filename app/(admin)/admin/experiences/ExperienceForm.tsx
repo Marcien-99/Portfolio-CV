@@ -216,11 +216,11 @@ export function ExperienceForm({ initialData }: { initialData?: any }) {
               </select>
             </div>
 
-            <div className="flex justify-end gap-4 pt-8 mt-8 border-t border-white/5">
-              <Button type="button" variant="ghost" onClick={() => router.push('/admin/experiences')} disabled={isPending} className="px-6 py-3 rounded-full text-white/70 hover:text-white hover:bg-[#222222]">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-4 pt-8 mt-8 border-t border-white/5">
+              <Button type="button" variant="ghost" onClick={() => router.push('/admin/experiences')} disabled={isPending} className="w-full sm:w-auto px-6 py-3 rounded-full text-white/70 hover:text-white hover:bg-[#222222]">
                 Annuler
               </Button>
-              <Button type="submit" disabled={isPending} className="px-8 py-3 bg-primary text-primary-foreground font-medium rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-primary/20">
+              <Button type="submit" disabled={isPending} className="w-full sm:w-auto px-8 py-3 bg-primary text-primary-foreground font-medium rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-primary/20">
                 {isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                 <Save className="mr-2 h-5 w-5" />
                 {isEditing ? 'Enregistrer' : 'Créer l\'expérience'}
