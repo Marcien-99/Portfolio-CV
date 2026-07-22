@@ -38,6 +38,13 @@ export async function createSkill(formData: FormData) {
 
   const { domains, level, ...skillData } = result.data
 
+  // Traduction automatique DeepL
+  if (skillData.en_auto_generated) {
+    const { translateText } = await import('@/lib/translate')
+    const translation = await translateText(skillData.name_fr)
+    if (translation) skillData.name_en = translation
+  }
+
   // Insertion de la compétence
   const { data: newSkill, error: skillError } = await supabase
     .from('skills')
@@ -96,6 +103,13 @@ export async function updateSkill(id: string, formData: FormData) {
   }
 
   const { domains, level, ...skillData } = result.data
+
+  // Traduction automatique DeepL
+  if (skillData.en_auto_generated) {
+    const { translateText } = await import('@/lib/translate')
+    const translation = await translateText(skillData.name_fr)
+    if (translation) skillData.name_en = translation
+  }
 
   // Mise à jour de la compétence
   const { error: skillError } = await supabase

@@ -41,6 +41,17 @@ export async function createEducation(formData: FormData) {
 
   const { end_date, ...eduData } = result.data
 
+  // Traduction automatique DeepL
+  if (eduData.en_auto_generated) {
+    const { translateTexts } = await import('@/lib/translate')
+    const translations = await translateTexts([
+      eduData.title_fr,
+      eduData.description_fr
+    ])
+    if (translations[0]) eduData.title_en = translations[0]
+    if (translations[1]) eduData.description_en = translations[1]
+  }
+
   const { error: eduError } = await supabase
     .from('educations')
     .insert([{
@@ -82,6 +93,17 @@ export async function updateEducation(id: string, formData: FormData) {
   }
 
   const { end_date, ...eduData } = result.data
+
+  // Traduction automatique DeepL
+  if (eduData.en_auto_generated) {
+    const { translateTexts } = await import('@/lib/translate')
+    const translations = await translateTexts([
+      eduData.title_fr,
+      eduData.description_fr
+    ])
+    if (translations[0]) eduData.title_en = translations[0]
+    if (translations[1]) eduData.description_en = translations[1]
+  }
 
   const { error: eduError } = await supabase
     .from('educations')

@@ -43,6 +43,17 @@ export async function createExperience(formData: FormData) {
 
   const { domains, end_date, ...expData } = result.data
 
+  // Traduction automatique DeepL
+  if (expData.en_auto_generated) {
+    const { translateTexts } = await import('@/lib/translate')
+    const translations = await translateTexts([
+      expData.title_fr,
+      expData.description_fr
+    ])
+    if (translations[0]) expData.title_en = translations[0]
+    if (translations[1]) expData.description_en = translations[1]
+  }
+
   const { data: newExp, error: expError } = await supabase
     .from('experiences')
     .insert([{
@@ -95,6 +106,17 @@ export async function updateExperience(id: string, formData: FormData) {
   }
 
   const { domains, end_date, ...expData } = result.data
+
+  // Traduction automatique DeepL
+  if (expData.en_auto_generated) {
+    const { translateTexts } = await import('@/lib/translate')
+    const translations = await translateTexts([
+      expData.title_fr,
+      expData.description_fr
+    ])
+    if (translations[0]) expData.title_en = translations[0]
+    if (translations[1]) expData.description_en = translations[1]
+  }
 
   const { error: expError } = await supabase
     .from('experiences')

@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { Plus, Pencil, CheckCircle2, XCircle, Timer, CheckSquare } from "lucide-react"
+import { Plus, Pencil, CheckCircle2, XCircle, Timer, CheckSquare, Sparkles } from "lucide-react"
 import { toggleProjectVisibility, toggleProjectStatus } from "@/lib/actions/projects"
+import { reviewTranslation } from "@/lib/actions/translations"
 import { DeleteProjectButton } from "./DeleteProjectButton"
 
 export default async function AdminProjectsPage() {
@@ -54,6 +55,7 @@ export default async function AdminProjectsPage() {
                     <th className="px-6 py-5 font-medium tracking-wide">Titre (FR) & Slug</th>
                     <th className="px-6 py-5 font-medium tracking-wide hidden md:table-cell">Domaines</th>
                     <th className="px-6 py-5 font-medium tracking-wide text-center">Avancement</th>
+                    <th className="px-6 py-5 font-medium tracking-wide text-center">Traduction EN</th>
                     <th className="px-6 py-5 font-medium tracking-wide text-center">Visibilité</th>
                     <th className="px-6 py-5 font-medium tracking-wide text-right">Actions</th>
                   </tr>
@@ -100,6 +102,26 @@ export default async function AdminProjectsPage() {
                               )}
                             </button>
                           </form>
+                        </td>
+
+                        {/* Validation de traduction */}
+                        <td className="px-6 py-5 text-center">
+                          {proj.en_auto_generated ? (
+                            <form action={async () => {
+                              'use server'
+                              await reviewTranslation('projects', proj.id)
+                            }}>
+                              <button type="submit" className="inline-flex items-center justify-center group gap-2" title="Marquer comme relu">
+                                <span className="flex items-center text-yellow-500 group-hover:text-yellow-400 transition-colors bg-yellow-500/10 px-2 py-1 rounded-md text-xs">
+                                  <Sparkles size={14} className="mr-1" /> Non relu
+                                </span>
+                              </button>
+                            </form>
+                          ) : (
+                            <span className="flex items-center justify-center text-white/30 text-xs">
+                              Relu
+                            </span>
+                          )}
                         </td>
 
                         {/* Bascule Rapide: Visibilité */}

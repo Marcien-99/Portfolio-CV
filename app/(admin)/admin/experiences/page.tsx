@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { Plus, Pencil, CheckCircle2, XCircle } from "lucide-react"
+import { Plus, Pencil, CheckCircle2, XCircle, Sparkles } from "lucide-react"
 import { toggleExperienceStatus } from "@/lib/actions/experiences"
+import { reviewTranslation } from "@/lib/actions/translations"
 import { DeleteExperienceButton } from "./DeleteExperienceButton"
 
 export default async function AdminExperiencesPage() {
@@ -54,6 +55,7 @@ export default async function AdminExperiencesPage() {
                     <th className="px-6 py-5 font-medium tracking-wide">Poste (FR)</th>
                     <th className="px-6 py-5 font-medium tracking-wide">Entreprise</th>
                     <th className="px-6 py-5 font-medium tracking-wide hidden md:table-cell">Domaines</th>
+                    <th className="px-6 py-5 font-medium tracking-wide text-center">Traduction EN</th>
                     <th className="px-6 py-5 font-medium tracking-wide text-center">Statut</th>
                     <th className="px-6 py-5 font-medium tracking-wide text-right">Actions</th>
                   </tr>
@@ -78,6 +80,24 @@ export default async function AdminExperiencesPage() {
                               </span>
                             ))}
                           </div>
+                        </td>
+                        <td className="px-6 py-5 text-center">
+                          {exp.en_auto_generated ? (
+                            <form action={async () => {
+                              'use server'
+                              await reviewTranslation('experiences', exp.id)
+                            }}>
+                              <button type="submit" className="inline-flex items-center justify-center group gap-2" title="Marquer comme relu">
+                                <span className="flex items-center text-yellow-500 group-hover:text-yellow-400 transition-colors bg-yellow-500/10 px-2 py-1 rounded-md text-xs">
+                                  <Sparkles size={14} className="mr-1" /> Non relu
+                                </span>
+                              </button>
+                            </form>
+                          ) : (
+                            <span className="flex items-center justify-center text-white/30 text-xs">
+                              Relu
+                            </span>
+                          )}
                         </td>
                         <td className="px-6 py-5 text-center">
                           <form action={async () => {

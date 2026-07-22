@@ -47,6 +47,21 @@ export async function createProject(formData: FormData) {
 
   const { domains, ...projectData } = result.data
 
+  // Traduction automatique DeepL
+  if (projectData.en_auto_generated) {
+    const { translateTexts } = await import('@/lib/translate')
+    const translations = await translateTexts([
+      projectData.title_fr,
+      projectData.context_fr,
+      projectData.approach_fr,
+      projectData.result_fr
+    ])
+    if (translations[0]) projectData.title_en = translations[0]
+    if (translations[1]) projectData.context_en = translations[1]
+    if (translations[2]) projectData.approach_en = translations[2]
+    if (translations[3]) projectData.result_en = translations[3]
+  }
+
   const { data: newProject, error: projectError } = await supabase
     .from('projects')
     .insert([projectData])
@@ -151,6 +166,21 @@ export async function updateProject(id: string, formData: FormData) {
   }
 
   const { domains, ...projectData } = result.data
+
+  // Traduction automatique DeepL
+  if (projectData.en_auto_generated) {
+    const { translateTexts } = await import('@/lib/translate')
+    const translations = await translateTexts([
+      projectData.title_fr,
+      projectData.context_fr,
+      projectData.approach_fr,
+      projectData.result_fr
+    ])
+    if (translations[0]) projectData.title_en = translations[0]
+    if (translations[1]) projectData.context_en = translations[1]
+    if (translations[2]) projectData.approach_en = translations[2]
+    if (translations[3]) projectData.result_en = translations[3]
+  }
 
   const { error: projectError } = await supabase
     .from('projects')
