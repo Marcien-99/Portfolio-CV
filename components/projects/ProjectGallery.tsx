@@ -46,7 +46,7 @@ export function ProjectGallery({ gallery, lang }: ProjectGalleryProps) {
           onClick={() => setSelectedImage(null)}
         >
           <button 
-            className="absolute top-4 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white bg-black/50 hover:bg-black/80 rounded-full p-2 transition-colors"
+            className="absolute z-50 top-4 right-4 sm:top-6 sm:right-6 text-white/70 hover:text-white bg-black/50 hover:bg-black/80 rounded-full p-2 transition-all hover:scale-110"
             onClick={(e) => {
               e.stopPropagation();
               setSelectedImage(null);
