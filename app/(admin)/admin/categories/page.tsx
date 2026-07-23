@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { getCategories, createCategory, updateCategory, deleteCategory } from '@/lib/actions/categories'
 import { Loader2, Plus, Save, Trash2, Edit2, X } from 'lucide-react'
 import { ConfirmActionDialog } from '@/components/ui/confirm-action-dialog'
+import { TranslateFieldButton } from '@/components/admin/TranslateFieldButton'
 
 export default function CategoriesAdminPage() {
   const [categories, setCategories] = useState<any[]>([])
@@ -12,7 +13,7 @@ export default function CategoriesAdminPage() {
   const [error, setError] = useState<string | null>(null)
   
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [formData, setFormData] = useState({ name_fr: '', name_en: '', position: 0, auto_translate: true })
+  const [formData, setFormData] = useState({ name_fr: '', name_en: '', position: 0 })
   const [isNew, setIsNew] = useState(false)
 
   useEffect(() => {
@@ -28,14 +29,14 @@ export default function CategoriesAdminPage() {
 
   function handleEdit(cat: any) {
     setEditingId(cat.id)
-    setFormData({ name_fr: cat.name_fr, name_en: cat.name_en, position: cat.position, auto_translate: false })
+    setFormData({ name_fr: cat.name_fr, name_en: cat.name_en, position: cat.position })
     setIsNew(false)
     setError(null)
   }
 
   function handleAddNew() {
     setEditingId('new')
-    setFormData({ name_fr: '', name_en: '', position: categories.length * 10, auto_translate: true })
+    setFormData({ name_fr: '', name_en: '', position: categories.length * 10 })
     setIsNew(true)
     setError(null)
   }
@@ -51,11 +52,22 @@ export default function CategoriesAdminPage() {
     setSaving(true)
     setError(null)
 
+    const name_en_input = document.getElementById('name_en') as HTMLInputElement
+    const currentNameEn = name_en_input ? name_en_input.value : formData.name_en
+    const name_fr_input = document.getElementById('name_fr') as HTMLInputElement
+    const currentNameFr = name_fr_input ? name_fr_input.value : formData.name_fr
+
+    const submitData = {
+      name_fr: currentNameFr,
+      name_en: currentNameEn,
+      position: formData.position
+    }
+
     let result
     if (isNew) {
-      result = await createCategory(formData)
+      result = await createCategory(submitData)
     } else if (editingId) {
-      result = await updateCategory(editingId, formData)
+      result = await updateCategory(editingId, submitData)
     }
 
     if (result?.error) {
@@ -121,8 +133,9 @@ export default function CategoriesAdminPage() {
               
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-white/70">Nom (FR)</label>
+                  <label htmlFor="name_fr" className="text-sm font-medium text-white/70">Nom (FR)</label>
                   <input 
+                    id="name_fr"
                     type="text" 
                     required
                     value={formData.name_fr} 
@@ -131,25 +144,17 @@ export default function CategoriesAdminPage() {
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-white/70">Nom (EN)</label>
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="name_en" className="text-sm font-medium text-white/70">Nom (EN)</label>
+                    <TranslateFieldButton sourceId="name_fr" targetId="name_en" />
+                  </div>
                   <input 
+                    id="name_en"
                     type="text" 
                     value={formData.name_en} 
                     onChange={e => setFormData({...formData, name_en: e.target.value})}
                     className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
                   />
-                  <div className="flex items-center gap-3 mt-3">
-                    <input 
-                      type="checkbox" 
-                      id="auto_translate" 
-                      checked={formData.auto_translate}
-                      onChange={e => setFormData({...formData, auto_translate: e.target.checked})}
-                      className="w-4 h-4 rounded border-white/20 text-primary bg-[#111111] focus:ring-primary/50"
-                    />
-                    <label htmlFor="auto_translate" className="text-xs font-normal text-white/50 cursor-pointer">
-                      Traduction automatique
-                    </label>
-                  </div>
                 </div>
                 <div className="space-y-3 sm:col-span-2">
                   <label className="text-sm font-medium text-white/70">Position (ordre d'affichage)</label>

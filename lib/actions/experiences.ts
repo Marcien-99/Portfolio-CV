@@ -43,16 +43,23 @@ export async function createExperience(formData: FormData) {
 
   const { domains, end_date, ...expData } = result.data
 
-  // Traduction automatique DeepL
-  if (expData.en_auto_generated) {
+  let usedDeepL = false
+  const textsToTranslate: string[] = []
+  
+  if (expData.title_fr && !expData.title_en) textsToTranslate.push(expData.title_fr)
+  if (expData.description_fr && !expData.description_en) textsToTranslate.push(expData.description_fr)
+  
+  if (textsToTranslate.length > 0) {
     const { translateTexts } = await import('@/lib/translate')
-    const translations = await translateTexts([
-      expData.title_fr,
-      expData.description_fr
-    ])
-    if (translations[0]) expData.title_en = translations[0]
-    if (translations[1]) expData.description_en = translations[1]
+    const translations = await translateTexts(textsToTranslate)
+    
+    let i = 0
+    if (expData.title_fr && !expData.title_en) expData.title_en = translations[i++] || ''
+    if (expData.description_fr && !expData.description_en) expData.description_en = translations[i++] || ''
+    usedDeepL = true
   }
+  
+  expData.en_auto_generated = usedDeepL
 
   const { data: newExp, error: expError } = await supabase
     .from('experiences')
@@ -107,16 +114,23 @@ export async function updateExperience(id: string, formData: FormData) {
 
   const { domains, end_date, ...expData } = result.data
 
-  // Traduction automatique DeepL
-  if (expData.en_auto_generated) {
+  let usedDeepL = false
+  const textsToTranslate: string[] = []
+  
+  if (expData.title_fr && !expData.title_en) textsToTranslate.push(expData.title_fr)
+  if (expData.description_fr && !expData.description_en) textsToTranslate.push(expData.description_fr)
+  
+  if (textsToTranslate.length > 0) {
     const { translateTexts } = await import('@/lib/translate')
-    const translations = await translateTexts([
-      expData.title_fr,
-      expData.description_fr
-    ])
-    if (translations[0]) expData.title_en = translations[0]
-    if (translations[1]) expData.description_en = translations[1]
+    const translations = await translateTexts(textsToTranslate)
+    
+    let i = 0
+    if (expData.title_fr && !expData.title_en) expData.title_en = translations[i++] || ''
+    if (expData.description_fr && !expData.description_en) expData.description_en = translations[i++] || ''
+    usedDeepL = true
   }
+  
+  expData.en_auto_generated = usedDeepL
 
   const { error: expError } = await supabase
     .from('experiences')

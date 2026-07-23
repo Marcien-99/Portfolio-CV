@@ -42,12 +42,17 @@ export async function createSkill(formData: FormData) {
 
   const { domains, level, ...skillData } = result.data
 
-  // Traduction automatique DeepL
-  if (skillData.en_auto_generated) {
+  let usedDeepL = false
+  if (skillData.name_fr && !skillData.name_en) {
     const { translateText } = await import('@/lib/translate')
     const translation = await translateText(skillData.name_fr)
-    if (translation) skillData.name_en = translation
+    if (translation) {
+      skillData.name_en = translation
+      usedDeepL = true
+    }
   }
+  
+  skillData.en_auto_generated = usedDeepL
 
   // Insertion de la compétence
   const { data: newSkill, error: skillError } = await supabase
@@ -112,12 +117,17 @@ export async function updateSkill(id: string, formData: FormData) {
 
   const { domains, level, ...skillData } = result.data
 
-  // Traduction automatique DeepL
-  if (skillData.en_auto_generated) {
+  let usedDeepL = false
+  if (skillData.name_fr && !skillData.name_en) {
     const { translateText } = await import('@/lib/translate')
     const translation = await translateText(skillData.name_fr)
-    if (translation) skillData.name_en = translation
+    if (translation) {
+      skillData.name_en = translation
+      usedDeepL = true
+    }
   }
+  
+  skillData.en_auto_generated = usedDeepL
 
   // Mise à jour de la compétence
   const { error: skillError } = await supabase

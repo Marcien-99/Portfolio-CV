@@ -41,16 +41,23 @@ export async function createEducation(formData: FormData) {
 
   const { end_date, ...eduData } = result.data
 
-  // Traduction automatique DeepL
-  if (eduData.en_auto_generated) {
+  let usedDeepL = false
+  const textsToTranslate: string[] = []
+  
+  if (eduData.title_fr && !eduData.title_en) textsToTranslate.push(eduData.title_fr)
+  if (eduData.description_fr && !eduData.description_en) textsToTranslate.push(eduData.description_fr)
+  
+  if (textsToTranslate.length > 0) {
     const { translateTexts } = await import('@/lib/translate')
-    const translations = await translateTexts([
-      eduData.title_fr,
-      eduData.description_fr
-    ])
-    if (translations[0]) eduData.title_en = translations[0]
-    if (translations[1]) eduData.description_en = translations[1]
+    const translations = await translateTexts(textsToTranslate)
+    
+    let i = 0
+    if (eduData.title_fr && !eduData.title_en) eduData.title_en = translations[i++] || ''
+    if (eduData.description_fr && !eduData.description_en) eduData.description_en = translations[i++] || ''
+    usedDeepL = true
   }
+  
+  eduData.en_auto_generated = usedDeepL
 
   const { error: eduError } = await supabase
     .from('educations')
@@ -94,16 +101,23 @@ export async function updateEducation(id: string, formData: FormData) {
 
   const { end_date, ...eduData } = result.data
 
-  // Traduction automatique DeepL
-  if (eduData.en_auto_generated) {
+  let usedDeepL = false
+  const textsToTranslate: string[] = []
+  
+  if (eduData.title_fr && !eduData.title_en) textsToTranslate.push(eduData.title_fr)
+  if (eduData.description_fr && !eduData.description_en) textsToTranslate.push(eduData.description_fr)
+  
+  if (textsToTranslate.length > 0) {
     const { translateTexts } = await import('@/lib/translate')
-    const translations = await translateTexts([
-      eduData.title_fr,
-      eduData.description_fr
-    ])
-    if (translations[0]) eduData.title_en = translations[0]
-    if (translations[1]) eduData.description_en = translations[1]
+    const translations = await translateTexts(textsToTranslate)
+    
+    let i = 0
+    if (eduData.title_fr && !eduData.title_en) eduData.title_en = translations[i++] || ''
+    if (eduData.description_fr && !eduData.description_en) eduData.description_en = translations[i++] || ''
+    usedDeepL = true
   }
+  
+  eduData.en_auto_generated = usedDeepL
 
   const { error: eduError } = await supabase
     .from('educations')

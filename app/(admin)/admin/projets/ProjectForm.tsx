@@ -11,6 +11,8 @@ import { ArrowLeft, Save, Loader2, Trash2, ImageIcon, Link as LinkIcon, Plus } f
 import Link from "next/link"
 import Image from "next/image"
 import { ConfirmActionDialog } from "@/components/ui/confirm-action-dialog"
+import { TranslateFieldButton } from "@/components/admin/TranslateFieldButton"
+import { TranslateAllButton } from "@/components/admin/TranslateAllButton"
 
 export function ProjectForm({ initialData }: { initialData?: any }) {
   const router = useRouter()
@@ -54,6 +56,16 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
 
   const addNewImageBlock = () => setNewImageBlocks([...newImageBlocks, newImageBlocks.length])
   const removeNewImageBlock = (index: number) => setNewImageBlocks(newImageBlocks.filter(i => i !== index))
+
+  const translationPairs = [
+    { sourceId: 'title_fr', targetId: 'title_en' },
+    { sourceId: 'context_fr', targetId: 'context_en' },
+    { sourceId: 'approach_fr', targetId: 'approach_en' },
+    { sourceId: 'result_fr', targetId: 'result_en' },
+    ...linkBlocks.map((_: any, i: number) => ({ sourceId: `link_label_fr_${i}`, targetId: `link_label_en_${i}` })),
+    ...(initialData?.images || []).map((_: any, i: number) => ({ sourceId: `existing_image_caption_fr_${i}`, targetId: `existing_image_caption_en_${i}` })),
+    ...newImageBlocks.map((_: any, i: number) => ({ sourceId: `new_image_caption_fr_${i}`, targetId: `new_image_caption_en_${i}` })),
+  ]
 
   return (
     <div className="flex flex-col min-h-full w-full">
@@ -101,10 +113,13 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
             
             {/* SECTION: Informations de base */}
             <div className="bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
-              <h2 className="text-2xl font-heading font-semibold text-white pb-6 border-b border-white/5 mb-8 flex items-center gap-3">
-                <CheckCircle2 className="w-6 h-6 text-primary" /> 
-                Informations principales
-              </h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-white/5 mb-8 gap-4">
+                <h2 className="text-2xl font-heading font-semibold text-white flex items-center gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-primary" /> 
+                  Informations principales
+                </h2>
+                <TranslateAllButton pairs={translationPairs} />
+              </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
@@ -113,12 +128,11 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label htmlFor="title_en" className="text-sm font-medium text-white/70">Titre du projet (Anglais)</Label>
-                  <Input id="title_en" name="title_en" defaultValue={initialData?.title_en || ''} className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
-                  <div className="flex items-center gap-3 mt-3">
-                    <input type="checkbox" id="en_auto_generated" name="en_auto_generated" defaultChecked={initialData ? initialData.en_auto_generated : true} className="w-4 h-4 rounded border-white/20 text-primary bg-[#111111] focus:ring-primary/50" />
-                    <Label htmlFor="en_auto_generated" className="text-xs font-normal text-white/50 cursor-pointer">Générer descriptions EN auto (DeepL) plus tard</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="title_en" className="text-sm font-medium text-white/70">Titre du projet (Anglais)</Label>
+                    <TranslateFieldButton sourceId="title_fr" targetId="title_en" />
                   </div>
+                  <Input id="title_en" name="title_en" defaultValue={initialData?.title_en || ''} className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
                 </div>
 
                 <div className="space-y-3 md:col-span-2">
@@ -143,8 +157,13 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
                     <div className="flex-1 space-y-4 w-full">
                       <Input name={`link_url_${i}`} defaultValue={link.url} placeholder="https://github.com/..." required className="w-full px-5 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto font-mono" />
                       <div className="grid grid-cols-2 gap-4">
-                        <Input name={`link_label_fr_${i}`} defaultValue={link.label_fr} placeholder="Texte FR (ex: Code source)" required className="w-full px-5 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
-                        <Input name={`link_label_en_${i}`} defaultValue={link.label_en} placeholder="Texte EN (ex: Source code)" className="w-full px-5 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
+                        <Input id={`link_label_fr_${i}`} name={`link_label_fr_${i}`} defaultValue={link.label_fr} placeholder="Texte FR (ex: Code source)" required className="w-full px-5 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
+                        <div className="relative">
+                          <Input id={`link_label_en_${i}`} name={`link_label_en_${i}`} defaultValue={link.label_en} placeholder="Texte EN (ex: Source code)" className="w-full px-5 py-3 pr-10 bg-[#1A1A1A] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto" />
+                          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                            <TranslateFieldButton sourceId={`link_label_fr_${i}`} targetId={`link_label_en_${i}`} />
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <Button type="button" variant="ghost" size="icon" onClick={() => removeLink(i)} className="text-white/30 hover:text-red-400 hover:bg-red-500/10 shrink-0">
@@ -181,9 +200,27 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
               </h2>
               
               <div className="space-y-6">
-                <div className="space-y-3"><Label htmlFor="context_en" className="text-sm font-medium text-white/70">Context & Objective</Label><Textarea id="context_en" name="context_en" rows={3} defaultValue={initialData?.context_en || ''} className="w-full px-5 py-4 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all" /></div>
-                <div className="space-y-3"><Label htmlFor="approach_en" className="text-sm font-medium text-white/70">Approach & Technical Solution</Label><Textarea id="approach_en" name="approach_en" rows={4} defaultValue={initialData?.approach_en || ''} className="w-full px-5 py-4 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all" /></div>
-                <div className="space-y-3"><Label htmlFor="result_en" className="text-sm font-medium text-white/70">Results & Impact</Label><Textarea id="result_en" name="result_en" rows={3} defaultValue={initialData?.result_en || ''} className="w-full px-5 py-4 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all" /></div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="context_en" className="text-sm font-medium text-white/70">Context & Objective</Label>
+                    <TranslateFieldButton sourceId="context_fr" targetId="context_en" />
+                  </div>
+                  <Textarea id="context_en" name="context_en" rows={3} defaultValue={initialData?.context_en || ''} className="w-full px-5 py-4 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="approach_en" className="text-sm font-medium text-white/70">Approach & Technical Solution</Label>
+                    <TranslateFieldButton sourceId="approach_fr" targetId="approach_en" />
+                  </div>
+                  <Textarea id="approach_en" name="approach_en" rows={4} defaultValue={initialData?.approach_en || ''} className="w-full px-5 py-4 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="result_en" className="text-sm font-medium text-white/70">Results & Impact</Label>
+                    <TranslateFieldButton sourceId="result_fr" targetId="result_en" />
+                  </div>
+                  <Textarea id="result_en" name="result_en" rows={3} defaultValue={initialData?.result_en || ''} className="w-full px-5 py-4 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                </div>
               </div>
             </div>
 
@@ -260,8 +297,13 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
                           </div>
                           <input type="hidden" name={`existing_image_id_${i}`} value={img.id} />
                           <div className="space-y-3">
-                            <Input name={`existing_image_caption_fr_${i}`} defaultValue={img.caption_fr} placeholder="Légende FR" className="w-full px-4 py-2 bg-[#1A1A1A] border border-white/10 rounded-lg text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
-                            <Input name={`existing_image_caption_en_${i}`} defaultValue={img.caption_en} placeholder="Légende EN" className="w-full px-4 py-2 bg-[#1A1A1A] border border-white/10 rounded-lg text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                            <Input id={`existing_image_caption_fr_${i}`} name={`existing_image_caption_fr_${i}`} defaultValue={img.caption_fr} placeholder="Légende FR" className="w-full px-4 py-2 bg-[#1A1A1A] border border-white/10 rounded-lg text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                            <div className="relative">
+                              <Input id={`existing_image_caption_en_${i}`} name={`existing_image_caption_en_${i}`} defaultValue={img.caption_en} placeholder="Légende EN" className="w-full px-4 py-2 pr-10 bg-[#1A1A1A] border border-white/10 rounded-lg text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                              <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                                <TranslateFieldButton sourceId={`existing_image_caption_fr_${i}`} targetId={`existing_image_caption_en_${i}`} />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -280,8 +322,13 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
                         <div className="flex-1 space-y-4 w-full">
                           <Input name={`new_image_file_${i}`} type="file" accept="image/*" required className="w-full bg-[#111111] border border-white/10 rounded-xl text-white file:bg-primary file:text-primary-foreground file:border-0 file:rounded-lg file:px-5 file:py-2 file:mr-4 file:cursor-pointer file:hover:bg-primary/90 h-auto p-2" />
                           <div className="grid grid-cols-2 gap-4">
-                            <Input name={`new_image_caption_fr_${i}`} placeholder="Légende FR" required className="w-full px-4 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
-                            <Input name={`new_image_caption_en_${i}`} placeholder="Légende EN" className="w-full px-4 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                            <Input id={`new_image_caption_fr_${i}`} name={`new_image_caption_fr_${i}`} placeholder="Légende FR" required className="w-full px-4 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                            <div className="relative">
+                              <Input id={`new_image_caption_en_${i}`} name={`new_image_caption_en_${i}`} placeholder="Légende EN" className="w-full px-4 py-3 pr-10 bg-[#111111] border border-white/10 rounded-xl text-white text-sm focus:ring-2 focus:ring-primary focus:outline-none transition-all" />
+                              <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                                <TranslateFieldButton sourceId={`new_image_caption_fr_${i}`} targetId={`new_image_caption_en_${i}`} />
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <Button type="button" variant="ghost" size="icon" onClick={() => removeNewImageBlock(blockId)} className="text-white/30 hover:text-red-400 hover:bg-red-500/10 shrink-0 h-12 w-12 rounded-xl">
@@ -298,15 +345,17 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
               </div>
             </div>
 
-            <div className="flex flex-col-reverse sm:flex-row justify-end gap-4 pt-8 sticky bottom-6 z-10">
-              <Button type="button" variant="ghost" onClick={() => router.push('/admin/projets')} disabled={isPending} className="w-full sm:w-auto px-6 py-4 rounded-full text-white/70 hover:text-white hover:bg-[#222222] bg-[#111111] border border-white/5 shadow-xl">
-                Annuler
-              </Button>
-              <Button type="submit" disabled={isPending} className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground font-medium rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-primary/20">
-                {isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                <Save className="mr-2 h-5 w-5" />
-                {isEditing ? 'Enregistrer les modifications' : 'Créer le projet'}
-              </Button>
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-8 mt-4 sticky bottom-6 z-10 p-4 rounded-3xl bg-[#111111]/80 backdrop-blur-xl border border-white/10 shadow-2xl">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-4 w-full sm:w-auto">
+                <Button type="button" variant="ghost" onClick={() => router.push('/admin/projets')} disabled={isPending} className="w-full sm:w-auto px-6 py-4 rounded-full text-white/70 hover:text-white hover:bg-[#222222] bg-[#111111] border border-white/5">
+                  Annuler
+                </Button>
+                <Button type="submit" disabled={isPending} className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground font-medium rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-primary/20">
+                  {isPending && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+                  <Save className="mr-2 h-5 w-5" />
+                  {isEditing ? 'Enregistrer les modifications' : 'Créer le projet'}
+                </Button>
+              </div>
             </div>
           </form>
         </div>

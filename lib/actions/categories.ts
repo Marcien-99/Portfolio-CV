@@ -17,11 +17,11 @@ export async function getCategories() {
   return data
 }
 
-export async function createCategory(data: { name_fr: string; name_en: string; position: number; auto_translate?: boolean }) {
+export async function createCategory(data: { name_fr: string; name_en: string; position: number }) {
   const supabase = await createClient()
   
   let name_en = data.name_en;
-  if (data.auto_translate) {
+  if (data.name_fr && !data.name_en) {
     const { translateText } = await import('@/lib/translate')
     const translation = await translateText(data.name_fr)
     if (translation) name_en = translation
@@ -37,11 +37,11 @@ export async function createCategory(data: { name_fr: string; name_en: string; p
   return { success: true }
 }
 
-export async function updateCategory(id: string, data: { name_fr: string; name_en: string; position: number; auto_translate?: boolean }) {
+export async function updateCategory(id: string, data: { name_fr: string; name_en: string; position: number }) {
   const supabase = await createClient()
   
   let name_en = data.name_en;
-  if (data.auto_translate) {
+  if (data.name_fr && !data.name_en) {
     const { translateText } = await import('@/lib/translate')
     const translation = await translateText(data.name_fr)
     if (translation) name_en = translation

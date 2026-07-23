@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, Save, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { TranslateFieldButton } from "@/components/admin/TranslateFieldButton"
+import { TranslateAllButton } from "@/components/admin/TranslateAllButton"
 
 export function ExperienceForm({ initialData }: { initialData?: any }) {
   const router = useRouter()
@@ -79,6 +81,14 @@ export function ExperienceForm({ initialData }: { initialData?: any }) {
           )}
 
           <form action={handleSubmit} className="bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl space-y-10">
+            <div className="flex justify-end">
+              <TranslateAllButton 
+                pairs={[
+                  { sourceId: 'title_fr', targetId: 'title_en' },
+                  { sourceId: 'description_fr', targetId: 'description_en' }
+                ]} 
+              />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-3">
                 <Label htmlFor="title_fr" className="text-sm font-medium text-white/70">Titre du poste (Français) *</Label>
@@ -92,25 +102,16 @@ export function ExperienceForm({ initialData }: { initialData?: any }) {
               </div>
               
               <div className="space-y-3">
-                <Label htmlFor="title_en" className="text-sm font-medium text-white/70">Titre du poste (Anglais)</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="title_en" className="text-sm font-medium text-white/70">Titre du poste (Anglais)</Label>
+                  <TranslateFieldButton sourceId="title_fr" targetId="title_en" />
+                </div>
                 <Input 
                   id="title_en" 
                   name="title_en" 
                   defaultValue={initialData?.title_en || ''}
                   className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto"
                 />
-                <div className="flex items-center gap-3 mt-3">
-                  <input 
-                    type="checkbox" 
-                    id="en_auto_generated" 
-                    name="en_auto_generated"
-                    defaultChecked={initialData ? initialData.en_auto_generated : true}
-                    className="w-4 h-4 rounded border-white/20 text-primary bg-[#111111] focus:ring-primary/50"
-                  />
-                  <Label htmlFor="en_auto_generated" className="text-xs font-normal text-white/50 cursor-pointer">
-                    Générer descriptions EN auto (DeepL) plus tard
-                  </Label>
-                </div>
               </div>
 
               <div className="space-y-3">
@@ -170,7 +171,10 @@ export function ExperienceForm({ initialData }: { initialData?: any }) {
             </div>
 
             <div className="space-y-3">
-              <Label htmlFor="description_en" className="text-sm font-medium text-white/70">Description (Anglais)</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="description_en" className="text-sm font-medium text-white/70">Description (Anglais)</Label>
+                <TranslateFieldButton sourceId="description_fr" targetId="description_en" />
+              </div>
               <Textarea 
                 id="description_en" 
                 name="description_en" 

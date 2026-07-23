@@ -47,20 +47,27 @@ export async function createProject(formData: FormData) {
 
   const { domains, ...projectData } = result.data
 
-  // Traduction automatique DeepL
-  if (projectData.en_auto_generated) {
+  let usedDeepL = false
+  const textsToTranslate: string[] = []
+  
+  if (projectData.title_fr && !projectData.title_en) textsToTranslate.push(projectData.title_fr)
+  if (projectData.context_fr && !projectData.context_en) textsToTranslate.push(projectData.context_fr)
+  if (projectData.approach_fr && !projectData.approach_en) textsToTranslate.push(projectData.approach_fr)
+  if (projectData.result_fr && !projectData.result_en) textsToTranslate.push(projectData.result_fr)
+  
+  if (textsToTranslate.length > 0) {
     const { translateTexts } = await import('@/lib/translate')
-    const translations = await translateTexts([
-      projectData.title_fr,
-      projectData.context_fr,
-      projectData.approach_fr,
-      projectData.result_fr
-    ])
-    if (translations[0]) projectData.title_en = translations[0]
-    if (translations[1]) projectData.context_en = translations[1]
-    if (translations[2]) projectData.approach_en = translations[2]
-    if (translations[3]) projectData.result_en = translations[3]
+    const translations = await translateTexts(textsToTranslate)
+    
+    let i = 0
+    if (projectData.title_fr && !projectData.title_en) projectData.title_en = translations[i++] || ''
+    if (projectData.context_fr && !projectData.context_en) projectData.context_en = translations[i++] || ''
+    if (projectData.approach_fr && !projectData.approach_en) projectData.approach_en = translations[i++] || ''
+    if (projectData.result_fr && !projectData.result_en) projectData.result_en = translations[i++] || ''
+    usedDeepL = true
   }
+  
+  projectData.en_auto_generated = usedDeepL
 
   const { data: newProject, error: projectError } = await supabase
     .from('projects')
@@ -90,10 +97,11 @@ export async function createProject(formData: FormData) {
     const label_fr = formData.get(`link_label_fr_${i}`) as string
     let label_en = formData.get(`link_label_en_${i}`) as string
     
-    if (projectData.en_auto_generated && !label_en && label_fr) {
+    if (!label_en && label_fr) {
       const { translateTexts } = await import('@/lib/translate')
       const t = await translateTexts([label_fr])
       if (t[0]) label_en = t[0]
+      usedDeepL = true
     }
 
     if (url) {
@@ -114,10 +122,11 @@ export async function createProject(formData: FormData) {
     const caption_fr = formData.get(`new_image_caption_fr_${i}`) as string
     let caption_en = formData.get(`new_image_caption_en_${i}`) as string
 
-    if (projectData.en_auto_generated && !caption_en && caption_fr) {
+    if (!caption_en && caption_fr) {
       const { translateTexts } = await import('@/lib/translate')
       const t = await translateTexts([caption_fr])
       if (t[0]) caption_en = t[0]
+      usedDeepL = true
     }
 
     if (file && file.size > 0) {
@@ -145,6 +154,10 @@ export async function createProject(formData: FormData) {
         return { error: "Erreur lors de l'upload de l'image. Avez-vous configuré les permissions Storage (RLS) ?" }
       }
     }
+  }
+
+  if (usedDeepL && !projectData.en_auto_generated) {
+    await supabase.from('projects').update({ en_auto_generated: true }).eq('id', newProject.id)
   }
 
   revalidatePath('/projets')
@@ -180,20 +193,27 @@ export async function updateProject(id: string, formData: FormData) {
 
   const { domains, ...projectData } = result.data
 
-  // Traduction automatique DeepL
-  if (projectData.en_auto_generated) {
+  let usedDeepL = false
+  const textsToTranslate: string[] = []
+  
+  if (projectData.title_fr && !projectData.title_en) textsToTranslate.push(projectData.title_fr)
+  if (projectData.context_fr && !projectData.context_en) textsToTranslate.push(projectData.context_fr)
+  if (projectData.approach_fr && !projectData.approach_en) textsToTranslate.push(projectData.approach_fr)
+  if (projectData.result_fr && !projectData.result_en) textsToTranslate.push(projectData.result_fr)
+  
+  if (textsToTranslate.length > 0) {
     const { translateTexts } = await import('@/lib/translate')
-    const translations = await translateTexts([
-      projectData.title_fr,
-      projectData.context_fr,
-      projectData.approach_fr,
-      projectData.result_fr
-    ])
-    if (translations[0]) projectData.title_en = translations[0]
-    if (translations[1]) projectData.context_en = translations[1]
-    if (translations[2]) projectData.approach_en = translations[2]
-    if (translations[3]) projectData.result_en = translations[3]
+    const translations = await translateTexts(textsToTranslate)
+    
+    let i = 0
+    if (projectData.title_fr && !projectData.title_en) projectData.title_en = translations[i++] || ''
+    if (projectData.context_fr && !projectData.context_en) projectData.context_en = translations[i++] || ''
+    if (projectData.approach_fr && !projectData.approach_en) projectData.approach_en = translations[i++] || ''
+    if (projectData.result_fr && !projectData.result_en) projectData.result_en = translations[i++] || ''
+    usedDeepL = true
   }
+  
+  projectData.en_auto_generated = usedDeepL
 
   const { error: projectError } = await supabase
     .from('projects')
@@ -227,10 +247,11 @@ export async function updateProject(id: string, formData: FormData) {
     const label_fr = formData.get(`link_label_fr_${i}`) as string
     let label_en = formData.get(`link_label_en_${i}`) as string
     
-    if (projectData.en_auto_generated && !label_en && label_fr) {
+    if (!label_en && label_fr) {
       const { translateTexts } = await import('@/lib/translate')
       const t = await translateTexts([label_fr])
       if (t[0]) label_en = t[0]
+      usedDeepL = true
     }
 
     if (url) {
@@ -251,10 +272,11 @@ export async function updateProject(id: string, formData: FormData) {
     const caption_fr = formData.get(`existing_image_caption_fr_${i}`) as string
     let caption_en = formData.get(`existing_image_caption_en_${i}`) as string
     
-    if (projectData.en_auto_generated && !caption_en && caption_fr) {
+    if (!caption_en && caption_fr) {
       const { translateTexts } = await import('@/lib/translate')
       const t = await translateTexts([caption_fr])
       if (t[0]) caption_en = t[0]
+      usedDeepL = true
     }
 
     await supabase.from('project_images')
@@ -269,10 +291,11 @@ export async function updateProject(id: string, formData: FormData) {
     const caption_fr = formData.get(`new_image_caption_fr_${i}`) as string
     let caption_en = formData.get(`new_image_caption_en_${i}`) as string
 
-    if (projectData.en_auto_generated && !caption_en && caption_fr) {
+    if (!caption_en && caption_fr) {
       const { translateTexts } = await import('@/lib/translate')
       const t = await translateTexts([caption_fr])
       if (t[0]) caption_en = t[0]
+      usedDeepL = true
     }
 
     if (file && file.size > 0) {
@@ -304,6 +327,10 @@ export async function updateProject(id: string, formData: FormData) {
         return { error: "Erreur lors de l'upload de l'image. Avez-vous configuré les permissions Storage (RLS) ?" }
       }
     }
+  }
+
+  if (usedDeepL && !projectData.en_auto_generated) {
+    await supabase.from('projects').update({ en_auto_generated: true }).eq('id', id)
   }
 
   revalidatePath('/projets')

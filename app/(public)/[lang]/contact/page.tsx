@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { ContactForm } from "@/components/public/ContactForm";
 import { GsapReveal } from "@/components/animations/GsapReveal";
 import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
@@ -140,42 +137,7 @@ export default async function ContactPage(props: { params: Promise<{ lang: strin
                 {/* Petit éclat de lumière design dans le coin */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none" />
                 
-                <form className="space-y-8 relative z-10">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    <div className="space-y-3">
-                      <Label htmlFor="firstName" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'First Name' : 'Prénom'}</Label>
-                      <Input id="firstName" placeholder="John" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
-                    </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="lastName" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'Last Name' : 'Nom'}</Label>
-                      <Input id="lastName" placeholder="Doe" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <Label htmlFor="email" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'Email Address' : 'Adresse e-mail'}</Label>
-                    <Input id="email" type="email" placeholder="john.doe@exemple.com" className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label htmlFor="subject" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'Subject' : 'Sujet'}</Label>
-                    <Input id="subject" placeholder={lang === 'en' ? "Collaboration proposal..." : "Proposition de collaboration..."} className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 h-12 rounded-xl focus-visible:ring-primary focus-visible:ring-1" />
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label htmlFor="message" className="text-gray-200 text-sm tracking-wide uppercase font-mono">{lang === 'en' ? 'Message' : 'Message'}</Label>
-                    <Textarea 
-                      id="message" 
-                      placeholder={lang === 'en' ? "Tell me more about your needs..." : "Dites-m'en plus sur votre besoin..."} 
-                      className="bg-[#222] border-none text-[#F5F5F7] placeholder:text-gray-500 min-h-[160px] rounded-xl focus-visible:ring-primary focus-visible:ring-1 resize-none"
-                    />
-                  </div>
-
-                  <Button type="button" size="lg" className="w-full sm:w-auto px-10 h-14 rounded-full text-base font-medium shadow-lg hover:-translate-y-1 transition-transform group">
-                    {lang === 'en' ? 'Send Message' : 'Envoyer le message'}
-                    <div className="ml-2 w-2 h-2 rounded-full bg-white group-hover:animate-ping" />
-                  </Button>
-                </form>
+                <ContactForm lang={lang} />
               </div>
             </div>
 
