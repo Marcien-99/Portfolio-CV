@@ -60,7 +60,7 @@ export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'stand
   const selectedProjects = projects.filter(p => items.some(i => i.item_type === 'project' && i.item_id === p.id))
   const orderedProjects = selectedProjects.sort((a, b) => getPosition('project', a.id) - getPosition('project', b.id)).map(p => ({
     title: lang === 'en' && p.title_en ? p.title_en : p.title_fr,
-    description: lang === 'en' && p.short_description_en ? p.short_description_en : p.short_description_fr,
+    description: lang === 'en' && p.context_en ? p.context_en : p.context_fr,
   }))
 
   const fullName = "Marcien BALOUBOULA NZOUSSI"

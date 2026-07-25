@@ -20,7 +20,7 @@ function getLocale(request: NextRequest): string {
   return defaultLocale
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const supabaseResponse = await updateSession(request)
 
   if (supabaseResponse.headers.get('location')) {

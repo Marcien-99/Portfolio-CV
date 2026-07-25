@@ -17,7 +17,7 @@ export async function GET(
     const data = await getCvPdfData(lang, profileId, origin);
     
     // We render the React PDF component to a Node.js Stream
-    const stream = await renderToStream(React.createElement(StandardTemplate, { data }));
+    const stream = await renderToStream(React.createElement(StandardTemplate, { data }) as any);
     
     // Convert the stream to a Web ReadableStream
     const readableStream = new ReadableStream({
