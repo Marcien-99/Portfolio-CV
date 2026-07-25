@@ -43,7 +43,13 @@ export async function middleware(request: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   )
 
-  if (pathnameHasLocale) return supabaseResponse
+  if (pathnameHasLocale) {
+    const matchedLocale = locales.find((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`)
+    if (matchedLocale && request.cookies.get('NEXT_LOCALE')?.value !== matchedLocale) {
+      supabaseResponse.cookies.set('NEXT_LOCALE', matchedLocale, { path: '/', maxAge: 31536000 })
+    }
+    return supabaseResponse
+  }
 
   const locale = getLocale(request)
   request.nextUrl.pathname = `/${locale}${pathname === '/' ? '' : pathname}`

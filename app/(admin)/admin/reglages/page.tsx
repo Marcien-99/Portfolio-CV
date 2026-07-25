@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { getSiteSettings, updateSiteSettings } from '@/lib/actions/settings'
 import { updatePassword } from '../login/actions'
 import { Loader2, Save, KeyRound, Eye, EyeOff } from 'lucide-react'
+import { TranslateFieldButton } from '@/components/admin/TranslateFieldButton'
 
 export default function ReglagesAdminPage() {
   const [settings, setSettings] = useState<Record<string, string>>({
@@ -19,7 +20,9 @@ export default function ReglagesAdminPage() {
     social_linkedin: 'https://linkedin.com/in/',
     social_github: 'https://github.com/',
     seo_title: 'Marcien B. Nzoussi - Portfolio',
-    seo_description: 'Ingénieur Sûreté de Fonctionnement & Développement'
+    seo_description: 'Ingénieur Sûreté de Fonctionnement & Développement',
+    interests_fr: '',
+    interests_en: ''
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -98,6 +101,7 @@ export default function ReglagesAdminPage() {
       ...prev,
       [e.target.name]: e.target.value
     }))
+    if (message) setMessage(null)
   }
 
   if (loading) {
@@ -287,6 +291,44 @@ export default function ReglagesAdminPage() {
               </div>
             </div>
 
+            {/* Section Centres d'intérêt (CV) */}
+            <div className="bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
+              <h2 className="text-2xl font-heading font-semibold text-white pb-6 border-b border-white/5 mb-8">Centres d'intérêt (CV)</h2>
+              
+              <div className="grid gap-8">
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-white/70">Centres d'intérêt (FR)</label>
+                  <input 
+                    type="text" 
+                    id="interests_fr"
+                    name="interests_fr" 
+                    value={settings.interests_fr} 
+                    onChange={handleChange}
+                    placeholder="Ex: Intelligence Artificielle, Échecs, Randonnée"
+                    className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  />
+                  <p className="text-xs text-white/40">Séparés par des virgules. Apparaîtra sur la version française du CV PDF.</p>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium text-white/70">Centres d'intérêt (EN)</label>
+                    <TranslateFieldButton sourceId="interests_fr" targetId="interests_en" />
+                  </div>
+                  <input 
+                    type="text" 
+                    id="interests_en"
+                    name="interests_en" 
+                    value={settings.interests_en} 
+                    onChange={handleChange}
+                    placeholder="Ex: Artificial Intelligence, Chess, Hiking"
+                    className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  />
+                  <p className="text-xs text-white/40">Séparés par des virgules. Apparaîtra sur la version anglaise du CV PDF.</p>
+                </div>
+              </div>
+            </div>
+
             {/* Section SEO */}
             <div className="bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
               <h2 className="text-2xl font-heading font-semibold text-white pb-6 border-b border-white/5 mb-8">Référencement (SEO)</h2>
@@ -349,7 +391,7 @@ export default function ReglagesAdminPage() {
                     type={showCurrent ? "text" : "password"}
                     name="currentPassword" 
                     value={currentPassword} 
-                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    onChange={(e) => { setCurrentPassword(e.target.value); if (secMessage) setSecMessage(null); }}
                     placeholder="••••••••"
                     className="w-full px-5 py-3 pr-12 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
                     required
@@ -372,7 +414,7 @@ export default function ReglagesAdminPage() {
                     type={showNew ? "text" : "password"}
                     name="newPassword" 
                     value={newPassword} 
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={(e) => { setNewPassword(e.target.value); if (secMessage) setSecMessage(null); }}
                     placeholder="••••••••"
                     className="w-full px-5 py-3 pr-12 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
                     required
@@ -397,7 +439,7 @@ export default function ReglagesAdminPage() {
                     type={showConfirm ? "text" : "password"}
                     name="confirmPassword" 
                     value={confirmPassword} 
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e) => { setConfirmPassword(e.target.value); if (secMessage) setSecMessage(null); }}
                     placeholder="••••••••"
                     className="w-full px-5 py-3 pr-12 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
                     required

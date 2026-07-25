@@ -84,6 +84,9 @@ export default function ProjectsClient({ projects, lang, dict }: { projects: Pro
                     status={project.status as any}
                     domains={project.domains as DomainType[]}
                     dict={dict}
+                    startDate={project.start_date}
+                    endDate={project.end_date}
+                    showDates={project.show_dates}
                   />
                 </Link>
               ))}

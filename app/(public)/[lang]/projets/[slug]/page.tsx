@@ -63,6 +63,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-tight tracking-tight">
                 {lang === 'en' && project.title_en ? project.title_en : project.title_fr}
               </h1>
+
+              {project.show_dates && project.start_date && (
+                <div className="flex items-center gap-2.5 text-primary mt-6 font-sans font-bold text-lg sm:text-xl">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span>{project.start_date.substring(0, 7)} — {project.end_date ? project.end_date.substring(0, 7) : (lang === 'en' ? "Present" : "Présent")}</span>
+                </div>
+              )}
             </div>
 
           </div>

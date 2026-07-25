@@ -17,7 +17,18 @@ const projectSchema = z.object({
   en_auto_generated: z.boolean().default(true),
   status: z.enum(['en_cours', 'termine']).default('en_cours'),
   visibility: z.enum(['draft', 'published']).default('draft'),
+  start_date: z.string().optional().nullable(),
+  end_date: z.string().optional().nullable(),
+  show_dates: z.boolean().default(true),
   domains: z.array(z.enum(['surete_fonctionnement', 'electronique', 'automatisme', 'informatique_ia'])).default([]),
+}).refine((data) => {
+  if (data.status === 'termine' && !data.end_date) {
+    return false;
+  }
+  return true;
+}, {
+  message: "La date de fin est obligatoire pour un projet terminé.",
+  path: ["end_date"]
 })
 
 export async function createProject(formData: FormData) {
@@ -36,6 +47,9 @@ export async function createProject(formData: FormData) {
     en_auto_generated: formData.get('en_auto_generated') === 'on' || formData.get('en_auto_generated') === 'true',
     status: formData.get('status'),
     visibility: formData.get('visibility'),
+    start_date: formData.get('start_date') || null,
+    end_date: formData.get('end_date') || null,
+    show_dates: formData.get('show_dates') === 'on' || formData.get('show_dates') === 'true',
     domains: formData.getAll('domains'),
   }
 
@@ -182,6 +196,9 @@ export async function updateProject(id: string, formData: FormData) {
     en_auto_generated: formData.get('en_auto_generated') === 'on' || formData.get('en_auto_generated') === 'true',
     status: formData.get('status'),
     visibility: formData.get('visibility'),
+    start_date: formData.get('start_date') || null,
+    end_date: formData.get('end_date') || null,
+    show_dates: formData.get('show_dates') === 'on' || formData.get('show_dates') === 'true',
     domains: formData.getAll('domains'),
   }
 

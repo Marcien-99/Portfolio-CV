@@ -1,6 +1,6 @@
 "use client";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Download, Menu } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -63,11 +63,11 @@ export function Header({ lang, dict }: HeaderProps) {
           <div className="flex justify-end items-center gap-3">
             <LanguageSelector />
             
-            <Button size="sm" className="rounded-full gap-2 font-medium">
+            <a href={`/api/cv/standard/${lang}`} download={`CV_Marcien_${lang.toUpperCase()}.pdf`} className={`${buttonVariants({ size: "sm" })} rounded-full gap-2 font-medium`}>
               <Download className="w-4 h-4 hidden sm:block" />
               <span className="hidden sm:inline">CV</span>
               <Download className="w-4 h-4 sm:hidden" />
-            </Button>
+            </a>
 
             {/* Menu Hamburger (Mobile) */}
             <div className="flex md:hidden">

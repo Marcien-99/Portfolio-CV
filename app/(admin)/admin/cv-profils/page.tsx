@@ -8,16 +8,14 @@ import { Loader2, Save, FileText, CheckSquare, Square } from 'lucide-react'
 export default function CvProfilesAdminPage() {
   const [profile, setProfile] = useState<any>(null)
   const [items, setItems] = useState<any[]>([])
-  const [availableData, setAvailableData] = useState<any>({
-    skill: [],
-    experience: [],
-    education: [],
-    project: []
-  })
+  const [availableData, setAvailableData] = useState<{
+    skill: any[], experience: any[], education: any[], project: any[]
+  }>({ skill: [], experience: [], education: [], project: [] })
   
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null)
 
   useEffect(() => {
     loadData()
@@ -59,6 +57,7 @@ export default function CvProfilesAdminPage() {
         return [...prev, { item_type: type, item_id: id }]
       }
     })
+    if (message) setMessage(null)
   }
 
   function isSelected(type: string, id: string) {
@@ -76,8 +75,13 @@ export default function CvProfilesAdminPage() {
     }))
 
     const result = await updateProfileItems(profile.id, cleanItems)
-    if (result.error) setError(result.error)
-    else alert('Profil sauvegardé avec succès !')
+    if (result.error) {
+      setError(result.error)
+      setMessage(null)
+    } else {
+      setError(null)
+      setMessage({ type: 'success', text: 'Profil sauvegardé avec succès !' })
+    }
     
     setSaving(false)
   }
@@ -149,6 +153,11 @@ export default function CvProfilesAdminPage() {
           {error && (
             <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500">
               {error}
+            </div>
+          )}
+          {message && (
+            <div className={`p-4 rounded-xl border ${message.type === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-green-500/10 border-green-500/20 text-green-400'}`}>
+              {message.text}
             </div>
           )}
 

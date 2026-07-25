@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { Skill, SkillCategory, Experience, Education, Project, ItemDomain } from '@/lib/types'
 
 export async function getSkillCategories(): Promise<SkillCategory[]> {
@@ -17,16 +17,19 @@ export async function getSkillCategories(): Promise<SkillCategory[]> {
   return data
 }
 
-export async function getSkills(domain?: ItemDomain): Promise<Skill[]> {
-  const supabase = await createClient()
+export async function getSkills(domain?: ItemDomain, includeDrafts: boolean = false): Promise<Skill[]> {
+  const supabase = includeDrafts ? await createAdminClient() : await createClient()
   let query = supabase
     .from('skills')
     .select(`
       *,
       skill_domains (domain)
     `)
-    .eq('status', 'published')
     .order('position')
+    
+  if (!includeDrafts) {
+    query = query.eq('status', 'published')
+  }
     
   if (domain) {
     // Supabase filtering on joined tables can be tricky. 
@@ -49,16 +52,19 @@ export async function getSkills(domain?: ItemDomain): Promise<Skill[]> {
   }))
 }
 
-export async function getExperiences(domain?: ItemDomain): Promise<Experience[]> {
-  const supabase = await createClient()
+export async function getExperiences(domain?: ItemDomain, includeDrafts: boolean = false): Promise<Experience[]> {
+  const supabase = includeDrafts ? await createAdminClient() : await createClient()
   let query = supabase
     .from('experiences')
     .select(`
       *,
       experience_domains (domain)
     `)
-    .eq('status', 'published')
     .order('position')
+    
+  if (!includeDrafts) {
+    query = query.eq('status', 'published')
+  }
     
   if (domain) {
     query = query.eq('experience_domains.domain', domain).not('experience_domains', 'is', null)
@@ -77,13 +83,18 @@ export async function getExperiences(domain?: ItemDomain): Promise<Experience[]>
   }))
 }
 
-export async function getEducations(): Promise<Education[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
+export async function getEducations(includeDrafts: boolean = false): Promise<Education[]> {
+  const supabase = includeDrafts ? await createAdminClient() : await createClient()
+  let query = supabase
     .from('educations')
     .select('*')
-    .eq('status', 'published')
     .order('position')
+    
+  if (!includeDrafts) {
+    query = query.eq('status', 'published')
+  }
+
+  const { data, error } = await query
 
   if (error) {
     console.error('Error fetching educations:', error)
@@ -96,8 +107,8 @@ export async function getEducations(): Promise<Education[]> {
   }))
 }
 
-export async function getProjects(domain?: ItemDomain, status?: string): Promise<Project[]> {
-  const supabase = await createClient()
+export async function getProjects(domain?: ItemDomain, status?: string, includeDrafts: boolean = false): Promise<Project[]> {
+  const supabase = includeDrafts ? await createAdminClient() : await createClient()
   let query = supabase
     .from('projects')
     .select(`
@@ -106,8 +117,11 @@ export async function getProjects(domain?: ItemDomain, status?: string): Promise
       project_images (url, position, caption_fr, caption_en),
       project_links (url, label_fr, label_en, position)
     `)
-    .eq('visibility', 'published')
     .order('position')
+    
+  if (!includeDrafts) {
+    query = query.eq('visibility', 'published')
+  }
     
   if (domain) {
     query = query.eq('project_domains.domain', domain).not('project_domains', 'is', null)

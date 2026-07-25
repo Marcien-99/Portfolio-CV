@@ -23,12 +23,23 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
   
   const [linkBlocks, setLinkBlocks] = useState<any[]>(initialData?.links || [])
   const [newImageBlocks, setNewImageBlocks] = useState<number[]>([])
+  const [showValidationDialog, setShowValidationDialog] = useState(false)
+  const [projectStatus, setProjectStatus] = useState(initialData?.status || 'en_cours')
+  const [endDate, setEndDate] = useState(initialData?.end_date || '')
 
   const isEditing = !!initialData
 
   async function handleSubmit(formData: FormData) {
     setError(null)
     setErrorDetails(null)
+
+    const formDataStatus = formData.get('status') as string || projectStatus
+    const formDataEndDate = formData.get('end_date') as string || endDate
+
+    if (formDataStatus === 'termine' && !formDataEndDate) {
+      setShowValidationDialog(true)
+      return
+    }
     
     startTransition(async () => {
       const result = isEditing 
@@ -139,6 +150,44 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
                   <Label htmlFor="slug" className="text-sm font-medium text-white/70">Slug (URL unique, ex: mon-super-projet) *</Label>
                   <Input id="slug" name="slug" required defaultValue={initialData?.slug || ''} className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto font-mono" placeholder="nom-du-projet" />
                 </div>
+
+                <div className="space-y-3">
+                  <Label htmlFor="start_date" className="text-sm font-medium text-white/70">Date de début (Optionnel)</Label>
+                  <Input 
+                    type="date"
+                    id="start_date" 
+                    name="start_date" 
+                    defaultValue={initialData?.start_date || ''} 
+                    className="dark-theme-date w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto cursor-pointer" 
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="end_date" className="text-sm font-medium text-white/70">Date de fin (Laisser vide si en cours)</Label>
+                  <Input 
+                    type="date"
+                    id="end_date" 
+                    name="end_date" 
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="dark-theme-date w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all h-auto cursor-pointer" 
+                  />
+                </div>
+
+                <div className="space-y-3 md:col-span-2 p-5 bg-[#111111] border border-white/10 rounded-xl">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="show_dates" 
+                      defaultChecked={initialData ? initialData.show_dates : true} 
+                      className="w-5 h-5 rounded border-white/20 text-primary bg-transparent focus:ring-primary/50" 
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-base font-medium text-white">Afficher la période publiquement</span>
+                      <span className="text-sm text-white/50">Si décoché, les dates ne s'afficheront ni sur le site, ni sur le CV.</span>
+                    </div>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -246,7 +295,13 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
               <div className="bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-8 md:p-10 shadow-2xl space-y-8">
                 <div className="space-y-4">
                   <Label htmlFor="status" className="text-lg font-heading font-semibold text-white block pb-2">Avancement du projet</Label>
-                  <select id="status" name="status" defaultValue={initialData?.status || 'en_cours'} className="w-full px-5 py-4 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all">
+                  <select 
+                    id="status" 
+                    name="status" 
+                    value={projectStatus} 
+                    onChange={(e) => setProjectStatus(e.target.value)}
+                    className="w-full px-5 py-4 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  >
                     <option value="en_cours">En cours de réalisation</option>
                     <option value="termine">Projet terminé</option>
                   </select>
@@ -360,6 +415,37 @@ export function ProjectForm({ initialData }: { initialData?: any }) {
           </form>
         </div>
       </div>
+
+      {/* Modal de validation Date de Fin */}
+      {showValidationDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+            onClick={() => setShowValidationDialog(false)}
+          />
+          <div className="bg-[#1A1A1A] border border-white/10 shadow-2xl rounded-[2rem] w-full max-w-md p-8 relative z-50 animate-in fade-in zoom-in-95 duration-200">
+            <h2 className="font-heading text-2xl font-bold tracking-tight text-white mb-2">
+              Action requise
+            </h2>
+            <p className="text-white/70 text-sm font-sans mb-8 leading-relaxed">
+              Vous avez marqué ce projet comme "Terminé", mais la date de fin n'a pas été renseignée. Veuillez entrer une date de fin avant de sauvegarder.
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowValidationDialog(false)
+                  setTimeout(() => document.getElementById('end_date')?.focus(), 100)
+                }}
+                className="bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:shadow-primary/40 px-6 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 hover:scale-105 active:scale-95"
+              >
+                Compris
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

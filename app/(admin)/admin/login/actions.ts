@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 
 export async function login(formData: FormData) {
@@ -32,7 +33,9 @@ export async function logout() {
 export async function logoutAndReturn() {
   const supabase = await createClient()
   await supabase.auth.signOut()
-  redirect('/')
+  const cookieStore = await cookies()
+  const locale = cookieStore.get('NEXT_LOCALE')?.value || 'fr'
+  redirect(`/${locale}`)
 }
 
 export async function updatePassword(formData: FormData) {

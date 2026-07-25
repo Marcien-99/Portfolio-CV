@@ -59,6 +59,14 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
                 {renderHeroTitle(heroTitle)}
               </div>
               
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 sm:gap-4 mb-8 text-sm sm:text-base font-mono font-medium text-muted-foreground">
+                <span>{heroExperience} {lang === 'en' ? 'years of experience' : "ans d'expérience"}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                <span>{projectsCount} {lang === 'en' ? 'projects' : 'projets'}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                <span>{heroLocation}</span>
+              </div>
+              
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
                 <Link href={`/${lang}/projets`} className={buttonVariants({ size: "lg", className: "rounded-none px-8 text-base shadow-lg hover:-translate-y-1 hover:scale-[1.03] transition-all" })}>
                   {dict.hero.view_projects}
@@ -66,11 +74,10 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
                 <Link href={`/${lang}/a-propos`} className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-none px-8 text-base bg-transparent hover:-translate-y-1 hover:scale-[1.03] transition-all" })}>
                   {dict.hero.learn_more}
                 </Link>
-                {/* Le bouton télécharger est visible partout */}
-                <Button variant="secondary" size="lg" className="rounded-none px-8 text-base flex w-full sm:w-auto mt-2 sm:mt-0 gap-2 hover:-translate-y-1 hover:scale-[1.03] transition-all">
+                <a href={`/api/cv/standard/${lang}`} download={`CV_Marcien_${lang.toUpperCase()}.pdf`} className={`${buttonVariants({ variant: "secondary", size: "lg" })} rounded-none px-8 text-base flex w-full sm:w-auto mt-2 sm:mt-0 gap-2 hover:-translate-y-1 hover:scale-[1.03] transition-all`}>
                   <Download className="w-4 h-4" />
                   {dict.hero.download_cv}
-                </Button>
+                </a>
               </div>
             </GsapReveal>
 

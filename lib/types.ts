@@ -78,6 +78,9 @@ export type Project = {
   approach_en?: string;
   result_fr?: string;
   result_en?: string;
+  start_date?: string;
+  end_date?: string;
+  show_dates?: boolean;
   en_auto_generated: boolean;
   status: ProjectStatus;
   visibility: ContentStatus;

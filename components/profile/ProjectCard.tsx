@@ -10,12 +10,23 @@ type ProjectCardProps = {
   domains: DomainType[];
   imageUrl?: string;
   dict?: any;
+  startDate?: string;
+  endDate?: string;
+  showDates?: boolean;
 };
 
-export function ProjectCard({ title, description, status, domains, imageUrl, dict }: ProjectCardProps) {
+export function ProjectCard({ title, description, status, domains, imageUrl, dict, startDate, endDate, showDates }: ProjectCardProps) {
   const statusLabel = status === "termine" 
     ? (dict?.project?.status_completed || "Terminé") 
     : (dict?.project?.status_in_progress || "En cours");
+
+  const lang = dict?.nav?.home === 'Home' ? 'en' : 'fr';
+  const formatPeriod = () => {
+    if (!startDate) return null;
+    const start = startDate.substring(0, 7);
+    const end = endDate ? endDate.substring(0, 7) : (lang === 'en' ? "Present" : "Présent");
+    return `${start} — ${end}`;
+  };
 
   return (
     <Card className="overflow-hidden bg-secondary/30 border-transparent rounded-[2rem] hover:bg-secondary/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:scale-[1.01] group cursor-pointer flex flex-col h-full">
@@ -37,6 +48,14 @@ export function ProjectCard({ title, description, status, domains, imageUrl, dic
       
       <CardHeader className="pb-2">
         <h3 className="text-xl font-heading font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">{title}</h3>
+        {showDates && startDate && (
+          <div className="flex items-center gap-1.5 text-sm font-sans font-bold text-primary mt-2">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>{formatPeriod()}</span>
+          </div>
+        )}
       </CardHeader>
       
       <CardContent className="flex-grow pb-4">
