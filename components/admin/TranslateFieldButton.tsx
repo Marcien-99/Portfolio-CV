@@ -9,9 +9,10 @@ interface TranslateFieldButtonProps {
   sourceId: string
   targetId: string
   className?: string
+  onTranslate?: (text: string) => void
 }
 
-export function TranslateFieldButton({ sourceId, targetId, className }: TranslateFieldButtonProps) {
+export function TranslateFieldButton({ sourceId, targetId, className, onTranslate }: TranslateFieldButtonProps) {
   const [isTranslating, setIsTranslating] = useState(false)
 
   const handleTranslate = async (e: React.MouseEvent) => {
@@ -32,9 +33,20 @@ export function TranslateFieldButton({ sourceId, targetId, className }: Translat
     try {
       const result = await translateTextAction(textToTranslate)
       if (result.text) {
-        targetEl.value = result.text
-        // Dispatch an event so that any onChange handlers trigger
-        targetEl.dispatchEvent(new Event('change', { bubbles: true }))
+        if (onTranslate) {
+          onTranslate(result.text);
+        }
+        const proto = targetEl instanceof HTMLTextAreaElement 
+          ? window.HTMLTextAreaElement.prototype 
+          : window.HTMLInputElement.prototype;
+        const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+        if (setter) {
+          setter.call(targetEl, result.text);
+        } else {
+          targetEl.value = result.text;
+        }
+        targetEl.dispatchEvent(new Event('input', { bubbles: true }));
+        targetEl.dispatchEvent(new Event('change', { bubbles: true }));
       } else if (result.error) {
         console.error(result.error)
       }

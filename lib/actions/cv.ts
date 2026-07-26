@@ -91,20 +91,56 @@ export async function getPhotos() {
 
 export async function getStandardProfile() {
   const supabase = await createClient()
-  let { data: profile } = await supabase
+  let { data: profiles } = await supabase
     .from('cv_profiles')
     .select('*')
-    .eq('template_key', 'standard')
-    .single()
+    .eq('is_default', true)
+    .limit(1)
+
+  let profile = profiles && profiles.length > 0 ? profiles[0] : null
 
   if (!profile) {
-    // Créer le profil s'il n'existe pas
-    const { data: newProfile } = await supabase
+    const { data: anyProfiles } = await supabase
       .from('cv_profiles')
-      .insert([{ name: 'Standard', template_key: 'standard', is_default: true }])
       .select('*')
-      .single()
-    profile = newProfile
+      .limit(1)
+    if (anyProfiles && anyProfiles.length > 0) {
+      profile = anyProfiles[0]
+    } else {
+      const { data: newProfile } = await supabase
+        .from('cv_profiles')
+        .insert([{ name: 'Standard', template_key: 'standard', is_default: true, show_github: true, is_public: true }])
+        .select('*')
+        .single()
+      profile = newProfile
+    }
+  }
+
+  const { data: items } = await supabase
+    .from('cv_profile_items')
+    .select('*')
+    .eq('cv_profile_id', profile?.id)
+
+  return { profile: profile!, items: items || [] }
+}
+
+export async function getProfileByIdOrDefault(profileId?: string) {
+  const supabase = await createClient()
+  let profile = null
+
+  if (profileId && profileId !== 'standard' && profileId !== 'default') {
+    const { data: profiles } = await supabase
+      .from('cv_profiles')
+      .select('*')
+      .eq('id', profileId)
+      .limit(1)
+    if (profiles && profiles.length > 0) {
+      profile = profiles[0]
+    }
+  }
+
+  if (!profile) {
+    return await getStandardProfile()
   }
 
   const { data: items } = await supabase
@@ -156,7 +192,6 @@ export async function getAllProfiles() {
   let { data: profiles } = await supabase
     .from('cv_profiles')
     .select('*')
-    .order('is_default', { ascending: false })
 
   if (!profiles || profiles.length === 0) {
     const { data: newProfile } = await supabase
@@ -170,6 +205,23 @@ export async function getAllProfiles() {
       profiles = []
     }
   }
+
+  // NETTOYAGE AUTO: Supprimer les profils "Standard" en double créés accidentellement
+  if (profiles && profiles.length > 1) {
+    const defaultProfiles = profiles.filter(p => p.is_default || p.name === 'Standard')
+    if (defaultProfiles.length > 1) {
+      const keepId = defaultProfiles[0].id
+      const duplicatesToDelete = defaultProfiles.slice(1).map(p => p.id)
+      if (duplicatesToDelete.length > 0) {
+        console.log("Nettoyage automatique des profils Standard en double :", duplicatesToDelete)
+        await supabase.from('cv_profiles').delete().in('id', duplicatesToDelete)
+        profiles = profiles.filter(p => !duplicatesToDelete.includes(p.id))
+      }
+    }
+  }
+
+  // Trier pour mettre le profil par défaut (le vrai Standard) en premier
+  profiles = (profiles || []).sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0))
 
   const { data: items } = await supabase
     .from('cv_profile_items')
@@ -197,7 +249,7 @@ export async function createProfile(name: string) {
 
   if (error) {
     console.error("Erreur création profil:", error)
-    return { error: "Erreur lors de la création du profil" }
+    return { error: `Erreur lors de la création du profil (${error.message})` }
   }
 
   revalidatePath('/admin/cv-profils')
@@ -223,7 +275,7 @@ export async function updateProfileMetadata(
 
   if (error) {
     console.error("Erreur mise à jour métadonnées profil:", error)
-    return { error: "Erreur lors de la mise à jour des informations du profil" }
+    return { error: `Erreur lors de la mise à jour des informations du profil (${error.message})` }
   }
 
   revalidatePath('/admin/cv-profils')
@@ -250,7 +302,7 @@ export async function deleteProfile(profileId: string) {
 
   if (error) {
     console.error("Erreur suppression profil:", error)
-    return { error: "Erreur lors de la suppression du profil" }
+    return { error: `Erreur lors de la suppression du profil (${error.message})` }
   }
 
   revalidatePath('/admin/cv-profils')

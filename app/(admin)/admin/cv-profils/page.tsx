@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { getAllProfiles, createProfile, updateProfileMetadata, updateProfileItems, deleteProfile } from '@/lib/actions/cv'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Save, FileText, CheckSquare, Square, Plus, Trash2, Eye, X } from 'lucide-react'
+import { TranslateFieldButton } from '@/components/admin/TranslateFieldButton'
 
 export default function CvProfilesAdminPage() {
   const [profiles, setProfiles] = useState<any[]>([])
@@ -280,7 +281,7 @@ export default function CvProfilesAdminPage() {
                 )
               })}
               <button
-                onClick={() => setShowCreateModal(true)}
+                onClick={() => { setError(null); setMessage(null); setShowCreateModal(true); }}
                 className="px-5 py-3 rounded-2xl border border-dashed border-white/20 text-white/60 hover:text-white hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 flex items-center gap-2 text-sm font-medium"
               >
                 <Plus className="w-4 h-4" />
@@ -290,7 +291,7 @@ export default function CvProfilesAdminPage() {
 
             {activeProfile && !activeProfile.is_default && (
               <button
-                onClick={() => setShowDeleteModal(true)}
+                onClick={() => { setError(null); setMessage(null); setShowDeleteModal(true); }}
                 className="px-5 py-3 rounded-2xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all duration-300 flex items-center gap-2 text-sm font-medium ml-auto"
               >
                 <Trash2 className="w-4 h-4" />
@@ -322,8 +323,9 @@ export default function CvProfilesAdminPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Résumé du profil (Bio FR) - Optionnel</label>
+                  <label htmlFor="bio_fr" className="text-sm font-medium text-white/70">Résumé du profil (Bio FR) - Optionnel</label>
                   <textarea
+                    id="bio_fr"
                     value={bioFr}
                     onChange={(e) => setBioFr(e.target.value)}
                     placeholder="Si vide, la bio générale du site sera utilisée."
@@ -333,8 +335,12 @@ export default function CvProfilesAdminPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Résumé du profil (Bio EN) - Optionnel</label>
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="bio_en" className="text-sm font-medium text-white/70">Résumé du profil (Bio EN) - Optionnel</label>
+                    <TranslateFieldButton sourceId="bio_fr" targetId="bio_en" onTranslate={(text) => setBioEn(text)} />
+                  </div>
                   <textarea
+                    id="bio_en"
                     value={bioEn}
                     onChange={(e) => setBioEn(e.target.value)}
                     placeholder="If empty, the default site bio will be used."
@@ -451,6 +457,11 @@ export default function CvProfilesAdminPage() {
           <div className="bg-[#1A1A1A] border border-white/10 rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl">
             <h3 className="text-xl font-heading font-semibold text-white mb-2">Créer un nouveau profil</h3>
             <p className="text-sm text-white/50 mb-6">Donnez un nom explicite à ce CV (ex: Ingénieur Logiciel).</p>
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm mb-4">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleCreateProfile} className="space-y-6">
               <input
                 type="text"
@@ -463,7 +474,7 @@ export default function CvProfilesAdminPage() {
               <div className="flex items-center justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowCreateModal(false)}
+                  onClick={() => { setError(null); setShowCreateModal(false); }}
                   className="px-6 py-2.5 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors"
                 >
                   Annuler
@@ -489,10 +500,15 @@ export default function CvProfilesAdminPage() {
             <p className="text-sm text-white/50 mb-6">
               Êtes-vous sûr de vouloir supprimer définitivement le profil <span className="text-white font-medium">"{activeProfile.name}"</span> ? Cette action est irréversible.
             </p>
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm mb-4">
+                {error}
+              </div>
+            )}
             <div className="flex items-center justify-end gap-3">
               <button
                 type="button"
-                onClick={() => setShowDeleteModal(false)}
+                onClick={() => { setError(null); setShowDeleteModal(false); }}
                 className="px-6 py-2.5 rounded-full text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors"
               >
                 Annuler

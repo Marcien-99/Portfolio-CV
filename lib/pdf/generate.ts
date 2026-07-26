@@ -1,9 +1,9 @@
-import { getStandardProfile } from '@/lib/actions/cv'
+import { getProfileByIdOrDefault } from '@/lib/actions/cv'
 import { getExperiences, getSkillCategories, getSkills, getEducations, getProjects, getActivePhoto } from '@/lib/api/content'
 import { getSiteSettings } from '@/lib/actions/settings'
 
 export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'standard', origin: string = 'https://marcien-bn.vercel.app') {
-  const { profile, items } = await getStandardProfile()
+  const { profile, items } = await getProfileByIdOrDefault(profileId)
   const settings = await getSiteSettings()
   
   const [experiences, skills, educations, projects, categories, photoUrl] = await Promise.all([
@@ -71,6 +71,9 @@ export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'stand
   const cleanTitle = title.replace(/\*\*/g, '')
   const interests = lang === 'en' && settings.interests_en ? settings.interests_en : (settings.interests_fr || "")
 
+  const defaultAbout = lang === 'en' ? "Versatile RAMS & Software Engineer specialized in system reliability and full-stack development." : "Ingénieur polyvalent avec une double compétence en Sûreté de Fonctionnement et en Ingénierie Logicielle, spécialisé dans l'optimisation et la fiabilisation des systèmes complexes."
+  const customAbout = lang === 'en' ? profile?.bio_en : profile?.bio_fr
+
   return {
     lang,
     profileSettings: {
@@ -83,9 +86,9 @@ export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'stand
       phone: settings.contact_phone || "+33 6 52 14 26 45",
       address: settings.contact_address || "Paris, France",
       linkedin: settings.social_linkedin || "https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215",
-      github: settings.social_github || "https://github.com/Marcien-99",
+      github: profile?.show_github === false ? "" : (settings.social_github || "https://github.com/Marcien-99"),
       website: `${origin}/${lang}`,
-      about: lang === 'en' ? "Versatile RAMS & Software Engineer specialized in system reliability and full-stack development." : "Ingénieur polyvalent avec une double compétence en Sûreté de Fonctionnement et en Ingénierie Logicielle, spécialisé dans l'optimisation et la fiabilisation des systèmes complexes.",
+      about: customAbout || defaultAbout,
       photoUrl,
       interests
     },
