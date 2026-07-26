@@ -12,6 +12,7 @@ export default function CvProfilesAdminPage() {
     skill: any[], experience: any[], education: any[], project: any[]
   }>({ skill: [], experience: [], education: [], project: [] })
   
+  const [projectsBeforeExperiences, setProjectsBeforeExperiences] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -29,13 +30,14 @@ export default function CvProfilesAdminPage() {
     const { profile: p, items: i } = await getStandardProfile()
     setProfile(p)
     setItems(i)
+    setProjectsBeforeExperiences(p?.projects_before_experiences || false)
 
     // Charger toutes les données disponibles (publiées et brouillons)
     const [skillsRes, expRes, eduRes, projRes] = await Promise.all([
       supabase.from('skills').select('id, name_fr').order('position'),
       supabase.from('experiences').select('id, title_fr, company').order('position'),
       supabase.from('educations').select('id, title_fr, institution').order('position'),
-      supabase.from('projects').select('id, title_fr').order('position')
+      supabase.from('projects').select('id, title_fr, visibility').order('position')
     ])
 
     setAvailableData({
@@ -74,7 +76,9 @@ export default function CvProfilesAdminPage() {
       item_id: item.item_id
     }))
 
-    const result = await updateProfileItems(profile.id, cleanItems)
+    const result = await updateProfileItems(profile.id, cleanItems, {
+      projects_before_experiences: projectsBeforeExperiences
+    })
     if (result.error) {
       setError(result.error)
       setMessage(null)
@@ -161,11 +165,33 @@ export default function CvProfilesAdminPage() {
             </div>
           )}
 
+          {/* Section Order Toggle */}
+          <div className="bg-[#1A1A1A] border border-white/5 rounded-[2rem] p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+            <div>
+              <h3 className="text-lg font-heading font-semibold text-white">Ordre des sections sur le CV</h3>
+              <p className="text-sm text-white/50 mt-1">
+                Choisissez quelle section principale afficher en premier sur la version imprimable du CV.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setProjectsBeforeExperiences(!projectsBeforeExperiences)}
+              className={`flex items-center gap-3 px-6 py-3 rounded-full border transition-all duration-300 text-sm font-medium ${
+                projectsBeforeExperiences 
+                  ? 'bg-primary/20 text-primary border-primary/30' 
+                  : 'bg-[#222222] text-white/70 border-white/10 hover:bg-[#282828]'
+              }`}
+            >
+              <div className={`w-3 h-3 rounded-full ${projectsBeforeExperiences ? 'bg-primary animate-pulse' : 'bg-white/30'}`} />
+              {projectsBeforeExperiences ? 'Projets affichés avant Expériences' : 'Expériences affichées avant Projets'}
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {renderSection('Compétences', 'skill', availableData.skill, item => item.name_fr)}
             {renderSection('Expériences', 'experience', availableData.experience, item => `${item.title_fr} chez ${item.company}`)}
             {renderSection('Formations', 'education', availableData.education, item => `${item.title_fr} à ${item.institution}`)}
-            {renderSection('Projets', 'project', availableData.project, item => item.title_fr)}
+            {renderSection('Projets', 'project', availableData.project, item => `${item.title_fr}${item.visibility === 'draft' ? ' (Brouillon CV)' : ''}`)}
           </div>
         </div>
       </div>

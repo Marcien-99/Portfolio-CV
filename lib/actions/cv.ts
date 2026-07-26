@@ -115,8 +115,19 @@ export async function getStandardProfile() {
   return { profile, items: items || [] }
 }
 
-export async function updateProfileItems(profileId: string, items: { item_type: string, item_id: string }[]) {
+export async function updateProfileItems(
+  profileId: string, 
+  items: { item_type: string, item_id: string }[],
+  options?: { projects_before_experiences?: boolean }
+) {
   const supabase = await createClient()
+
+  if (options && options.projects_before_experiences !== undefined) {
+    await supabase
+      .from('cv_profiles')
+      .update({ projects_before_experiences: options.projects_before_experiences })
+      .eq('id', profileId)
+  }
 
   // Supprimer les anciens items
   await supabase.from('cv_profile_items').delete().eq('cv_profile_id', profileId)

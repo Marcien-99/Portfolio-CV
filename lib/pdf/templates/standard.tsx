@@ -165,7 +165,7 @@ interface StandardTemplateProps {
 }
 
 export const StandardTemplate = ({ data }: StandardTemplateProps) => {
-  const { lang, personalInfo, experiences, educations, skillCategories, projects } = data;
+  const { lang, profileSettings, personalInfo, experiences, educations, skillCategories, projects } = data;
 
   const t = {
     contact: lang === 'en' ? 'Contact' : 'Contact',
@@ -178,12 +178,73 @@ export const StandardTemplate = ({ data }: StandardTemplateProps) => {
     present: lang === 'en' ? 'Present' : 'Présent'
   };
 
-  const formatDate = (dateString: string | null) => {
+  const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return t.present;
     const d = new Date(dateString);
     if (isNaN(d.getTime())) return dateString;
     return `${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   };
+
+  const renderExperiencesSection = () => (
+    experiences && experiences.length > 0 ? (
+      <View style={styles.mainSection}>
+        <Text style={styles.mainSectionTitle}>{t.experiences}</Text>
+        {experiences.map((exp: any, i: number) => (
+          <View key={i} style={styles.item} wrap={false}>
+            <View style={styles.itemHeader}>
+              <View style={styles.itemTitleContainer}>
+                <Text style={styles.itemTitle}>{exp.title}</Text>
+                <Text style={styles.itemCompany}>{exp.company}{exp.location ? ` • ${exp.location}` : ''}</Text>
+              </View>
+              <Text style={styles.itemDate}>{formatDate(exp.startDate)} - {formatDate(exp.endDate)}</Text>
+            </View>
+            {exp.description ? <Text style={styles.itemDesc}>{exp.description}</Text> : null}
+          </View>
+        ))}
+      </View>
+    ) : null
+  );
+
+  const renderProjectsSection = () => (
+    projects && projects.length > 0 ? (
+      <View style={styles.mainSection}>
+        <Text style={styles.mainSectionTitle}>{t.projects}</Text>
+        {projects.map((proj: any, i: number) => (
+          <View key={i} style={styles.item} wrap={false}>
+            <View style={styles.itemHeader}>
+              <View style={styles.itemTitleContainer}>
+                <Text style={styles.itemTitle}>{proj.title}</Text>
+              </View>
+              {proj.showDates && (
+                <Text style={styles.itemDate}>{formatDate(proj.startDate)} - {formatDate(proj.endDate)}</Text>
+              )}
+            </View>
+            {proj.description ? <Text style={styles.itemDesc}>{proj.description}</Text> : null}
+          </View>
+        ))}
+      </View>
+    ) : null
+  );
+
+  const renderEducationsSection = () => (
+    educations && educations.length > 0 ? (
+      <View style={styles.mainSection}>
+        <Text style={styles.mainSectionTitle}>{t.educations}</Text>
+        {educations.map((edu: any, i: number) => (
+          <View key={i} style={styles.item} wrap={false}>
+            <View style={styles.itemHeader}>
+              <View style={styles.itemTitleContainer}>
+                <Text style={styles.itemTitle}>{edu.degree}</Text>
+                <Text style={styles.itemCompany}>{edu.institution}{edu.location ? ` • ${edu.location}` : ''}</Text>
+              </View>
+              <Text style={styles.itemDate}>{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</Text>
+            </View>
+            {edu.description ? <Text style={styles.itemDesc}>{edu.description}</Text> : null}
+          </View>
+        ))}
+      </View>
+    ) : null
+  );
 
   return (
     <Document>
@@ -254,57 +315,18 @@ export const StandardTemplate = ({ data }: StandardTemplateProps) => {
           </View>
 
           <View style={styles.mainContentWrapper}>
-            {experiences && experiences.length > 0 && (
-              <View style={styles.mainSection}>
-                <Text style={styles.mainSectionTitle}>{t.experiences}</Text>
-                {experiences.map((exp: any, i: number) => (
-                  <View key={i} style={styles.item} wrap={false}>
-                    <View style={styles.itemHeader}>
-                      <View style={styles.itemTitleContainer}>
-                        <Text style={styles.itemTitle}>{exp.title}</Text>
-                        <Text style={styles.itemCompany}>{exp.company}{exp.location ? ` • ${exp.location}` : ''}</Text>
-                      </View>
-                      <Text style={styles.itemDate}>{formatDate(exp.startDate)} - {formatDate(exp.endDate)}</Text>
-                    </View>
-                    {exp.description && <Text style={styles.itemDesc}>{exp.description}</Text>}
-                  </View>
-                ))}
-              </View>
+            {profileSettings?.projectsBeforeExperiences ? (
+              <>
+                {renderProjectsSection()}
+                {renderExperiencesSection()}
+              </>
+            ) : (
+              <>
+                {renderExperiencesSection()}
+                {renderProjectsSection()}
+              </>
             )}
-
-            {educations && educations.length > 0 && (
-              <View style={styles.mainSection}>
-                <Text style={styles.mainSectionTitle}>{t.educations}</Text>
-                {educations.map((edu: any, i: number) => (
-                  <View key={i} style={styles.item} wrap={false}>
-                    <View style={styles.itemHeader}>
-                      <View style={styles.itemTitleContainer}>
-                        <Text style={styles.itemTitle}>{edu.degree}</Text>
-                        <Text style={styles.itemCompany}>{edu.institution}{edu.location ? ` • ${edu.location}` : ''}</Text>
-                      </View>
-                      <Text style={styles.itemDate}>{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</Text>
-                    </View>
-                    {edu.description && <Text style={styles.itemDesc}>{edu.description}</Text>}
-                  </View>
-                ))}
-              </View>
-            )}
-
-            {projects && projects.length > 0 && (
-              <View style={styles.mainSection}>
-                <Text style={styles.mainSectionTitle}>{t.projects}</Text>
-                {projects.map((proj: any, i: number) => (
-                  <View key={i} style={styles.item} wrap={false}>
-                    <View style={styles.itemHeader}>
-                      <View style={styles.itemTitleContainer}>
-                        <Text style={styles.itemTitle}>{proj.title}</Text>
-                      </View>
-                    </View>
-                    {proj.description && <Text style={styles.itemDesc}>{proj.description}</Text>}
-                  </View>
-                ))}
-              </View>
-            )}
+            {renderEducationsSection()}
           </View>
         </View>
       </Page>

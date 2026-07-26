@@ -3,7 +3,7 @@ import { getExperiences, getSkillCategories, getSkills, getEducations, getProjec
 import { getSiteSettings } from '@/lib/actions/settings'
 
 export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'standard', origin: string = 'https://marcien-bn.vercel.app') {
-  const { items } = await getStandardProfile()
+  const { profile, items } = await getStandardProfile()
   const settings = await getSiteSettings()
   
   const [experiences, skills, educations, projects, categories, photoUrl] = await Promise.all([
@@ -60,7 +60,10 @@ export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'stand
   const selectedProjects = projects.filter(p => items.some(i => i.item_type === 'project' && i.item_id === p.id))
   const orderedProjects = selectedProjects.sort((a, b) => getPosition('project', a.id) - getPosition('project', b.id)).map(p => ({
     title: lang === 'en' && p.title_en ? p.title_en : p.title_fr,
-    description: lang === 'en' && p.context_en ? p.context_en : p.context_fr,
+    description: (lang === 'en' && p.context_en ? p.context_en : p.context_fr) || p.context_fr || "",
+    startDate: p.start_date,
+    endDate: p.end_date,
+    showDates: p.show_dates !== undefined ? p.show_dates : true
   }))
 
   const fullName = "Marcien BALOUBOULA NZOUSSI"
@@ -70,6 +73,9 @@ export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'stand
 
   return {
     lang,
+    profileSettings: {
+      projectsBeforeExperiences: profile?.projects_before_experiences || false,
+    },
     personalInfo: {
       fullName,
       title: cleanTitle,

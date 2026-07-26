@@ -16,7 +16,7 @@ async function getStats() {
     supabase.from('skills').select('*', { count: 'exact', head: true }),
     supabase.from('experiences').select('*', { count: 'exact', head: true }),
     supabase.from('educations').select('*', { count: 'exact', head: true }),
-    supabase.from('projects').select('*', { count: 'exact', head: true }),
+    supabase.from('projects').select('*', { count: 'exact', head: true }).eq('visibility', 'published'),
     supabase.from('cv_profiles').select('*', { count: 'exact', head: true })
   ])
 
