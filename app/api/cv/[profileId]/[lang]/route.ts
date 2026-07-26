@@ -29,11 +29,13 @@ export async function GET(
     });
 
     const filename = `CV_Marcien_BALOUBOULA_${lang.toUpperCase()}.pdf`;
+    const isInline = new URL(request.url).searchParams.get('inline') === 'true';
+    const disposition = isInline ? 'inline' : 'attachment';
 
     return new NextResponse(readableStream, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Disposition': `${disposition}; filename="${filename}"`,
       },
     });
   } catch (error) {

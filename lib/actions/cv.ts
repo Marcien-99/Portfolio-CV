@@ -150,3 +150,109 @@ export async function updateProfileItems(
   revalidatePath('/admin/cv-profils')
   return { success: true }
 }
+
+export async function getAllProfiles() {
+  const supabase = await createClient()
+  let { data: profiles } = await supabase
+    .from('cv_profiles')
+    .select('*')
+    .order('is_default', { ascending: false })
+
+  if (!profiles || profiles.length === 0) {
+    const { data: newProfile } = await supabase
+      .from('cv_profiles')
+      .insert([{ name: 'Standard', template_key: 'standard', is_default: true, show_github: true, is_public: true }])
+      .select('*')
+      .single()
+    if (newProfile) {
+      profiles = [newProfile]
+    } else {
+      profiles = []
+    }
+  }
+
+  const { data: items } = await supabase
+    .from('cv_profile_items')
+    .select('*')
+
+  return profiles.map(profile => ({
+    profile,
+    items: (items || []).filter(item => item.cv_profile_id === profile.id)
+  }))
+}
+
+export async function createProfile(name: string) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('cv_profiles')
+    .insert([{ 
+      name, 
+      template_key: 'standard', 
+      is_default: false, 
+      show_github: true, 
+      is_public: true 
+    }])
+    .select('*')
+    .single()
+
+  if (error) {
+    console.error("Erreur création profil:", error)
+    return { error: "Erreur lors de la création du profil" }
+  }
+
+  revalidatePath('/admin/cv-profils')
+  return { success: true, profile: data }
+}
+
+export async function updateProfileMetadata(
+  profileId: string,
+  metadata: {
+    name?: string;
+    bio_fr?: string;
+    bio_en?: string;
+    show_github?: boolean;
+    is_public?: boolean;
+    skills_order?: string[];
+  }
+) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('cv_profiles')
+    .update(metadata)
+    .eq('id', profileId)
+
+  if (error) {
+    console.error("Erreur mise à jour métadonnées profil:", error)
+    return { error: "Erreur lors de la mise à jour des informations du profil" }
+  }
+
+  revalidatePath('/admin/cv-profils')
+  return { success: true }
+}
+
+export async function deleteProfile(profileId: string) {
+  const supabase = await createClient()
+  
+  const { data: profile } = await supabase
+    .from('cv_profiles')
+    .select('is_default')
+    .eq('id', profileId)
+    .single()
+
+  if (profile?.is_default) {
+    return { error: "Impossible de supprimer le profil par défaut." }
+  }
+
+  const { error } = await supabase
+    .from('cv_profiles')
+    .delete()
+    .eq('id', profileId)
+
+  if (error) {
+    console.error("Erreur suppression profil:", error)
+    return { error: "Erreur lors de la suppression du profil" }
+  }
+
+  revalidatePath('/admin/cv-profils')
+  return { success: true }
+}
