@@ -6,6 +6,8 @@ import { getSkillCategories, getExperiences, getActivePhoto, getProjects } from 
 import { getSiteSettings } from "@/lib/actions/settings";
 import { GsapReveal } from "@/components/animations/GsapReveal";
 import { getDictionary, Locale } from "@/lib/i18n/dictionaries";
+import { getPublicProfiles } from "@/lib/actions/cv";
+import { DownloadCvButton } from "@/components/public/DownloadCvButton";
 
 export default async function Home(props: { params: Promise<{ lang: string }> }) {
   const { lang } = await props.params;
@@ -17,6 +19,7 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
   const currentExperience = experiences.find(e => e.end_date === null || e.end_date === undefined) || experiences[0] || { company: '...' };
   const profilePhoto = await getActivePhoto() || "/Profil.jpg";
   const settings = await getSiteSettings();
+  const profiles = await getPublicProfiles();
 
   const heroExperience = settings.hero_experience || "3+";
   const heroLocation = settings.hero_location || "Paris, FR";
@@ -74,10 +77,14 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
                 <Link href={`/${lang}/a-propos`} className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-none px-8 text-base bg-transparent hover:-translate-y-1 hover:scale-[1.03] transition-all" })}>
                   {dict.hero.learn_more}
                 </Link>
-                <a href={`/api/cv/standard/${lang}`} download={`CV_Marcien_${lang.toUpperCase()}.pdf`} className={`${buttonVariants({ variant: "secondary", size: "lg" })} rounded-none px-8 text-base flex w-full sm:w-auto mt-2 sm:mt-0 gap-2 hover:-translate-y-1 hover:scale-[1.03] transition-all`}>
-                  <Download className="w-4 h-4" />
-                  {dict.hero.download_cv}
-                </a>
+                <DownloadCvButton
+                  lang={lang}
+                  label={dict.hero.download_cv}
+                  variant="secondary"
+                  size="lg"
+                  className="rounded-none px-8 text-base flex w-full sm:w-auto mt-2 sm:mt-0 gap-2 hover:-translate-y-1 hover:scale-[1.03] transition-all"
+                  initialProfiles={profiles}
+                />
               </div>
             </GsapReveal>
 

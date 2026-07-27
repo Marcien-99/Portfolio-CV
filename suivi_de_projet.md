@@ -145,5 +145,24 @@ Ce document récapitule l'avancement du projet, les fonctionnalités implément�
   - **Encart interactif de tri dans `/admin/cv-profils`** : Ajout d'une section interactive "Ordre de priorité des catégories de compétences sur le CV". Chaque catégorie (Informatique, Sûreté, Électronique, IOT, Langues, Automatisme) est affichée sous forme de badge numéroté (`#1`, `#2`...) assorti de boutons fléchés (`⬆️` / `⬇️`) permettant de monter ou descendre la catégorie. Le nouvel ordre est synchronisé instantanément dans l'état et sauvegardé en base de données dans la colonne `skills_order` du profil actif.
   - **Tri dynamique dans le moteur PDF (`lib/pdf/generate.ts`)** : Mise à jour de `getCvPdfData` pour interroger l'ordre personnalisé (`profile.skills_order`) et réorganiser dynamiquement l'affichage de la barre latérale des compétences sur le CV généré en direct (PDF `@react-pdf/renderer`). Le document final reflète fidèlement la priorité exacte des domaines définie par l'utilisateur pour le profil sélectionné.
 
+- **Phase 3 — La Vitrine Publique : Téléchargement multi-profils à la carte (Hors PRD)** :
+  - **Composant réutilisable `<DownloadCvButton />`** : Création d'un composant client intelligent dans `components/public/DownloadCvButton.tsx` pour remplacer les simples liens statiques de téléchargement de CV.
+  - **Comportement adaptatif (1 profil vs 2+ profils)** :
+    - *Cas 1 (1 seul profil public)* : Le bouton fonctionne comme un lien de téléchargement direct (`<a download>`) pointant vers le profil actif (ou Standard par défaut).
+    - *Cas 2 (2 profils publics ou plus)* : Le clic sur le bouton ouvre une magnifique modale interactive au design sombre ("glassmorphism" avec flou d'arrière-plan, animations douces et cartes interactives). Le visiteur peut y visualiser la liste des profils disponibles (ex: *CV — Ingénieur Logiciel*, *CV — RAMS & Électronique*) et cliquer sur le profil de son choix pour déclencher immédiatement son téléchargement au format PDF.
+  - **Intégration globale sur tout le site** :
+    - **Header (Navigation supérieure)** : Intégration dans `components/layout/Header.tsx` avec gestion responsive (affichage de l'icône seule sur mobile, texte complet sur desktop).
+    - **Section Hero (Accueil)** : Remplacement du bouton statique dans `app/(public)/[lang]/page.tsx` pour un téléchargement interactif dès le premier écran.
+    - **Footer (Pied de page)** : Ajout inédit d'un bouton de téléchargement de CV dans `components/layout/Footer.tsx`, offrant un point de conversion direct aux recruteurs qui ont défilé jusqu'au bas de page.
+  - **Performance et Zéro Latence** : Création d'une Server Action `getPublicProfiles()` dans `lib/actions/cv.ts` qui filtre les profils par `is_public = true` (en triant le profil par défaut en premier). Les profils sont pré-chargés côté serveur dans `PublicLayout` et injectés directement dans le HTML initial : aucune attente de chargement (spinner) pour le visiteur.
+  - **Résolution du rognage visuel (React Portal)** : Modification du composant `<DownloadCvButton />` pour encapsuler le rendu de la modale dans un appel `createPortal(..., document.body)`. Cela permet d'attacher la boîte de dialogue directement à la racine du document HTML, évitant ainsi tout conflit de positionnement ou de découpage (clipping) induit par le conteneur parent fixe et l'effet `backdrop-blur` du Header.
+  - **Titres de CV personnalisés par profil (FR & EN + DeepL)** :
+    - *Migration SQL* : Ajout des colonnes `title_fr` et `title_en` dans la table `cv_profiles` (fichier de migration `20260727000000_add_cv_profiles_titles.sql`).
+    - *Interface Admin* : Ajout de deux champs de texte ("Titre professionnel sur le CV - FR" et "EN") dans la page `/admin/cv-profils`, positionnés sous le nom du profil. Intégration du bouton de traduction automatique DeepL (`✨`) pour traduire instantanément le titre français vers l'anglais.
+    - *Moteur PDF (`generate.ts`)* : Le générateur vérifie désormais si un titre sur mesure (`profile.title_fr` ou `profile.title_en`) est défini pour le profil sélectionné. Si c'est le cas, il remplace le titre global du site sur le document généré. Chaque CV public (ex: *Ingénieur Logiciel* vs *RAMS & Électronique*) affiche ainsi son propre titre de poste spécifique !
+
+---
+*Dernière mise à jour : Phase 3 achevée (avec ajustements Portal et Titres sur mesure, en attente de validation avant push).*
+
 
 

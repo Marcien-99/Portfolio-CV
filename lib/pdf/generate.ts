@@ -79,7 +79,9 @@ export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'stand
   }))
 
   const fullName = "Marcien BALOUBOULA NZOUSSI"
-  const title = lang === 'en' && settings.hero_title_en ? settings.hero_title_en : (settings.hero_title_fr || "Ingénieur Sûreté de Fonctionnement & Développement")
+  const defaultTitle = lang === 'en' && settings.hero_title_en ? settings.hero_title_en : (settings.hero_title_fr || "Ingénieur Sûreté de Fonctionnement & Développement")
+  const customTitle = lang === 'en' ? profile?.title_en : profile?.title_fr
+  const title = (customTitle && customTitle.trim() !== '') ? customTitle : defaultTitle
   const cleanTitle = title.replace(/\*\*/g, '')
   const interests = lang === 'en' && settings.interests_en ? settings.interests_en : (settings.interests_fr || "")
 

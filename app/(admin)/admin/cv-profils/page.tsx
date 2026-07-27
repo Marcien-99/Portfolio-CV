@@ -16,6 +16,8 @@ export default function CvProfilesAdminPage() {
   
   // Active profile local fields
   const [name, setName] = useState('')
+  const [titleFr, setTitleFr] = useState('')
+  const [titleEn, setTitleEn] = useState('')
   const [bioFr, setBioFr] = useState('')
   const [bioEn, setBioEn] = useState('')
   const [showGithub, setShowGithub] = useState(true)
@@ -45,6 +47,8 @@ export default function CvProfilesAdminPage() {
   useEffect(() => {
     if (activeProfile) {
       setName(activeProfile.name || '')
+      setTitleFr(activeProfile.title_fr || '')
+      setTitleEn(activeProfile.title_en || '')
       setBioFr(activeProfile.bio_fr || '')
       setBioEn(activeProfile.bio_en || '')
       setShowGithub(activeProfile.show_github ?? true)
@@ -147,6 +151,8 @@ export default function CvProfilesAdminPage() {
       }),
       updateProfileMetadata(activeProfile.id, {
         name,
+        title_fr: titleFr,
+        title_en: titleEn,
         bio_fr: bioFr,
         bio_en: bioEn,
         show_github: showGithub,
@@ -351,6 +357,34 @@ export default function CvProfilesAdminPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ex: Ingénieur Logiciel"
+                    className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="title_fr" className="text-sm font-medium text-white/70">Titre professionnel sur le CV (FR) - Optionnel</label>
+                  <input
+                    id="title_fr"
+                    type="text"
+                    value={titleFr}
+                    onChange={(e) => setTitleFr(e.target.value)}
+                    placeholder="Ex: Ingénieur en Sûreté de Fonctionnement & Électronique"
+                    className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                  />
+                  <p className="text-xs text-white/40">Si vide, le titre général du site sera utilisé sur le PDF.</p>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="title_en" className="text-sm font-medium text-white/70">Titre professionnel sur le CV (EN) - Optionnel</label>
+                    <TranslateFieldButton sourceId="title_fr" targetId="title_en" onTranslate={(text) => setTitleEn(text)} />
+                  </div>
+                  <input
+                    id="title_en"
+                    type="text"
+                    value={titleEn}
+                    onChange={(e) => setTitleEn(e.target.value)}
+                    placeholder="Ex: RAMS & Electronics Engineer"
                     className="w-full px-5 py-3 bg-[#111111] border border-white/10 rounded-xl text-white text-base focus:ring-2 focus:ring-primary focus:outline-none transition-all"
                   />
                 </div>

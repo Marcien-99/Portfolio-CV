@@ -233,6 +233,29 @@ export async function getAllProfiles() {
   }))
 }
 
+export async function getPublicProfiles() {
+  const supabase = await createClient()
+  let { data: profiles, error } = await supabase
+    .from('cv_profiles')
+    .select('id, name, is_default, is_public')
+    .eq('is_public', true)
+  
+  if (error || !profiles || profiles.length === 0) {
+    const { data: defaultProfile } = await supabase
+      .from('cv_profiles')
+      .select('id, name, is_default, is_public')
+      .eq('is_default', true)
+      .single()
+    
+    if (defaultProfile) {
+      return [defaultProfile]
+    }
+    return [{ id: 'standard', name: 'Standard', is_default: true, is_public: true }]
+  }
+
+  return profiles.sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0))
+}
+
 export async function createProfile(name: string) {
   const supabase = await createClient()
   const { data, error } = await supabase
@@ -262,6 +285,8 @@ export async function updateProfileMetadata(
     name?: string;
     bio_fr?: string;
     bio_en?: string;
+    title_fr?: string;
+    title_en?: string;
     show_github?: boolean;
     is_public?: boolean;
     skills_order?: string[];

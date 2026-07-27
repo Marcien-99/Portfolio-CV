@@ -4,6 +4,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Download, Menu } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { DownloadCvButton } from "@/components/public/DownloadCvButton";
 import {
   Sheet,
   SheetContent,
@@ -18,9 +19,10 @@ import { usePathname } from "next/navigation";
 interface HeaderProps {
   lang: string;
   dict: any;
+  profiles?: any[];
 }
 
-export function Header({ lang, dict }: HeaderProps) {
+export function Header({ lang, dict, profiles }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
@@ -63,11 +65,14 @@ export function Header({ lang, dict }: HeaderProps) {
           <div className="flex justify-end items-center gap-3">
             <LanguageSelector />
             
-            <a href={`/api/cv/standard/${lang}`} download={`CV_Marcien_${lang.toUpperCase()}.pdf`} className={`${buttonVariants({ size: "sm" })} rounded-full gap-2 font-medium`}>
-              <Download className="w-4 h-4 hidden sm:block" />
-              <span className="hidden sm:inline">CV</span>
-              <Download className="w-4 h-4 sm:hidden" />
-            </a>
+            <DownloadCvButton
+              lang={lang}
+              label="CV"
+              size="sm"
+              className="rounded-full"
+              initialProfiles={profiles}
+              showIconOnlyOnSmall={true}
+            />
 
             {/* Menu Hamburger (Mobile) */}
             <div className="flex md:hidden">

@@ -45,8 +45,9 @@ function LinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
 import { getSiteSettings } from "@/lib/actions/settings";
 import { AdminSecretLink } from "./AdminSecretLink";
 import { getDictionary, Locale } from "@/lib/i18n/dictionaries";
+import { DownloadCvButton } from "@/components/public/DownloadCvButton";
 
-export async function Footer({ lang = 'fr' }: { lang?: string }) {
+export async function Footer({ lang = 'fr', profiles }: { lang?: string, profiles?: any[] }) {
   const settings = await getSiteSettings();
   const dict = await getDictionary(lang as Locale);
   
@@ -63,7 +64,15 @@ export async function Footer({ lang = 'fr' }: { lang?: string }) {
           </p>
           <p className="text-sm text-muted-foreground mt-1">© {new Date().getFullYear()} Marcien BALOUBOULA NZOUSSI. {dict.footer.rights}</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap justify-center">
+          <DownloadCvButton
+            lang={lang}
+            label={dict.hero?.download_cv || (lang === 'en' ? 'Download CV' : 'Télécharger CV')}
+            variant="outline"
+            size="sm"
+            className="rounded-full"
+            initialProfiles={profiles}
+          />
           <Link href={linkedin} target="_blank" className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center text-muted-foreground hover:bg-primary/20 hover:text-primary transition-colors">
             <LinkedinIcon className="w-5 h-5" />
           </Link>
