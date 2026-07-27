@@ -17,7 +17,7 @@ export default async function PublicLayout(props: {
       <main className="flex-1 w-full">
         {props.children}
       </main>
-      <Footer lang={lang} profiles={profiles} />
+      <Footer lang={lang} />
     </>
   );
 }
