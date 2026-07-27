@@ -84,19 +84,22 @@ const styles = StyleSheet.create({
   /* --- Main Styles --- */
   header: {
     marginBottom: 16,
+    alignItems: 'center',
   },
   name: {
-    fontSize: 20,
+    fontSize: 16.5,
     fontFamily: 'Helvetica-Bold',
     color: TEXT_DARK,
     textTransform: 'uppercase',
     marginBottom: 6,
+    textAlign: 'center',
   },
   title: {
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: 'Helvetica-Bold',
     color: PRIMARY,
     marginBottom: 4,
+    textAlign: 'center',
   },
   about: {
     fontSize: 9,
@@ -105,6 +108,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 6,
     lineHeight: 1.4,
+    textAlign: 'center',
   },
   mainContentWrapper: {
     flex: 1,

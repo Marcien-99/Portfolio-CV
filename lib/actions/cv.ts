@@ -237,13 +237,13 @@ export async function getPublicProfiles() {
   const supabase = await createClient()
   let { data: profiles, error } = await supabase
     .from('cv_profiles')
-    .select('id, name, is_default, is_public')
+    .select('id, name, title_fr, title_en, is_default, is_public')
     .eq('is_public', true)
   
   if (error || !profiles || profiles.length === 0) {
     const { data: defaultProfile } = await supabase
       .from('cv_profiles')
-      .select('id, name, is_default, is_public')
+      .select('id, name, title_fr, title_en, is_default, is_public')
       .eq('is_default', true)
       .single()
     

@@ -9,6 +9,8 @@ import { getPublicProfiles } from "@/lib/actions/cv";
 interface Profile {
   id: string;
   name: string;
+  title_fr?: string;
+  title_en?: string;
   is_default?: boolean;
   is_public?: boolean;
 }
@@ -147,9 +149,14 @@ export function DownloadCvButton({
               {profiles.map((profile) => {
                 const targetName = profile.name ? `_${profile.name.replace(/\s+/g, "_")}` : "";
                 const filename = `CV_Marcien_BALOUBOULA${targetName}_${lang.toUpperCase()}.pdf`;
-                const displayName = profile.is_default && profile.name === "Standard" 
-                  ? (lang === "en" ? "General Profile" : "Profil Général")
-                  : profile.name;
+                let displayName = profile.name;
+                if (profile.is_default && profile.name === "Standard") {
+                  displayName = lang === "en" ? "General Profile" : "Profil Général";
+                } else if (lang === "en" && profile.title_en && profile.title_en.trim() !== "") {
+                  displayName = profile.title_en;
+                } else if (profile.title_fr && profile.title_fr.trim() !== "") {
+                  displayName = profile.title_fr;
+                }
 
                 return (
                   <a

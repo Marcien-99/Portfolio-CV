@@ -160,9 +160,12 @@ Ce document récapitule l'avancement du projet, les fonctionnalités implément�
     - *Migration SQL* : Ajout des colonnes `title_fr` et `title_en` dans la table `cv_profiles` (fichier de migration `20260727000000_add_cv_profiles_titles.sql`).
     - *Interface Admin* : Ajout de deux champs de texte ("Titre professionnel sur le CV - FR" et "EN") dans la page `/admin/cv-profils`, positionnés sous le nom du profil. Intégration du bouton de traduction automatique DeepL (`✨`) pour traduire instantanément le titre français vers l'anglais.
     - *Moteur PDF (`generate.ts`)* : Le générateur vérifie désormais si un titre sur mesure (`profile.title_fr` ou `profile.title_en`) est défini pour le profil sélectionné. Si c'est le cas, il remplace le titre global du site sur le document généré. Chaque CV public (ex: *Ingénieur Logiciel* vs *RAMS & Électronique*) affiche ainsi son propre titre de poste spécifique !
+  - **Affinage esthétique et ergonomique (Suite aux tests utilisateurs)** :
+    - *Équilibre et centrage du Header PDF (`standard.tsx`)* : Réduction de la police du nom (de 20pt à 16.5pt) pour un rendu plus subtil, augmentation du titre professionnel (de 12pt à 14pt) en bleu pour valoriser l'expertise, et centrage symétrique du bloc d'en-tête (Nom, Titre, Bio).
+    - *Affichage multilingue dans la modale de téléchargement* : Exploitation des colonnes `title_en` et `title_fr` dans `<DownloadCvButton />`. Lorsqu'un visiteur est sur la version anglaise (`lang === "en"`), la boîte de dialogue affiche automatiquement le titre anglais de chaque profil (ex: *CV — RAMS & Electronics Engineer*) au lieu du nom interne en français.
 
 ---
-*Dernière mise à jour : Phase 3 achevée (avec ajustements Portal et Titres sur mesure, en attente de validation avant push).*
+*Dernière mise à jour : Phase 3 achevée avec affinages esthétiques (en attente de tests locaux avant push).*
 
 
 
