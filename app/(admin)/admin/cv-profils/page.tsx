@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { getAllProfiles, createProfile, updateProfileMetadata, updateProfileItems, deleteProfile } from '@/lib/actions/cv'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Save, FileText, CheckSquare, Square, Plus, Trash2, Eye, X } from 'lucide-react'
+import { Loader2, Save, FileText, CheckSquare, Square, Plus, Trash2, Eye, X, ArrowUp, ArrowDown } from 'lucide-react'
 import { TranslateFieldButton } from '@/components/admin/TranslateFieldButton'
 
 export default function CvProfilesAdminPage() {
@@ -21,6 +21,8 @@ export default function CvProfilesAdminPage() {
   const [showGithub, setShowGithub] = useState(true)
   const [isPublic, setIsPublic] = useState(true)
   const [projectsBeforeExperiences, setProjectsBeforeExperiences] = useState(false)
+  const [skillsOrder, setSkillsOrder] = useState<string[]>([])
+  const [skillCategories, setSkillCategories] = useState<any[]>([])
 
   // Modals & loading states
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -48,6 +50,7 @@ export default function CvProfilesAdminPage() {
       setShowGithub(activeProfile.show_github ?? true)
       setIsPublic(activeProfile.is_public ?? true)
       setProjectsBeforeExperiences(activeProfile.projects_before_experiences || false)
+      setSkillsOrder(activeProfile.skills_order || [])
       
       const currentProfileObj = profiles[activeProfileIndex]
       setItems(currentProfileObj?.items || [])
@@ -66,11 +69,12 @@ export default function CvProfilesAdminPage() {
     }
 
     // Charger toutes les données disponibles (publiées et brouillons)
-    const [skillsRes, expRes, eduRes, projRes] = await Promise.all([
+    const [skillsRes, expRes, eduRes, projRes, catsRes] = await Promise.all([
       supabase.from('skills').select('id, name_fr').order('position'),
       supabase.from('experiences').select('id, title_fr, company').order('position'),
       supabase.from('educations').select('id, title_fr, institution').order('position'),
-      supabase.from('projects').select('id, title_fr, visibility').order('position')
+      supabase.from('projects').select('id, title_fr, visibility').order('position'),
+      supabase.from('skill_categories').select('*').order('position')
     ])
 
     setAvailableData({
@@ -79,8 +83,36 @@ export default function CvProfilesAdminPage() {
       education: eduRes.data || [],
       project: projRes.data || []
     })
+    setSkillCategories(catsRes.data || [])
 
     setLoading(false)
+  }
+
+  const getOrderedCategories = () => {
+    if (!skillCategories || skillCategories.length === 0) return []
+    if (!skillsOrder || !Array.isArray(skillsOrder) || skillsOrder.length === 0) return [...skillCategories]
+    return [...skillCategories].sort((a, b) => {
+      const indexA = skillsOrder.indexOf(a.id)
+      const indexB = skillsOrder.indexOf(b.id)
+      if (indexA !== -1 && indexB !== -1) return indexA - indexB
+      if (indexA !== -1) return -1
+      if (indexB !== -1) return 1
+      return (a.position || 0) - (b.position || 0)
+    })
+  }
+
+  const moveCategory = (index: number, direction: 'up' | 'down') => {
+    const currentOrdered = getOrderedCategories()
+    if (direction === 'up' && index === 0) return
+    if (direction === 'down' && index === currentOrdered.length - 1) return
+    
+    const targetIndex = direction === 'up' ? index - 1 : index + 1
+    const newOrder = [...currentOrdered]
+    const temp = newOrder[index]
+    newOrder[index] = newOrder[targetIndex]
+    newOrder[targetIndex] = temp
+    
+    setSkillsOrder(newOrder.map(cat => cat.id))
   }
 
   function toggleItem(type: string, id: string) {
@@ -118,7 +150,8 @@ export default function CvProfilesAdminPage() {
         bio_fr: bioFr,
         bio_en: bioEn,
         show_github: showGithub,
-        is_public: isPublic
+        is_public: isPublic,
+        skills_order: skillsOrder
       })
     ])
 
@@ -400,6 +433,47 @@ export default function CvProfilesAdminPage() {
               <div className={`w-3 h-3 rounded-full ${projectsBeforeExperiences ? 'bg-primary animate-pulse' : 'bg-white/30'}`} />
               {projectsBeforeExperiences ? 'Projets affichés avant Expériences' : 'Expériences affichées avant Projets'}
             </button>
+          </div>
+
+          {/* Skill Categories Order Toggle */}
+          <div className="bg-[#1A1A1A] border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-xl">
+            <div className="mb-4">
+              <h3 className="text-lg font-heading font-semibold text-white">Ordre de priorité des catégories de compétences sur le CV</h3>
+              <p className="text-sm text-white/50 mt-1">
+                Utilisez les flèches ⬆️ ⬇️ pour définir l&apos;ordre d&apos;affichage des catégories dans la barre latérale du PDF pour ce profil.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 mt-4">
+              {getOrderedCategories().map((cat, index, arr) => (
+                <div 
+                  key={cat.id} 
+                  className="flex items-center gap-2 bg-[#222222] border border-white/10 rounded-full px-4 py-2 text-sm text-white/80 transition-all hover:border-white/20"
+                >
+                  <span className="text-xs font-mono text-primary font-bold">#{index + 1}</span>
+                  <span className="font-medium">{cat.name_fr}</span>
+                  <div className="flex items-center gap-1 ml-2 border-l border-white/10 pl-2">
+                    <button
+                      type="button"
+                      onClick={() => moveCategory(index, 'up')}
+                      disabled={index === 0}
+                      className="p-1 rounded hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 disabled:hover:bg-transparent transition-colors"
+                      title="Monter"
+                    >
+                      <ArrowUp className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveCategory(index, 'down')}
+                      disabled={index === arr.length - 1}
+                      className="p-1 rounded hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 disabled:hover:bg-transparent transition-colors"
+                      title="Descendre"
+                    >
+                      <ArrowDown className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

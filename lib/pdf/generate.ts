@@ -38,7 +38,19 @@ export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'stand
     category_id: s.category_id,
   }))
 
-  const groupedSkills = categories.map(cat => ({
+  const orderedCategories = [...categories].sort((a, b) => {
+    if (!profile?.skills_order || !Array.isArray(profile.skills_order) || profile.skills_order.length === 0) {
+      return (a.position || 0) - (b.position || 0);
+    }
+    const indexA = profile.skills_order.indexOf(a.id);
+    const indexB = profile.skills_order.indexOf(b.id);
+    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+    return (a.position || 0) - (b.position || 0);
+  });
+
+  const groupedSkills = orderedCategories.map(cat => ({
     name: lang === 'en' && cat.name_en ? cat.name_en : cat.name_fr,
     skills: orderedSkills.filter(s => s.category_id === cat.id)
   })).filter(c => c.skills.length > 0)
