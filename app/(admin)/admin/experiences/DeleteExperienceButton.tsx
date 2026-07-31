@@ -10,7 +10,10 @@ export function DeleteExperienceButton({ id }: { id: string }) {
       title="Supprimer cette expérience"
       description="Voulez-vous vraiment supprimer cette expérience ? L'action est irréversible."
       action={async () => {
-        await deleteExperience(id)
+        const res = await deleteExperience(id)
+        if (res?.error) {
+          alert(res.error)
+        }
       }}
       trigger={
         <button 

@@ -23,8 +23,12 @@ export function ProjectCard({ title, description, status, domains, imageUrl, dic
   const lang = dict?.nav?.home === 'Home' ? 'en' : 'fr';
   const formatPeriod = () => {
     if (!startDate) return null;
-    const start = startDate.substring(0, 7);
-    const end = endDate ? endDate.substring(0, 7) : (lang === 'en' ? "Present" : "Présent");
+    const formatStr = (d: string) => {
+      const [year, month] = d.substring(0, 7).split('-');
+      return `${month}/${year}`;
+    };
+    const start = formatStr(startDate);
+    const end = endDate ? formatStr(endDate) : (lang === 'en' ? "Present" : "Présent");
     return `${start} — ${end}`;
   };
 

@@ -316,6 +316,24 @@ Ce document récapitule l'avancement du projet, les fonctionnalités implément�
     - *Moteur PDF (`generate.ts`)* : Le générateur vérifie désormais si un titre sur mesure (`profile.title_fr` ou `profile.title_en`) est défini pour le profil sélectionné. Si c'est le cas, il remplace le titre global du site sur le document généré. Chaque CV public (ex: *Ingénieur Logiciel* vs *RAMS & Électronique*) affiche ainsi son propre titre de poste spécifique !
   - **Affinage esthétique et ergonomique (Suite aux tests utilisateurs)** :
     - *Équilibre et centrage du Header PDF (`standard.tsx`)* : Réduction de la police du nom (de 20pt à 16.5pt) pour un rendu plus subtil, augmentation du titre professionnel (de 12pt à 14pt) en bleu pour valoriser l'expertise, et centrage symétrique du bloc d'en-tête (Nom, Titre, Bio).
-    - *Affichage multilingue dans la modale de téléchargement* : Exploitation des colonnes `title_en` et `title_fr` dans `<DownloadCvButton />`. Lorsqu'un visiteur est sur la version anglaise (`lang === "en"`), la boîte de dialogue affiche automatiquement le titre anglais de chaque profil (ex: *CV — RAMS & Electronics Engineer*) au lieu du nom interne en français.
+    - *Affichage multilingue dans la modale de téléchargement* : Exploitation des colonnes `title_en` and `title_fr` dans `<DownloadCvButton />`. Lorsqu'un visiteur est sur la version anglaise (`lang === "en"`), la boîte de dialogue affiche automatiquement le titre anglais de chaque profil (ex: *CV — RAMS & Electronics Engineer*) au lieu du nom interne en français.
 ---
 *Dernière mise à jour : Suppression du bouton de téléchargement sur le pied de page (Footer) pour éviter la redondance avec le bouton sticky du Header.*
+
+### Résolution de bugs (31/07/2026)
+- **Statut** : Terminé
+- **Fonctionnalités et correctifs implémentés** :
+  - **Correction du "projet fantôme" (Constructeur de CV)** : Ajout d'une étape de nettoyage dans les Server Actions (`deleteProject`, `deleteSkill`, `deleteEducation`, `deleteExperience`). Lorsqu'un élément est supprimé, toutes ses références polymorphes (`item_id`) sont désormais purgées manuellement de la table `cv_profile_items`.
+  - **Correction du bug de suppression en "2 clics"** : Implémentation d'une gestion d'erreurs UI (`alert()`) dans tous les composants de suppression (ex: `DeleteProjectButton`). Si la base de données ou le stockage (Supabase) renvoie une erreur lors de la suppression, l'utilisateur est maintenant prévenu au lieu de subir une fermeture silencieuse de la modale.
+  - **Refonte UI : Barre latérale d'administration** : 
+    - La barre est maintenant fixée (`sticky`) au défilement de la page.
+    - Ajout d'une fonctionnalité de réduction (collapse) pour gagner de l'espace (icônes uniquement).
+    - Les boutons d'action (Retour au site, Déconnexion) ont été intégrés au flux de navigation.
+  - **Amélioration UX de la page Profil CV** :
+    - *Section Priorité* : Transformation en menu accordéon (collapsible) pour gagner de l'espace vertical.
+    - *Sélection des items* : Layout plus compact, passage à deux lignes pour éviter les troncatures excessives (ex: Titre + Entreprise/Institution), et disposition en grille 2 colonnes pour les compétences.
+    - *Badges visuels* : Ajout de badges distincts (vert "Site web" / orange "Brouillon CV") pour différencier la portée des projets dans les listes de sélection.
+    - Déplacement des boutons d'actions ("Retour au site" et "Déconnexion") dans la continuité du menu de navigation pour une meilleure cohérence.
+  - **Correction du statut des projets** : Uniformisation des valeurs de statut (`en_cours`, `termine`) sur la page de détail d'un projet (`/projets/[slug]`) pour correspondre aux vraies valeurs en base de données.
+  - **Tri des projets par date** : Les projets sont maintenant triés du plus récent au plus ancien (basé sur la date de début) avant le tri par position, ce qui met naturellement en valeur les projets récents.
+  - **Formatage des dates (MM/YYYY)** : Passage d'un format YYYY-MM (ex: 2024-03) à un format MM/YYYY (ex: 03/2024) sur l'ensemble de l'application publique (Projets, Expériences, Formations).

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { getAllProfiles, createProfile, updateProfileMetadata, updateProfileItems, deleteProfile } from '@/lib/actions/cv'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Save, FileText, CheckSquare, Square, Plus, Trash2, Eye, X, ArrowUp, ArrowDown } from 'lucide-react'
+import { Loader2, Save, FileText, CheckSquare, Square, Plus, Trash2, Eye, X, ArrowUp, ArrowDown, ChevronDown, ChevronUp } from 'lucide-react'
 import { TranslateFieldButton } from '@/components/admin/TranslateFieldButton'
 
 export default function CvProfilesAdminPage() {
@@ -28,6 +28,7 @@ export default function CvProfilesAdminPage() {
 
   // Modals & loading states
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [isPrioritySectionOpen, setIsPrioritySectionOpen] = useState(false)
   const [newProfileName, setNewProfileName] = useState('')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showPreviewModal, setShowPreviewModal] = useState(false)
@@ -74,9 +75,9 @@ export default function CvProfilesAdminPage() {
 
     // Charger toutes les données disponibles (publiées et brouillons)
     const [skillsRes, expRes, eduRes, projRes, catsRes] = await Promise.all([
-      supabase.from('skills').select('id, name_fr').order('position'),
-      supabase.from('experiences').select('id, title_fr, company').order('position'),
-      supabase.from('educations').select('id, title_fr, institution').order('position'),
+      supabase.from('skills').select('id, name_fr, status').order('position'),
+      supabase.from('experiences').select('id, title_fr, company, status').order('position'),
+      supabase.from('educations').select('id, title_fr, institution, status').order('position'),
       supabase.from('projects').select('id, title_fr, visibility').order('position'),
       supabase.from('skill_categories').select('*').order('position')
     ])
@@ -213,15 +214,15 @@ export default function CvProfilesAdminPage() {
     return <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
-  const renderSection = (title: string, type: 'skill' | 'experience' | 'education' | 'project', dataList: any[], getLabel: (item: any) => string) => (
-    <div className="bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-8 md:p-10 shadow-2xl">
-      <div className="flex items-center justify-between mb-6 pb-6 border-b border-white/5">
-        <h2 className="text-2xl font-heading font-semibold text-white">{title}</h2>
-        <span className="text-sm font-medium text-white/50 px-3 py-1 bg-[#111111] rounded-full border border-white/10">
+  const renderSection = (title: string, type: 'skill' | 'experience' | 'education' | 'project', dataList: any[], renderItem: (item: any) => React.ReactNode) => (
+    <div className="bg-[#1A1A1A] border border-white/5 rounded-[2.5rem] p-6 shadow-2xl flex flex-col h-full">
+      <div className="flex items-center justify-between mb-4 pb-4 border-b border-white/5">
+        <h2 className="text-xl font-heading font-semibold text-white">{title}</h2>
+        <span className="text-xs font-medium text-white/50 px-3 py-1 bg-[#111111] rounded-full border border-white/10">
           {items.filter(i => i.item_type === type).length} inclus
         </span>
       </div>
-      <div className="space-y-3 max-h-72 overflow-y-auto pr-3 custom-scrollbar">
+      <div className={`mt-2 flex-1 max-h-[22rem] overflow-y-auto pr-2 custom-scrollbar ${type === 'skill' ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 content-start' : 'space-y-2'}`}>
         {dataList.length === 0 ? (
           <p className="text-sm text-white/40 italic">Aucun élément disponible.</p>
         ) : (
@@ -231,10 +232,14 @@ export default function CvProfilesAdminPage() {
               <button
                 key={item.id}
                 onClick={() => toggleItem(type, item.id)}
-                className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 text-left ${selected ? 'bg-primary/10 text-primary border border-primary/20 font-medium' : 'hover:bg-[#222222] text-white/70 border border-transparent'}`}
+                className={`w-full flex items-start gap-3 p-3 rounded-xl transition-all duration-300 text-left ${selected ? 'bg-primary/10 text-primary border border-primary/20' : 'hover:bg-[#222222] text-white/70 border border-transparent hover:border-white/5'}`}
               >
-                {selected ? <CheckSquare className="w-5 h-5 flex-shrink-0" /> : <Square className="w-5 h-5 flex-shrink-0 opacity-40" />}
-                <span className="truncate">{getLabel(item)}</span>
+                <div className="mt-0.5 flex-shrink-0">
+                  {selected ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4 opacity-40" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  {renderItem(item)}
+                </div>
               </button>
             )
           })
@@ -470,51 +475,108 @@ export default function CvProfilesAdminPage() {
           </div>
 
           {/* Skill Categories Order Toggle */}
-          <div className="bg-[#1A1A1A] border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-xl">
-            <div className="mb-4">
-              <h3 className="text-lg font-heading font-semibold text-white">Ordre de priorité des catégories de compétences sur le CV</h3>
-              <p className="text-sm text-white/50 mt-1">
-                Utilisez les flèches ⬆️ ⬇️ pour définir l&apos;ordre d&apos;affichage des catégories dans la barre latérale du PDF pour ce profil.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3 mt-4">
-              {getOrderedCategories().map((cat, index, arr) => (
-                <div 
-                  key={cat.id} 
-                  className="flex items-center gap-2 bg-[#222222] border border-white/10 rounded-full px-4 py-2 text-sm text-white/80 transition-all hover:border-white/20"
-                >
-                  <span className="text-xs font-mono text-primary font-bold">#{index + 1}</span>
-                  <span className="font-medium">{cat.name_fr}</span>
-                  <div className="flex items-center gap-1 ml-2 border-l border-white/10 pl-2">
-                    <button
-                      type="button"
-                      onClick={() => moveCategory(index, 'up')}
-                      disabled={index === 0}
-                      className="p-1 rounded hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 disabled:hover:bg-transparent transition-colors"
-                      title="Monter"
-                    >
-                      <ArrowUp className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveCategory(index, 'down')}
-                      disabled={index === arr.length - 1}
-                      className="p-1 rounded hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 disabled:hover:bg-transparent transition-colors"
-                      title="Descendre"
-                    >
-                      <ArrowDown className="w-3.5 h-3.5" />
-                    </button>
+          <div className="bg-[#1A1A1A] border border-white/5 rounded-[2rem] p-6 md:p-8 shadow-xl transition-all duration-300">
+            <div 
+              className={`flex items-start justify-between gap-4 ${!isPrioritySectionOpen ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+              onClick={() => !isPrioritySectionOpen && setIsPrioritySectionOpen(true)}
+            >
+              <div>
+                <h3 className="text-lg font-heading font-semibold text-white">Ordre de priorité des catégories de compétences sur le CV</h3>
+                {!isPrioritySectionOpen ? (
+                  <div className="mt-2 text-sm text-white/60 flex items-center gap-2 flex-wrap">
+                    <span className="font-medium text-white/80">Ordre actuel :</span>
+                    {getOrderedCategories().map((c, i) => (
+                      <span key={c.id}>
+                        {i > 0 && <span className="mx-1 text-white/30">➔</span>}
+                        {c.name_fr}
+                      </span>
+                    ))}
                   </div>
-                </div>
-              ))}
+                ) : (
+                  <p className="text-sm text-white/50 mt-1">
+                    Utilisez les flèches ⬆️ ⬇️ pour définir l&apos;ordre d&apos;affichage des catégories dans la barre latérale du PDF pour ce profil.
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setIsPrioritySectionOpen(!isPrioritySectionOpen); }}
+                className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors"
+              >
+                {isPrioritySectionOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              </button>
             </div>
+            
+            {isPrioritySectionOpen && (
+              <div className="flex flex-wrap gap-3 mt-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                {getOrderedCategories().map((cat, index, arr) => (
+                  <div 
+                    key={cat.id} 
+                    className="flex items-center gap-2 bg-[#222222] border border-white/10 rounded-full px-4 py-2 text-sm text-white/80 transition-all hover:border-white/20"
+                  >
+                    <span className="text-xs font-mono text-primary font-bold">#{index + 1}</span>
+                    <span className="font-medium">{cat.name_fr}</span>
+                    <div className="flex items-center gap-1 ml-2 border-l border-white/10 pl-2">
+                      <button
+                        type="button"
+                        onClick={() => moveCategory(index, 'up')}
+                        disabled={index === 0}
+                        className="p-1 rounded hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 disabled:hover:bg-transparent transition-colors"
+                        title="Monter"
+                      >
+                        <ArrowUp className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveCategory(index, 'down')}
+                        disabled={index === arr.length - 1}
+                        className="p-1 rounded hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 disabled:hover:bg-transparent transition-colors"
+                        title="Descendre"
+                      >
+                        <ArrowDown className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {renderSection('Compétences', 'skill', availableData.skill, item => item.name_fr)}
-            {renderSection('Expériences', 'experience', availableData.experience, item => `${item.title_fr} chez ${item.company}`)}
-            {renderSection('Formations', 'education', availableData.education, item => `${item.title_fr} à ${item.institution}`)}
-            {renderSection('Projets', 'project', availableData.project, item => `${item.title_fr}${item.visibility === 'draft' ? ' (Brouillon CV)' : ''}`)}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {renderSection('Compétences', 'skill', availableData.skill, item => (
+              <span className="font-medium text-sm block truncate">{item.name_fr}</span>
+            ))}
+            {renderSection('Expériences', 'experience', availableData.experience, item => (
+              <div className="flex flex-col gap-1.5">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <span className="font-medium text-sm leading-tight text-white/90 flex-1">{item.title_fr}</span>
+                  {item.status === 'draft' ? (
+                    <span className="px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 text-[9px] uppercase font-bold tracking-wider shrink-0 border border-orange-500/20">Brouillon (CV)</span>
+                  ) : (
+                    <span className="px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 text-[9px] uppercase font-bold tracking-wider shrink-0 border border-green-500/20">Site web</span>
+                  )}
+                </div>
+                <span className="text-xs text-white/50 truncate">chez {item.company}</span>
+              </div>
+            ))}
+            {renderSection('Formations', 'education', availableData.education, item => (
+              <div className="flex flex-col gap-0.5">
+                <span className="font-medium text-sm leading-tight text-white/90">{item.title_fr}</span>
+                <span className="text-xs text-white/50 truncate">à {item.institution}</span>
+              </div>
+            ))}
+            {renderSection('Projets', 'project', availableData.project, item => (
+              <div className="flex flex-col gap-1.5">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <span className="font-medium text-sm leading-tight text-white/90 flex-1">{item.title_fr}</span>
+                  {item.visibility === 'draft' ? (
+                    <span className="px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 text-[9px] uppercase font-bold tracking-wider shrink-0 border border-orange-500/20">Brouillon (CV)</span>
+                  ) : (
+                    <span className="px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 text-[9px] uppercase font-bold tracking-wider shrink-0 border border-green-500/20">Site web</span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

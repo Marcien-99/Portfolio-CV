@@ -76,7 +76,15 @@ export default async function ExperiencesPage(props: { params: Promise<{ lang: s
                       <div className="bg-[#1A1A1A] p-8 sm:p-10 rounded-[2rem] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300">
                         <div className="flex flex-col gap-4">
                           <span className="font-mono text-primary text-sm tracking-wider uppercase">
-                            {exp.start_date.substring(0, 7)} — {exp.end_date ? exp.end_date.substring(0, 7) : (lang === 'en' ? "Present" : "Présent")}
+                            {(() => {
+                              const formatD = (d: string) => {
+                                const [y, m] = d.substring(0, 7).split('-');
+                                return `${m}/${y}`;
+                              };
+                              const start = formatD(exp.start_date);
+                              const end = exp.end_date ? formatD(exp.end_date) : (lang === 'en' ? "Present" : "Présent");
+                              return `${start} — ${end}`;
+                            })()}
                           </span>
                           <div>
                             <h3 className="text-2xl font-sans font-bold text-[#F5F5F7] mb-1">

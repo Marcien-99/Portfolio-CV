@@ -175,6 +175,12 @@ export async function deleteSkill(id: string) {
     return { error: 'Erreur lors de la suppression' }
   }
 
+  // Nettoyer cv_profile_items pour éviter les compétences fantômes
+  await supabase
+    .from('cv_profile_items')
+    .delete()
+    .eq('item_id', id)
+
   revalidatePath('/competences')
   revalidatePath('/admin/competences')
   return { success: true }

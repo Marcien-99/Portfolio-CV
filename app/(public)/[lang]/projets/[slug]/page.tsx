@@ -34,11 +34,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   // Format the status
   const statusConfig = {
-    'completed': { label: dict.project.status_completed || "Terminé", variant: "default" as const },
-    'in_progress': { label: dict.project.status_in_progress || "En cours", variant: "secondary" as const },
+    'termine': { label: dict.project.status_completed || "Terminé", variant: "default" as const },
+    'en_cours': { label: dict.project.status_in_progress || "En cours", variant: "secondary" as const },
     'planned': { label: "Planifié", variant: "outline" as const },
   };
-  const status = statusConfig[project.status as keyof typeof statusConfig] || statusConfig['completed'];
+  const status = statusConfig[project.status as keyof typeof statusConfig] || statusConfig['termine'];
 
   return (
     <>
@@ -69,7 +69,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span>{project.start_date.substring(0, 7)} — {project.end_date ? project.end_date.substring(0, 7) : (lang === 'en' ? "Present" : "Présent")}</span>
+                  <span>
+                    {(() => {
+                      const formatD = (d: string) => {
+                        const [y, m] = d.substring(0, 7).split('-');
+                        return `${m}/${y}`;
+                      };
+                      const start = formatD(project.start_date);
+                      const end = project.end_date ? formatD(project.end_date) : (lang === 'en' ? "Present" : "Présent");
+                      return `${start} — ${end}`;
+                    })()}
+                  </span>
                 </div>
               )}
             </div>

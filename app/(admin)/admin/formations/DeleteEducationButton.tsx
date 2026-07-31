@@ -10,7 +10,10 @@ export function DeleteEducationButton({ id }: { id: string }) {
       title="Supprimer cette formation"
       description="Voulez-vous vraiment supprimer cette formation ? L'action est irréversible."
       action={async () => {
-        await deleteEducation(id)
+        const res = await deleteEducation(id)
+        if (res?.error) {
+          alert(res.error)
+        }
       }}
       trigger={
         <button 

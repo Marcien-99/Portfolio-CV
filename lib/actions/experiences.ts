@@ -175,6 +175,12 @@ export async function deleteExperience(id: string) {
     return { error: 'Erreur lors de la suppression' }
   }
 
+  // Nettoyer cv_profile_items pour éviter les expériences fantômes
+  await supabase
+    .from('cv_profile_items')
+    .delete()
+    .eq('item_id', id)
+
   revalidatePath('/experiences')
   revalidatePath('/admin/experiences')
   return { success: true }

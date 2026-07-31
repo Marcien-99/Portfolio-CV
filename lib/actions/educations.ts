@@ -152,6 +152,12 @@ export async function deleteEducation(id: string) {
     return { error: 'Erreur lors de la suppression' }
   }
 
+  // Nettoyer cv_profile_items pour éviter les formations fantômes
+  await supabase
+    .from('cv_profile_items')
+    .delete()
+    .eq('item_id', id)
+
   revalidatePath('/a-propos')
   revalidatePath('/admin/formations')
   return { success: true }

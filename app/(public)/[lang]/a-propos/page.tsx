@@ -71,7 +71,15 @@ export default async function AboutPage(props: { params: Promise<{ lang: string 
                 <div key={edu.id} className="group bg-[#1A1A1A] p-8 sm:p-10 rounded-[2rem] flex flex-col sm:flex-row items-start gap-6 hover:-translate-y-1 transition-all duration-300">
                   <div className="sm:w-1/3 flex-shrink-0">
                     <span className="font-mono text-primary text-sm tracking-wider uppercase">
-                      {edu.start_date.substring(0,4)} {edu.end_date ? `— ${edu.end_date.substring(0,4)}` : ""}
+                      {(() => {
+                        const formatD = (d: string) => {
+                          const [y, m] = d.substring(0, 7).split('-');
+                          return `${m}/${y}`;
+                        };
+                        const start = formatD(edu.start_date);
+                        const end = edu.end_date ? formatD(edu.end_date) : "";
+                        return `${start}${end ? ` — ${end}` : ""}`;
+                      })()}
                     </span>
                   </div>
                   <div className="sm:w-2/3">

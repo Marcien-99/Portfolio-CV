@@ -10,7 +10,10 @@ export function DeleteProjectButton({ id }: { id: string }) {
       title="Supprimer ce projet"
       description="Voulez-vous vraiment supprimer ce projet ? L'action est irréversible."
       action={async () => {
-        await deleteProject(id)
+        const res = await deleteProject(id)
+        if (res?.error) {
+          alert(res.error)
+        }
       }}
       trigger={
         <button 

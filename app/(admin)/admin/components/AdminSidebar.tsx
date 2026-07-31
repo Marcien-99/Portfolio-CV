@@ -18,11 +18,41 @@ import {
   Image as ImageIcon,
   Menu,
   X,
-  Globe
+  Globe,
+  PanelLeftClose,
+  PanelLeft
 } from "lucide-react"
+
+interface NavActionProps {
+  icon: React.ReactNode
+  label: string
+  isCollapsed?: boolean
+  formAction: string | ((formData: FormData) => void | Promise<void>)
+  danger?: boolean
+}
+
+const NavAction = ({ icon, label, isCollapsed, formAction, danger }: NavActionProps) => (
+  <button 
+    formAction={formAction}
+    title={isCollapsed ? label : undefined}
+    className={`flex items-center gap-4 py-3.5 rounded-[1.25rem] text-sm font-medium transition-all duration-300 group ${
+      isCollapsed ? "px-0 justify-center w-12 mx-auto" : "px-4 w-full text-left"
+    } ${
+      danger 
+        ? "text-[#111111]/60 hover:text-red-500 hover:bg-red-500/10" 
+        : "text-[#111111]/60 hover:text-primary hover:bg-primary/10"
+    }`}
+  >
+    <div className={`transition-transform duration-300 flex-shrink-0 ${danger ? "group-hover:-translate-x-1" : "group-hover:rotate-12"}`}>
+      {icon}
+    </div>
+    {!isCollapsed && <span className="mt-[1px] truncate">{label}</span>}
+  </button>
+)
 
 export function AdminSidebar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const pathname = usePathname()
 
   // Fermer le menu sur mobile lors de la navigation
@@ -44,64 +74,80 @@ export function AdminSidebar() {
 
   const navContent = (
     <div className="flex flex-col h-full">
-      <div className="p-10 pb-6 hidden md:block">
-        <Link href="/admin" className="font-heading font-bold text-3xl tracking-tighter text-[#111111] hover:opacity-80 transition-opacity">
-          marcien-bn<span className="text-primary italic">.dev</span>
-        </Link>
-        <div className="mt-2 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-          <span className="text-xs text-[#111111]/50 font-mono uppercase tracking-[0.2em] font-medium">
-            Back-office
-          </span>
-        </div>
+      <div className={`p-6 pb-4 hidden md:flex ${isCollapsed ? 'flex-col items-center gap-6 px-2 pt-8' : 'items-center justify-between'}`}>
+        {!isCollapsed ? (
+          <div>
+            <Link href="/admin" className="font-heading font-bold text-2xl tracking-tighter text-[#111111] hover:opacity-80 transition-opacity whitespace-nowrap">
+              marcien-bn<span className="text-primary italic">.dev</span>
+            </Link>
+            <div className="mt-1 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+              <span className="text-[10px] text-[#111111]/50 font-mono uppercase tracking-[0.2em] font-medium">
+                Back-office
+              </span>
+            </div>
+          </div>
+        ) : (
+          <Link href="/admin" className="font-heading font-bold text-xl tracking-tighter text-primary italic hover:opacity-80 transition-opacity" title="marcien-bn.dev">
+            .dev
+          </Link>
+        )}
+
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="p-2 text-[#111111]/40 hover:text-[#111111] hover:bg-black/5 rounded-xl transition-all flex-shrink-0"
+          title={isCollapsed ? "Développer" : "Réduire"}
+        >
+          {isCollapsed ? <PanelLeft size={20} strokeWidth={1.5} /> : <PanelLeftClose size={20} strokeWidth={1.5} />}
+        </button>
       </div>
 
-      <nav className="flex-1 px-6 py-6 md:py-4 space-y-1.5 overflow-y-auto custom-scrollbar">
-        <NavItem href="/admin" icon={<LayoutDashboard size={20} strokeWidth={1.5} />} label="Tableau de bord" exact />
+      <nav className="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto custom-scrollbar">
+        <NavItem href="/admin" icon={<LayoutDashboard size={20} strokeWidth={1.5} />} label="Tableau de bord" exact isCollapsed={isCollapsed} />
         
-        <div className="mt-10 mb-4 px-4 flex items-center gap-3">
-          <div className="h-[1px] flex-1 bg-black/5" />
-          <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-[0.2em]">
-            Contenu
-          </p>
-          <div className="h-[1px] flex-1 bg-black/5" />
+        <div className={`mt-8 mb-4 px-2 flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+          {!isCollapsed && <div className="h-[1px] flex-1 bg-black/5" />}
+          {!isCollapsed ? (
+            <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-[0.2em]">Contenu</p>
+          ) : (
+            <div className="w-4 h-[1px] bg-black/10" />
+          )}
+          {!isCollapsed && <div className="h-[1px] flex-1 bg-black/5" />}
         </div>
-        <NavItem href="/admin/competences" icon={<Code2 size={20} strokeWidth={1.5} />} label="Compétences" />
-        <NavItem href="/admin/categories" icon={<Tags size={20} strokeWidth={1.5} />} label="Catégories" />
-        <NavItem href="/admin/experiences" icon={<Briefcase size={20} strokeWidth={1.5} />} label="Expériences" />
-        <NavItem href="/admin/formations" icon={<GraduationCap size={20} strokeWidth={1.5} />} label="Formations" />
-        <NavItem href="/admin/projets" icon={<FolderKanban size={20} strokeWidth={1.5} />} label="Projets" />
+        <NavItem href="/admin/competences" icon={<Code2 size={20} strokeWidth={1.5} />} label="Compétences" isCollapsed={isCollapsed} />
+        <NavItem href="/admin/categories" icon={<Tags size={20} strokeWidth={1.5} />} label="Catégories" isCollapsed={isCollapsed} />
+        <NavItem href="/admin/experiences" icon={<Briefcase size={20} strokeWidth={1.5} />} label="Expériences" isCollapsed={isCollapsed} />
+        <NavItem href="/admin/formations" icon={<GraduationCap size={20} strokeWidth={1.5} />} label="Formations" isCollapsed={isCollapsed} />
+        <NavItem href="/admin/projets" icon={<FolderKanban size={20} strokeWidth={1.5} />} label="Projets" isCollapsed={isCollapsed} />
         
-        <div className="mt-10 mb-4 px-4 flex items-center gap-3">
-          <div className="h-[1px] flex-1 bg-black/5" />
-          <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-[0.2em]">
-            Paramètres
-          </p>
-          <div className="h-[1px] flex-1 bg-black/5" />
+        <div className={`mt-8 mb-4 px-2 flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+          {!isCollapsed && <div className="h-[1px] flex-1 bg-black/5" />}
+          {!isCollapsed ? (
+            <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-[0.2em]">Paramètres</p>
+          ) : (
+            <div className="w-4 h-[1px] bg-black/10" />
+          )}
+          {!isCollapsed && <div className="h-[1px] flex-1 bg-black/5" />}
         </div>
-        <NavItem href="/admin/cv-profils" icon={<FileText size={20} strokeWidth={1.5} />} label="Profils CV" />
-        <NavItem href="/admin/photo" icon={<ImageIcon size={20} strokeWidth={1.5} />} label="Photo de profil" />
-        <NavItem href="/admin/reglages" icon={<Settings size={20} strokeWidth={1.5} />} label="Réglages" />
-      </nav>
-
-      <div className="p-6 border-t border-black/5 space-y-3">
-        <form className="space-y-3">
-          <button 
-            formAction={logoutAndReturn}
-            className="flex items-center justify-center gap-3 px-4 py-4 w-full text-sm font-medium rounded-[1.25rem] bg-[#111111] text-[#F5F5F7] hover:bg-primary hover:text-white transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 group"
-          >
-            <Globe size={18} strokeWidth={1.5} className="group-hover:rotate-12 transition-transform" />
-            Retour au site
-          </button>
-          <button 
-            formAction={logout}
-            className="flex items-center justify-center gap-3 px-4 py-4 w-full text-sm font-medium rounded-[1.25rem] text-[#111111]/60 hover:text-red-500 hover:bg-red-500/10 transition-all duration-300 group"
-          >
-            <LogOut size={20} strokeWidth={1.5} className="group-hover:-translate-x-1 transition-transform" />
-            Déconnexion
-          </button>
+        <NavItem href="/admin/cv-profils" icon={<FileText size={20} strokeWidth={1.5} />} label="Profils CV" isCollapsed={isCollapsed} />
+        <NavItem href="/admin/photo" icon={<ImageIcon size={20} strokeWidth={1.5} />} label="Photo de profil" isCollapsed={isCollapsed} />
+        <NavItem href="/admin/reglages" icon={<Settings size={20} strokeWidth={1.5} />} label="Réglages" isCollapsed={isCollapsed} />
+        
+        <div className={`mt-8 mb-4 px-2 flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+          {!isCollapsed && <div className="h-[1px] flex-1 bg-black/5" />}
+          {!isCollapsed ? (
+            <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-[0.2em]">Actions</p>
+          ) : (
+            <div className="w-4 h-[1px] bg-black/10" />
+          )}
+          {!isCollapsed && <div className="h-[1px] flex-1 bg-black/5" />}
+        </div>
+        
+        <form className="space-y-1.5">
+          <NavAction formAction={logoutAndReturn} icon={<Globe size={20} strokeWidth={1.5} />} label="Retour au site" isCollapsed={isCollapsed} />
+          <NavAction formAction={logout} icon={<LogOut size={20} strokeWidth={1.5} />} label="Déconnexion" isCollapsed={isCollapsed} danger />
         </form>
-      </div>
+      </nav>
     </div>
   )
 
@@ -140,8 +186,8 @@ export function AdminSidebar() {
         </div>
       )}
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-full md:w-80 bg-[#F5F5F7] border-r border-black/5 flex-col flex-shrink-0 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+      {/* Desktop Sidebar (Sticky + Collapsible) */}
+      <aside className={`hidden md:flex flex-col flex-shrink-0 z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300 ease-in-out bg-[#F5F5F7] border-r border-black/5 sticky top-0 h-screen ${isCollapsed ? 'w-20' : 'w-64'}`}>
         {navContent}
       </aside>
     </>

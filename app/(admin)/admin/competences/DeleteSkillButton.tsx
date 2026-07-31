@@ -10,7 +10,10 @@ export function DeleteSkillButton({ id }: { id: string }) {
       title="Supprimer cette compétence"
       description="Voulez-vous vraiment supprimer cette compétence ? L'action est irréversible."
       action={async () => {
-        await deleteSkill(id)
+        const res = await deleteSkill(id)
+        if (res?.error) {
+          alert(res.error)
+        }
       }}
       trigger={
         <button 

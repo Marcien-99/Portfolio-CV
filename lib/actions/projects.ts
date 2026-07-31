@@ -377,6 +377,12 @@ export async function deleteProject(id: string) {
     return { error: 'Erreur lors de la suppression' }
   }
 
+  // Nettoyer cv_profile_items pour éviter les projets fantômes
+  await supabase
+    .from('cv_profile_items')
+    .delete()
+    .eq('item_id', id)
+
   // 3. Supprimer physiquement les fichiers du Storage
   if (images && images.length > 0) {
     const pathsToRemove = images.map(img => {

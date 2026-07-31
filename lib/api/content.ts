@@ -117,6 +117,7 @@ export async function getProjects(domain?: ItemDomain, status?: string, includeD
       project_images (url, position, caption_fr, caption_en),
       project_links (url, label_fr, label_en, position)
     `)
+    .order('start_date', { ascending: false, nullsFirst: false })
     .order('position')
     
   if (!includeDrafts) {
