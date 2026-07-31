@@ -98,7 +98,7 @@ export async function getCvPdfData(lang: 'fr' | 'en', profileId: string = 'stand
       title: cleanTitle,
       email: settings.contact_email || "marcienbalouboula@gmail.com",
       phone: settings.contact_phone || "+33 6 52 14 26 45",
-      address: settings.contact_address || "Paris, France",
+      address: settings.hero_location || "Paris, France",
       linkedin: settings.social_linkedin || "https://www.linkedin.com/in/marcien-balouboula-nzoussi-b37970215",
       github: profile?.show_github === false ? "" : (settings.social_github || "https://github.com/Marcien-99"),
       website: `${origin}/${lang}`,
